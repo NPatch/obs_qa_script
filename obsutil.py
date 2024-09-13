@@ -170,7 +170,7 @@ def create_source(props, property):
     obs.obs_data_set_string(settings, "capture_mode", "window")
     obs.obs_data_set_string(settings, "window", window_name)
 
-    new_source = obs.obs_source_create("gamecapture_oldskies", oldskies_scene_source_name, settings, None)
+    new_source = obs.obs_source_create("game_capture", source_name, settings, None)
     obs.obs_scene_add(scene_ref, new_source)
     
     source_properties = obs.obs_source_properties(new_source)
