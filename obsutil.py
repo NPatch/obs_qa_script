@@ -2,11 +2,6 @@ import obspython as obs
 import math, time
 from cffi import FFI as ffi
 
-oldskies_scene_name = "Old Skies Scene"
-oldskies_scene_source_name = "Old Skies2"
-oldskies_capture_window_name = "[OldSkies.exe]: Old Skies"
-oldskies_capture_window_string = "Old Skies:SDL_app:OldSkies.exe"
-
 def find_scene(scene_name):
     scene_ref = None
     scene = None
@@ -15,7 +10,6 @@ def find_scene(scene_name):
         name = obs.obs_source_get_name(iscene)
         #print("Frontend SceneName:"+name)
         if name == scene_name:
-            print("Old Skies Scene exists. Will reference.")
             scene_ref = iscene
             break
     scene = obs.obs_scene_from_source(scene_ref)
@@ -23,12 +17,11 @@ def find_scene(scene_name):
     return scene
 
 def find_or_create_scene(scene_name):
-    scene_ref = find_scene(oldskies_scene_name)
+    scene_ref = find_scene(scene_name)
     if scene_ref is None:
-        print("Old Skies scene does not exist. Will create.")
-        scene_ref = obs.obs_scene_create(oldskies_scene_name)
+        print("Scene does not exist. Will create.")
+        scene_ref = obs.obs_scene_create(scene_name)
     return scene_ref
-
 
 def PrintSceneInfo(source_ref):
     settings = obs.obs_source_get_settings(source_ref)
@@ -44,16 +37,8 @@ def PrintSceneInfo(source_ref):
     print("---------- default private settings for this source type ----------")
     print(obs.obs_data_get_json(pdsettings))
 
-def on_frontend_finished_loading(event):
-    if event == obs.OBS_FRONTEND_EVENT_FINISHED_LOADING:
-        scene_ref = find_or_create_scene(oldskies_scene_name)
-
-        #find_or_create_sceneitem for GameCapture
-
-        obs.obs_scene_release(scene_ref)
-
-def print_scene_info(props, property):
-    scene_ref = find_scene(oldskies_scene_name)
+def print_scene_info(scene_name):
+    scene_ref = find_scene(scene_name)
     if scene_ref is None:
         print('Scene does not exist')
     scene_ref = obs.obs_scene_get_ref(scene_ref)
@@ -119,9 +104,9 @@ def print_property_info(property, settings):
         setting_value = obs.obs_data_get_string(settings, source_property_name)
         print("\t\t\tSetting Value:" + str(setting_value))
 
-def enum_scene_items(props, property):
+def enum_scene_items(scene_name):
     #walk_scene_items_in_current_source()
-    scene_ref = find_scene(oldskies_scene_name)
+    scene_ref = find_scene(scene_name)
     if(scene_ref is None):
         print('scene var is None')
         return
@@ -162,9 +147,9 @@ def enum_scene_items(props, property):
     obs.obs_scene_release(scene_ref)
 
 
-def find_scene_item(source_name):
+def find_scene_item(scene_name, source_name):
     scene_item = None
-    scene_ref = find_scene(oldskies_scene_name)
+    scene_ref = find_scene(scene_name)
     scene_items = obs.obs_scene_enum_items(scene_ref)
     for s, i in enumerate(scene_items):
         source_ref = obs.obs_sceneitem_get_source(i)
@@ -183,7 +168,7 @@ def create_source(props, property):
     scene_ref = find_scene(oldskies_scene_name)
     settings = obs.obs_data_create()
     obs.obs_data_set_string(settings, "capture_mode", "window")
-    obs.obs_data_set_string(settings, "window", oldskies_capture_window_string)
+    obs.obs_data_set_string(settings, "window", window_name)
 
     new_source = obs.obs_source_create("gamecapture_oldskies", oldskies_scene_source_name, settings, None)
     obs.obs_scene_add(scene_ref, new_source)
@@ -197,31 +182,4 @@ def create_source(props, property):
     obs.obs_properties_destroy(source_properties)
     obs.obs_save_sources()
 
-def script_description():
-  return """<center><h1>QA Tools</h1></center>"""
 
-def script_defaults(settings):
-    print("script_defaults")
-
-def script_load(settings):
-    print("script_load")
-    obs.obs_frontend_add_event_callback(on_frontend_finished_loading)
-
-def script_update(settings):
-    print("script_update")
-
-
-#def script_tick(seconds):
-#   global scene
-#   print("GlobalScene:"+str(scene is not None))
-
-def script_properties():
-    props = obs.obs_properties_create()
-
-    obs.obs_properties_add_button(props, "button0", "Print Scene Info:",print_scene_info)
-    obs.obs_properties_add_button(props, "button1", "Enum Scene Items",enum_scene_items)
-    obs.obs_properties_add_button(props, "button2", "Create Source",create_source)
-    #obs.obs_properties_add_button(props, "button1", "Start QA:",start_qa)
-    return props
-
-#def script_unload():
