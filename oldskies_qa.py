@@ -5,9 +5,6 @@ import os, subprocess
 import obsutil
 
 oldskies_scene_name = "Old Skies Scene"
-scene = None
-proc = None
-proc_result = None
 oldskies_scene_source_name = "Old Skies"
 oldskies_capture_window_name = "[OldSkies.exe]: Old Skies"
 oldskies_capture_window_string = "Old Skies:SDL_app:OldSkies.exe"
@@ -39,6 +36,64 @@ def script_properties():
 
 #def script_tick(seconds):
 
+def print_scene_info(props, property):
+    obsutil.print_scene_info(oldskies_scene_name)
+
+def enum_scene_items(props, property):
+    obsutil.enum_scene_items(oldskies_scene_name)
+
+def create_game_capture_source(props, property):
+    scene_ref = obsutil.find_scene(oldskies_scene_name)
+    if not obsutil.game_capture_source_exists(scene_ref, oldskies_scene_source_name):
+        source_ref = obsutil.create_game_capture_source(scene_ref, oldskies_scene_source_name, oldskies_capture_window_string)
+        obs.obs_source_release(source_ref)
+
+def setup_needs():
+    scene_ref = obsutil.find_scene(oldskies_scene_name)
+    if scene_ref is None:
+        print("Scene does not exist. Will create.")
+        scene_ref = obs.obs_scene_create(oldskies_scene_name)
+
+    source_ref = None
+    if not obsutil.game_capture_source_exists(scene_ref, oldskies_scene_source_name):
+        print("Source does not exist. Will create.")
+        source_ref = obsutil.create_game_capture_source(scene_ref, oldskies_scene_source_name, oldskies_capture_window_string)
+        obs.obs_source_release(source_ref)
+
+def setup_signals():
+    scene_ref = obsutil.find_scene(oldskies_scene_name)
+    scene_item_ref = obsutil.find_scene_item(scene_ref, oldskies_scene_source_name)
+    source_ref = obs.obs_sceneitem_get_source(scene_item_ref)
+    signal_handler = obs.obs_source_get_signal_handler(source_ref)
+    #Signals to get
+    #source_activate/deactivate
+    obs.signal_handler_connect(signal_handler,"source_activated",source_activated_callback)
+    obs.signal_handler_connect(signal_handler,"source_deactivated",source_activated_callback)
+    #hooked/unhooked for game_capture
+    obs.signal_handler_connect(signal_handler,"hooked",game_hooked_callback)
+    obs.signal_handler_connect(signal_handler,"unhooked",game_unhooked_callback)
+
+
+def source_activated_callback(calldata):
+    source = obs.calldata_source(calldata,"source")
+    print("activated: ", obs.obs_source_get_name(source))
+
+def source_deactivated_callback(calldata):
+    source = obs.calldata_source(calldata,"source")
+    print("deactivated: ", obs.obs_source_get_name(source))
+
+def game_hooked_callback(calldata):
+    source = obs.calldata_source(calldata,"source")
+    game_title = obs.calldata_source(calldata,"title")
+    game_class = obs.calldata_source(calldata,"class")
+    game_executable = obs.calldata_source(calldata,"executable")
+    print("hooked: ", obs.obs_source_get_name(source),
+    ",", game_title, ",", game_class, ",", game_executable)
+
+def game_unhooked_callback(calldata):
+    source = obs.calldata_source(calldata,"source")
+    print("unhooked: ", obs.obs_source_get_name(source))
+
 
 def RunGame():
     print("Running Old Skies")
@@ -57,11 +112,26 @@ def RunGame():
     proc_result = proc.returncode
 
 def start_qa(props, property):
-
+    scene_ref = obsutil.find_scene(oldskies_scene_name)
+    source_ref = obs.obs_scene_get_source(scene_ref)
+    obs.obs_frontend_set_current_scene(source_ref)
+    
+    #RunGame()
+    
 def on_frontend_finished_loading(event):
-    global scene
     if event == obs.OBS_FRONTEND_EVENT_FINISHED_LOADING:
-        scene = find_or_create_scene(oldskies_scene_name)
-
+        setup_needs()
+        setup_signals()
 
 def script_unload():
+    scene_ref = obsutil.find_scene(oldskies_scene_name)
+    scene_item_ref = obsutil.find_scene_item(scene_ref, oldskies_scene_source_name)
+    source_ref = obs.obs_sceneitem_get_source(scene_item_ref)
+    signal_handler = obs.obs_source_get_signal_handler(source_ref)
+    #Signals to get
+    #source_activate/deactivate
+    obs.signal_handler_disconnect(signal_handler,"source_activated",source_activated_callback)
+    obs.signal_handler_disconnect(signal_handler,"source_deactivated",source_activated_callback)
+    #hooked/unhooked for game_capture
+    obs.signal_handler_disconnect(signal_handler,"hooked",game_hooked_callback)
+    obs.signal_handler_disconnect(signal_handler,"unhooked",game_unhooked_callback)

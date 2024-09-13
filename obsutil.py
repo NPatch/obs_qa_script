@@ -23,7 +23,7 @@ def find_or_create_scene(scene_name):
         scene_ref = obs.obs_scene_create(scene_name)
     return scene_ref
 
-def PrintSceneInfo(source_ref):
+def print_source_info(source_ref):
     settings = obs.obs_source_get_settings(source_ref)
     psettings = obs.obs_source_get_private_settings(source_ref)
     dsettings = obs.obs_data_get_defaults(settings)
@@ -43,7 +43,7 @@ def print_scene_info(scene_name):
         print('Scene does not exist')
     scene_ref = obs.obs_scene_get_ref(scene_ref)
     source_ref = obs.obs_scene_get_source(scene_ref)
-    PrintSceneInfo(source_ref)
+    print_source_info(source_ref)
     obs.obs_scene_release(scene_ref)
 
 def walk_scene_items_in_current_source():
@@ -164,22 +164,41 @@ def find_scene_item(scene_name, source_name):
     obs.obs_scene_release(scene_ref)
     return scene_item
 
-def create_source(props, property):
-    scene_ref = find_scene(oldskies_scene_name)
+def find_scene_item(scene_ref, source_name):
+    scene_item = None
+    scene_items = obs.obs_scene_enum_items(scene_ref)
+    for s, i in enumerate(scene_items):
+        source_ref = obs.obs_sceneitem_get_source(i)
+        if source_ref is None:
+            continue
+        # print("SourceItem:"+obs.obs_source_get_name(source))
+        scene_item_name = obs.obs_source_get_name(source_ref)
+        if scene_item_name == source_name:
+            scene_item = i
+            break
+    obs.sceneitem_list_release(scene_items)
+    return scene_item
+
+def create_game_capture_source(scene_ref, source_name, window_name):
     settings = obs.obs_data_create()
     obs.obs_data_set_string(settings, "capture_mode", "window")
     obs.obs_data_set_string(settings, "window", window_name)
 
     new_source = obs.obs_source_create("game_capture", source_name, settings, None)
     obs.obs_scene_add(scene_ref, new_source)
-    
-    source_properties = obs.obs_source_properties(new_source)
-    obs.obs_properties_apply_settings(source_properties, settings)
+
+    #source_properties = obs.obs_source_properties(new_source)
+    #obs.obs_properties_apply_settings(source_properties, settings)
     #scene_item = find_scene_item(oldskies_scene_source_name)
     #if scene_item is None:
     #    new_source = obs.obs_source_create(None, oldskies_scene_source_name, #settings, None)
     #    obs.obs_save_sources()
-    obs.obs_properties_destroy(source_properties)
+    #obs.obs_properties_destroy(source_properties)
     obs.obs_save_sources()
+    return new_source
 
 
+def game_capture_source_exists(scene_ref, source_name):
+    scene_item_ref = find_scene_item(scene_ref, source_name)
+    source_ref = obs.obs_sceneitem_get_source(scene_item_ref)
+    return source_ref is not None
