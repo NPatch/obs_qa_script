@@ -1,6 +1,6 @@
 import obspython as obs
 import math, time
-from cffi import FFI as ffi
+# from cffi import FFI as ffi
 
 def find_scene(scene_name):
     scene_ref = None
