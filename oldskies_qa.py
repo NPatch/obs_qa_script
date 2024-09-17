@@ -2,7 +2,7 @@ import obspython as obs
 import math, time
 import os, subprocess
 
-import obsutil
+import obsutil, gameutil
 
 oldskies_scene_name = "Old Skies Scene"
 oldskies_scene_source_name = "Old Skies"
