@@ -2,7 +2,35 @@ import obspython as obs
 import math, time
 # from cffi import FFI as ffi
 
-def find_scene(scene_name):
+source_property_types = [
+    "OBS_PROPERTY_INVALID",
+    "OBS_PROPERTY_BOOL",
+    "OBS_PROPERTY_INT",
+    "OBS_PROPERTY_FLOAT",
+    "OBS_PROPERTY_TEXT",
+    "OBS_PROPERTY_PATH",
+    "OBS_PROPERTY_LIST",
+    "OBS_PROPERTY_COLOR",
+    "OBS_PROPERTY_BUTTON",
+    "OBS_PROPERTY_FONT",
+    "OBS_PROPERTY_EDITABLE_LIST",
+    "OBS_PROPERTY_FRAME_RATE",
+    "OBS_PROPERTY_GROUP",
+]
+
+def find_scene(scene_name : str):
+    """
+    finds and returns an obs_scene_t*
+
+    Returns: obs_scene_t*, does **not require release**
+
+    ##### obs API responsibilities
+    * Uses [obs_frontend_get_scenes](https://docs.obsproject.com/reference-frontend-api#c.obs_frontend_get_scenes) which **requires release** through [source_list_release](https://docs.obsproject.com/scripting#source_list_release).
+
+    * Uses [obs_source_get_name](https://docs.obsproject.com/reference-sources#c.obs_source_get_name) which doesn't increase the ref count.
+
+    * Uses [obs_scene_from_source](https://docs.obsproject.com/reference-scenes#c.obs_scene_from_source) which doesn't increase ref count.
+    """
     scene_ref = None
     scene = None
     scenes = obs.obs_frontend_get_scenes()
@@ -16,7 +44,17 @@ def find_scene(scene_name):
     obs.source_list_release(scenes)
     return scene
 
-def find_or_create_scene(scene_name):
+def find_or_create_scene(scene_name: str):
+    """
+    Tries to find the scene with the same name, but if it doesn't, autocreates it.
+
+    Returns: obs_scene_t*, does **not require release**
+
+    ##### obs API responsibilities
+    * Uses `find_scene`, doesn't require release.
+
+    * Uses [obs_scene_create](https://docs.obsproject.com/reference-scenes#c.obs_scene_create), which doesn't require release.
+    """
     scene_ref = find_scene(scene_name)
     if scene_ref is None:
         print("Scene does not exist. Will create.")
@@ -37,7 +75,7 @@ def print_source_info(source_ref):
     print("---------- default private settings for this source type ----------")
     print(obs.obs_data_get_json(pdsettings))
 
-def print_scene_info(scene_name):
+def print_scene_info(scene_name: str):
     scene_ref = find_scene(scene_name)
     if scene_ref is None:
         print('Scene does not exist')
@@ -61,22 +99,6 @@ def walk_scene_items_in_current_source():
 
     obs.sceneitem_list_release(items)
     obs.obs_source_release(current_scene_as_source)
-
-source_property_types = [
-    "OBS_PROPERTY_INVALID",
-    "OBS_PROPERTY_BOOL",
-    "OBS_PROPERTY_INT",
-    "OBS_PROPERTY_FLOAT",
-    "OBS_PROPERTY_TEXT",
-    "OBS_PROPERTY_PATH",
-    "OBS_PROPERTY_LIST",
-    "OBS_PROPERTY_COLOR",
-    "OBS_PROPERTY_BUTTON",
-    "OBS_PROPERTY_FONT",
-    "OBS_PROPERTY_EDITABLE_LIST",
-    "OBS_PROPERTY_FRAME_RATE",
-    "OBS_PROPERTY_GROUP",
-]
 
 def print_property_info(property, settings):
     if property is None:
@@ -104,7 +126,7 @@ def print_property_info(property, settings):
         setting_value = obs.obs_data_get_string(settings, source_property_name)
         print("\t\t\tSetting Value:" + str(setting_value))
 
-def enum_scene_items(scene_name):
+def enum_scene_items(scene_name: str):
     #walk_scene_items_in_current_source()
     scene_ref = find_scene(scene_name)
     if(scene_ref is None):
@@ -146,10 +168,20 @@ def enum_scene_items(scene_name):
     obs.sceneitem_list_release(scene_items)
     obs.obs_scene_release(scene_ref)
 
+def find_scene_item(scene_ref, source_name: str):
+    """
+    Tries to find the scene with the same name, but if it doesn't, autocreates it.
 
-def find_scene_item(scene_name, source_name):
+    Returns: obs_sceneitem_t*, does **not require release**.
+
+    ##### obs API responsibilities
+    * Uses [obs_scene_enum_items](https://docs.obsproject.com/scripting#obs_scene_enum_items), which **requires release** through [sceneitem_list_release](https://docs.obsproject.com/scripting#sceneitem_list_release).
+
+    * Uses [obs_sceneitem_get_source](https://docs.obsproject.com/reference-scenes#c.obs_sceneitem_get_source, which does not increment ref count.
+
+    * Uses [obs_source_get_name](https://docs.obsproject.com/reference-sources#c.obs_source_get_name) which doesn't increase the ref count.
+    """
     scene_item = None
-    scene_ref = find_scene(scene_name)
     scene_items = obs.obs_scene_enum_items(scene_ref)
     for s, i in enumerate(scene_items):
         source_ref = obs.obs_sceneitem_get_source(i)
@@ -164,22 +196,32 @@ def find_scene_item(scene_name, source_name):
     obs.obs_scene_release(scene_ref)
     return scene_item
 
-def find_scene_item(scene_ref, source_name):
-    scene_item = None
-    scene_items = obs.obs_scene_enum_items(scene_ref)
-    for s, i in enumerate(scene_items):
-        source_ref = obs.obs_sceneitem_get_source(i)
-        if source_ref is None:
-            continue
-        # print("SourceItem:"+obs.obs_source_get_name(source))
-        scene_item_name = obs.obs_source_get_name(source_ref)
-        if scene_item_name == source_name:
-            scene_item = i
-            break
-    obs.sceneitem_list_release(scene_items)
+def find_scene_item(scene_name: str, source_name: str):
+    """
+    Finds the scene item within a scene, using names for both. A scene item is basically a source.
+
+    Returns: obs_sceneitem_t*, does **not require release**
+
+    ##### obs API responsibilities
+
+    * Uses `find_scene`, which doesn't increment the ref count
+
+    * Uses `find_scene_item(scene_ref, source_name: str)`, which doesn't increment the ref count
+    """
+    scene_ref = find_scene(scene_name)
+    scene_item = find_scene_item(scene_ref, source_name)
     return scene_item
 
-def create_game_capture_source(scene_ref, source_name, window_name):
+def create_game_capture_source(scene_ref, source_name: str, window_name: str):
+    """
+    Creates a game capture style source that targets a specific application through its window's name.
+
+    Returns: obs_source_t*, does **require release**
+
+    ##### obs API responsibilities
+
+    * Uses [obs_source_create](https://docs.obsproject.com/reference-sources#c.obs_source_create), which **requires release**
+    """
     settings = obs.obs_data_create()
     obs.obs_data_set_string(settings, "capture_mode", "window")
     obs.obs_data_set_string(settings, "window", window_name)
@@ -197,8 +239,18 @@ def create_game_capture_source(scene_ref, source_name, window_name):
     obs.obs_save_sources()
     return new_source
 
+def game_capture_source_exists(scene_ref, source_name: str) -> bool:
+    """
+    Returns whether a source of type game capture exists under the given scene reference.
 
-def game_capture_source_exists(scene_ref, source_name):
+    Returns: bool
+
+    ##### obs API responsibilities
+
+    * Uses `find_scene_item`, which doesn't require release.
+    
+    * Uses [obs_sceneitem_get_source](https://docs.obsproject.com/reference-scenes#c.obs_sceneitem_get_source), which does not increment the ref count.
+    """
     scene_item_ref = find_scene_item(scene_ref, source_name)
     source_ref = obs.obs_sceneitem_get_source(scene_item_ref)
     return source_ref is not None
