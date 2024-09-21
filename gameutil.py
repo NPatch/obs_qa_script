@@ -88,7 +88,7 @@ def get_process_status(process: psutil.Process, window_name: str, window_class: 
         main_hwnd = win32gui.FindWindow(window_class, window_name)
         crash_hwnd = win32gui.FindWindow(crash_window_class, crash_window_name)
         app_status = process.status()
-        
+        #obs.script_log(obs.LOG_INFO, str(main_hwnd)+","+str(crash_hwnd))
         if main_hwnd == 0 and crash_hwnd != 0:
             app_status = psutil.STATUS_STOPPED
         
