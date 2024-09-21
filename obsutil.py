@@ -36,7 +36,6 @@ def find_scene(scene_name : str):
     scenes = obs.obs_frontend_get_scenes()
     for iscene in scenes:
         name = obs.obs_source_get_name(iscene)
-        #print("Frontend SceneName:"+name)
         if name == scene_name:
             scene_ref = iscene
             break
@@ -57,7 +56,7 @@ def find_or_create_scene(scene_name: str):
     """
     scene_ref = find_scene(scene_name)
     if scene_ref is None:
-        print("Scene does not exist. Will create.")
+        obs.script_log(obs.LOG_INFO, "Scene does not exist. Will create.")
         scene_ref = obs.obs_scene_create(scene_name)
     return scene_ref
 
