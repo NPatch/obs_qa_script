@@ -4,25 +4,22 @@ import keyboard
 import psutil
 import win32gui
 import win32process
+import obspython as obs
 
-def RunSteamGame(game_name, game_steam_gameid):
-    print("Running ", game_name)
+def run_steam_game(game_name: str, game_steam_gameid: int):
+    """
+    Runs a steam game, given its steam gameid.
+    """
+    obs.script_log(obs.LOG_INFO, "Running "+game_name)
     steamCommand = "steam"
     steamGameParameter = "steam://rungameid/"+str(game_steam_gameid)
     subprocess.call([steamCommand, steamGameParameter])
-    # global proc
-    # proc = subprocess.Popen(
-    #     executable = steamCommand,
-    #     args = steamOldSkiesParameter,
-    #     # avoid having to explicitly encode
-    #     shell = True,
-    #     text=True)
-    # global proc_result
-    # proc_result = proc.returncode
 
-def checkIfProcessRunning(processName):
+def check_if_process_running(processName: str) -> bool:
     '''
     Check if there is any running process that contains the given name processName.
+
+    Returns: bool
     '''
     #Iterate over the all the running process
     for proc in psutil.process_iter():
@@ -34,10 +31,11 @@ def checkIfProcessRunning(processName):
             pass
     return False;
  
-def findProcessIdByName(processName):
+def find_processid_by_name(processName: str) -> psutil.Process | None:
     '''
-    Get a list of all the PIDs of a all the running process whose name contains
-    the given string processName
+    Iterate through running processes and return the one with the given proces name, otherwise None
+
+    Returns: Process | None
     '''
     listOfProcessObjects = []
  
@@ -55,28 +53,37 @@ def findProcessIdByName(processName):
     else:
         return listOfProcessObjects[0]
 
-def print_parent_proc(process):
+def print_parent_proc(process: psutil.Process):
     if process is None:
         return
     parent = process.parent()
     if parent is not None:
-        print('Parent %s [PID = %d]' % (parent.name(), parent.pid))
+        msg = "Parent {proc_name} [PID = {proc_id}]".format(proc_name=parent.name(), proc_id=parent.pid)
+        obs.script_log(obs.LOG_INFO, msg)
             
-def print_current_proc(process):
+def print_current_proc(process: psutil.Process):
     if process is None:
         return
-    print ('   - Process %s [PID = %d]' % (process.name(), process.pid))
+    msg = "   - Process {proc_name} [PID = {proc_id}]".format(proc_name=process.name(), proc_id=process.pid)
+    obs.script_log(obs.LOG_INFO, msg)
 
-def print_child_procs(process):
+def print_child_procs(process: psutil.Process):
     if process is None:
         return
     for child in process.children(recursive=True):
         if child.pid != process.pid:
-            print ('        - Child %s [PID = %d]' % (child.name(), child.pid))
+            msg = "        - Child {proc_name} [PID = {proc_id}]".format(proc_name=child.name(), proc_id=child.pid)
+            obs.script_log(obs.LOG_INFO, msg)
         else:
-            print('        - Child %s [PID = %d] (Self)' % (child.name(), child.pid))
+            msg = "        - Child {proc_name} [PID = {proc_id}]".format(proc_name=process.name(), proc_id=process.pid)
+            obs.script_log(obs.LOG_INFO, msg)
 
-def get_process_status(process, window_name, window_class, crash_window_name, crash_window_class):
+def get_process_status(process: psutil.Process, window_name: str, window_class: str, crash_window_name: str, crash_window_class: str) -> str:
+    '''
+    Finds the window handle for the application's main window, as well as, for the crash window. Returns the process' status based on combination of Process.status() and which window of the two is currently in use.
+
+    Returns: string
+    '''
     try:
         main_hwnd = win32gui.FindWindow(window_class, window_name)
         crash_hwnd = win32gui.FindWindow(crash_window_class, crash_window_name)
