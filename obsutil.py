@@ -1,6 +1,6 @@
 import obspython as obs
 import math, time
-# from cffi import FFI as ffi
+from enum import Enum
 
 source_property_types = [
     "OBS_PROPERTY_INVALID",
@@ -212,6 +212,14 @@ def find_scene_item(scene_name: str, source_name: str):
     scene_item = find_scene_item(scene_ref, source_name)
     return scene_item
 
+class HookRate(Enum):
+    HOOK_RATE_SLOW = 0.5
+    HOOK_RATE_NORMAL = 1.0
+    HOOK_RATE_FAST = 2.0
+    HOOK_RATE_FASTEST = 3.0
+    def __str__(self):
+        return f'{self.name}'
+
 def create_game_capture_source(scene_ref, source_name: str, window_name: str):
     """
     Creates a game capture style source that targets a specific application through its window's name.
@@ -225,6 +233,7 @@ def create_game_capture_source(scene_ref, source_name: str, window_name: str):
     settings = obs.obs_data_create()
     obs.obs_data_set_string(settings, "capture_mode", "window")
     obs.obs_data_set_string(settings, "window", window_name)
+    obs.obs_data_set_double(settings, "hook_rate", HookRate.HOOK_RATE_NORMAL.value)
 
     new_source = obs.obs_source_create("game_capture", source_name, settings, None)
     obs.obs_scene_add(scene_ref, new_source)
