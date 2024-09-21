@@ -64,12 +64,12 @@ def setup_needs():
     obs.script_log(obs.LOG_INFO, "setup_needs")
     scene_ref = obsutil.find_scene(oldskies_scene_name)
     if scene_ref is None:
-        print("Scene does not exist. Will create.")
+        obs.script_log(obs.LOG_INFO, "Scene does not exist. Will create.")
         scene_ref = obs.obs_scene_create(oldskies_scene_name)
 
     source_ref = None
     if not obsutil.game_capture_source_exists(scene_ref, oldskies_scene_source_name):
-        print("Source does not exist. Will create.")
+        obs.script_log(obs.LOG_INFO, "Source does not exist. Will create.")
         source_ref = obsutil.create_game_capture_source(scene_ref, oldskies_scene_source_name, oldskies_capture_window_string)
         obs.obs_frontend_set_current_scene(source_ref)
         obs.obs_source_release(source_ref)
@@ -87,6 +87,7 @@ def setup_signals():
     #hooked/unhooked for game_capture
     obs.signal_handler_connect(signal_handler,"hooked",game_hooked_callback)
     obs.signal_handler_connect(signal_handler,"unhooked",game_unhooked_callback)
+    #obs.obs_scene_release(scene_ref)
 
 def unset_signals():
     obs.script_log(obs.LOG_INFO, "unset_signals")
@@ -101,6 +102,7 @@ def unset_signals():
     #hooked/unhooked for game_capture
     obs.signal_handler_disconnect(signal_handler,"hooked",game_hooked_callback)
     obs.signal_handler_disconnect(signal_handler,"unhooked",game_unhooked_callback)
+    #obs.obs_scene_release(scene_ref)
 
 def source_activated_callback(calldata):
     source = obs.calldata_source(calldata,"source")
