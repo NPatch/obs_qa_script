@@ -193,7 +193,6 @@ def find_scene_item(scene_ref, source_name: str):
             scene_item = i
             break
     obs.sceneitem_list_release(scene_items)
-    obs.obs_scene_release(scene_ref)
     return scene_item
 
 def find_scene_item(scene_name: str, source_name: str):
@@ -235,6 +234,9 @@ def create_game_capture_source(scene_ref, source_name: str, window_name: str):
     obs.obs_data_set_string(settings, "window", window_name)
     obs.obs_data_set_double(settings, "hook_rate", HookRate.HOOK_RATE_NORMAL.value)
 
+    #Size (w, h) of the window
+    #Positional Alignment = Top Left
+    # BB Size = 1,1
     new_source = obs.obs_source_create("game_capture", source_name, settings, None)
     obs.obs_scene_add(scene_ref, new_source)
 
