@@ -1,6 +1,7 @@
 import obspython as obs
 import math, time
 #import os
+import psutil
 import obsutil, gameutil
 
 oldskies_scene_name = "Old Skies Scene"
