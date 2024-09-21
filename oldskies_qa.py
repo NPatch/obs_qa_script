@@ -1,10 +1,6 @@
 import obspython as obs
 import math, time
-import os, subprocess
-import psutil
-import win32gui
-import win32process
-
+#import os
 import obsutil, gameutil
 
 oldskies_scene_name = "Old Skies Scene"
@@ -34,13 +30,14 @@ def script_description():
 #     print("script_defaults")
 
 def script_load(settings):
-    print("script_load")
+    obs.script_log(obs.LOG_INFO, "script_load")
     obs.obs_frontend_add_event_callback(on_frontend_finished_loading)
 
 # def script_update(settings):
 #     print("script_update")
 
 def script_properties():
+    obs.script_log(obs.LOG_INFO, "script_properties")
     props = obs.obs_properties_create()
 
     obs.obs_properties_add_button(props, "button0", "Start QA",start_qa)
@@ -57,12 +54,14 @@ def enum_scene_items(props, property):
     obsutil.enum_scene_items(oldskies_scene_name)
 
 def create_game_capture_source(props, property):
+    obs.script_log(obs.LOG_INFO, "create_game_capture_source")
     scene_ref = obsutil.find_scene(oldskies_scene_name)
     if not obsutil.game_capture_source_exists(scene_ref, oldskies_scene_source_name):
         source_ref = obsutil.create_game_capture_source(scene_ref, oldskies_scene_source_name, oldskies_capture_window_string)
         obs.obs_source_release(source_ref)
 
 def setup_needs():
+    obs.script_log(obs.LOG_INFO, "setup_needs")
     scene_ref = obsutil.find_scene(oldskies_scene_name)
     if scene_ref is None:
         print("Scene does not exist. Will create.")
@@ -76,6 +75,7 @@ def setup_needs():
         obs.obs_source_release(source_ref)
 
 def setup_signals():
+    obs.script_log(obs.LOG_INFO, "setup_signals")
     scene_ref = obsutil.find_scene(oldskies_scene_name)
     scene_item_ref = obsutil.find_scene_item(scene_ref, oldskies_scene_source_name)
     source_ref = obs.obs_sceneitem_get_source(scene_item_ref)
@@ -89,6 +89,7 @@ def setup_signals():
     obs.signal_handler_connect(signal_handler,"unhooked",game_unhooked_callback)
 
 def unset_signals():
+    obs.script_log(obs.LOG_INFO, "unset_signals")
     scene_ref = obsutil.find_scene(oldskies_scene_name)
     scene_item_ref = obsutil.find_scene_item(scene_ref, oldskies_scene_source_name)
     source_ref = obs.obs_sceneitem_get_source(scene_item_ref)
@@ -103,19 +104,20 @@ def unset_signals():
 
 def source_activated_callback(calldata):
     source = obs.calldata_source(calldata,"source")
-    print("activated: ", obs.obs_source_get_name(source))
+    obs.script_log(obs.LOG_INFO, "activated: ", obs.obs_source_get_name(source))
 
 def source_deactivated_callback(calldata):
     source = obs.calldata_source(calldata,"source")
-    print("deactivated: ", obs.obs_source_get_name(source))
+    obs.script_log(obs.LOG_INFO, "deactivated: ", obs.obs_source_get_name(source))
 
 def game_hooked_callback(calldata):
     source = obs.calldata_source(calldata,"source")
     game_title = obs.calldata_source(calldata,"title")
     game_class = obs.calldata_source(calldata,"class")
     game_executable = obs.calldata_source(calldata,"executable")
-    print("hooked: ", obs.obs_source_get_name(source),
-    ",", game_title, ",", game_class, ",", game_executable)
+    msg = "hooked: {source_name}, game_title: {game_title}, game_class: {game_class}, game_executable: {game_executable}".format(source_name=obs.obs_source_get_name(source),game_title=
+    game_title, game_class=game_class, game_executable=game_executable)
+    obs.script_log(obs.LOG_INFO, msg)
 
     global game_app_hooked
     game_app_hooked = True
@@ -127,6 +129,7 @@ def game_hooked_callback(calldata):
 def game_unhooked_callback(calldata):
     source = obs.calldata_source(calldata,"source")
     print("unhooked: ", obs.obs_source_get_name(source))
+    obs.script_log(obs.LOG_INFO, "unhooked: ", obs.obs_source_get_name(source))
 
     global game_app_hooked
     game_app_hooked = False
@@ -152,6 +155,7 @@ def script_tick(seconds):
             #     print("App Exited")
 
 def start_qa(props, property):
+    obs.script_log(obs.LOG_INFO, "start_qa")
     scene_ref = obsutil.find_scene(oldskies_scene_name)
     scene_source_ref = obs.obs_scene_get_source(scene_ref)
     obs.obs_frontend_set_current_scene(scene_source_ref)
@@ -166,8 +170,10 @@ def start_qa(props, property):
     last_app_status = None
     
 def on_frontend_finished_loading(event):
+    obs.script_log(obs.LOG_INFO, "on_frontend_finished_loading: ", str(event))
     if event == obs.OBS_FRONTEND_EVENT_FINISHED_LOADING:
         setup_needs()
 
-def script_unload():
-    unset_signals()
+#def script_unload():
+#   obs.script_log(obs.LOG_INFO, "script_unload")
+#    unset_signals()
