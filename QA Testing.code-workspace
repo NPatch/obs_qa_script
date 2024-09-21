@@ -5,6 +5,9 @@
 		},
 		{
 			"path": "C:/Program Files/obs-studio/data/obs-plugins"
+		},
+		{
+			"path": "C:/Users/npats/AppData/Roaming/obs-studio"
 		}
 	],
 	"settings": {}
