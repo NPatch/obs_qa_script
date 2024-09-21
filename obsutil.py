@@ -194,21 +194,21 @@ def find_scene_item(scene_ref, source_name: str):
     obs.sceneitem_list_release(scene_items)
     return scene_item
 
-def find_scene_item(scene_name: str, source_name: str):
-    """
-    Finds the scene item within a scene, using names for both. A scene item is basically a source.
+# def find_scene_item(scene_name: str, source_name: str):
+#     """
+#     Finds the scene item within a scene, using names for both. A scene item is basically a source.
 
-    Returns: obs_sceneitem_t*, does **not require release**
+#     Returns: obs_sceneitem_t*, does **not require release**
 
-    ##### obs API responsibilities
+#     ##### obs API responsibilities
 
-    * Uses `find_scene`, which doesn't increment the ref count
+#     * Uses `find_scene`, which doesn't increment the ref count
 
-    * Uses `find_scene_item(scene_ref, source_name: str)`, which doesn't increment the ref count
-    """
-    scene_ref = find_scene(scene_name)
-    scene_item = find_scene_item(scene_ref, source_name)
-    return scene_item
+#     * Uses `find_scene_item(scene_ref, source_name: str)`, which doesn't increment the ref count
+#     """
+#     scene_ref = find_scene(scene_name)
+#     scene_item = find_scene_item(scene_ref, source_name)
+#     return scene_item
 
 class HookRate(Enum):
     HOOK_RATE_SLOW = 0.5
