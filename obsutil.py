@@ -231,7 +231,7 @@ def create_game_capture_source(scene_ref, source_name: str, window_name: str):
     settings = obs.obs_data_create()
     obs.obs_data_set_string(settings, "capture_mode", "window")
     obs.obs_data_set_string(settings, "window", window_name)
-    obs.obs_data_set_double(settings, "hook_rate", HookRate.HOOK_RATE_NORMAL.value)
+    obs.obs_data_set_double(settings, "hook_rate", HookRate.HOOK_RATE_FASTEST.value)
 
     #Size (w, h) of the window
     #Positional Alignment = Top Left
