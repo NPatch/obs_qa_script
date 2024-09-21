@@ -123,8 +123,7 @@ def game_hooked_callback(calldata):
     game_app_hooked = True
 
     global proc
-    proc = gameutil.findProcessIdByName(oldskies_game_proc_name)
-
+    proc = gameutil.find_processid_by_name(oldskies_game_proc_name)
 
 def game_unhooked_callback(calldata):
     source = obs.calldata_source(calldata,"source")
@@ -164,7 +163,7 @@ def start_qa(props, property):
     #source_ref = obs.obs_sceneitem_get_source(scene_item_ref)
     #obs.obs_frontend_set_current_scene(source_ref)
     setup_signals()
-    gameutil.RunSteamGame(oldskies_proc_main_window_name, oldskies_steam_gameid)
+    gameutil.run_steam_game(oldskies_proc_main_window_name, oldskies_steam_gameid)
     global qa_started
     qa_started = True
     last_app_status = None
