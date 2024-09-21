@@ -19,9 +19,6 @@ proc = None
 proc_result = None
 last_app_status = None
 
-qa_started = False
-game_app_hooked = False
-
 # Description displayed in the Scripts dialog window
 def script_description():
   return """<center><h2>Old Skies QA Tools</h2></center>
@@ -83,12 +80,11 @@ def setup_signals():
     signal_handler = obs.obs_source_get_signal_handler(source_ref)
     #Signals to get
     #source_activate/deactivate
-    obs.signal_handler_connect(signal_handler,"source_activated",source_activated_callback)
-    obs.signal_handler_connect(signal_handler,"source_deactivated",source_activated_callback)
+    # obs.signal_handler_connect(signal_handler,"source_activated",source_activated_callback)
+    # obs.signal_handler_connect(signal_handler,"source_deactivated",source_activated_callback)
     #hooked/unhooked for game_capture
     obs.signal_handler_connect(signal_handler,"hooked",game_hooked_callback)
     obs.signal_handler_connect(signal_handler,"unhooked",game_unhooked_callback)
-    #obs.obs_scene_release(scene_ref)
 
 def unset_signals():
     obs.script_log(obs.LOG_INFO, "unset_signals")
@@ -98,12 +94,11 @@ def unset_signals():
     signal_handler = obs.obs_source_get_signal_handler(source_ref)
     #Signals to get
     #source_activate/deactivate
-    obs.signal_handler_disconnect(signal_handler,"source_activated",source_activated_callback)
-    obs.signal_handler_disconnect(signal_handler,"source_deactivated",source_activated_callback)
-    #hooked/unhooked for game_capture
+    # obs.signal_handler_disconnect(signal_handler,"source_activated",source_activated_callback)
+    # obs.signal_handler_disconnect(signal_handler,"source_deactivated",source_activated_callback)
+    # #hooked/unhooked for game_capture
     obs.signal_handler_disconnect(signal_handler,"hooked",game_hooked_callback)
     obs.signal_handler_disconnect(signal_handler,"unhooked",game_unhooked_callback)
-    #obs.obs_scene_release(scene_ref)
 
 def source_activated_callback(calldata):
     source = obs.calldata_source(calldata,"source")
@@ -122,39 +117,46 @@ def game_hooked_callback(calldata):
     game_title, game_class=game_class, game_executable=game_executable)
     obs.script_log(obs.LOG_INFO, msg)
 
-    global game_app_hooked
-    game_app_hooked = True
+    # scene_ref = obsutil.find_scene(oldskies_scene_name)
+    # scene_item_ref = obsutil.find_scene_item(scene_ref, oldskies_scene_source_name)
+    # source_ref = obs.obs_sceneitem_get_source(scene_item_ref)
+    # signal_handler = obs.obs_source_get_signal_handler(source_ref)
+    # obs.signal_handler_disconnect(signal_handler,"hooked",game_hooked_callback)
+    # obs.signal_handler_connect(signal_handler,"unhooked",game_unhooked_callback)
 
     global proc
     proc = gameutil.find_processid_by_name(oldskies_game_proc_name)
 
 def game_unhooked_callback(calldata):
     source = obs.calldata_source(calldata,"source")
-    print("unhooked: ", obs.obs_source_get_name(source))
-    obs.script_log(obs.LOG_INFO, "unhooked: ", obs.obs_source_get_name(source))
+    obs.script_log(obs.LOG_INFO, "unhooked: "+ obs.obs_source_get_name(source))
 
-    global game_app_hooked
-    game_app_hooked = False
+    global proc
+    proc_state = did_qa_crash(proc)
+    if proc_state:
+        obs.script_log(obs.LOG_ERROR, "Application Crashed")
+    proc = None
 
+    # scene_ref = obsutil.find_scene(oldskies_scene_name)
+    # scene_item_ref = obsutil.find_scene_item(scene_ref, oldskies_scene_source_name)
+    # source_ref = obs.obs_sceneitem_get_source(scene_item_ref)
+    # signal_handler = obs.obs_source_get_signal_handler(source_ref)
+    # obs.signal_handler_disconnect(signal_handler,"unhooked",game_unhooked_callback)
     unset_signals()
 
-def script_tick(seconds):
-    if qa_started and game_app_hooked:
-        #start recording
-        app_status = None
-        global proc, last_app_status
-        if proc is not None:
-            while(True):
-                app_status = gameutil.get_process_status(proc, oldskies_proc_main_window_name, oldskies_proc_main_window_class, oldskies_proc_crash_window_name, oldskies_proc_crash_window_class)
-                if app_status != psutil.STATUS_RUNNING:
-                    break
-            print(str(last_app_status), " " + str(app_status))
-            if last_app_status is not app_status:
-                    if app_status == psutil.STATUS_STOPPED:
-                        print("App Crashed")
-                    last_app_status = app_status
-            # elif app_status == psutil.STATUS_DEAD:
-            #     print("App Exited")
+def did_qa_crash(proc: psutil.Process) -> bool:
+    app_status = None
+    if proc is not None:
+        while(True):
+            app_status = gameutil.get_process_status(proc, oldskies_proc_main_window_name, oldskies_proc_main_window_class, oldskies_proc_crash_window_name, oldskies_proc_crash_window_class)
+            if app_status != psutil.STATUS_RUNNING:
+                break
+        if app_status == psutil.STATUS_STOPPED:
+            #obs.script_log(obs.LOG_INFO, "App Crashed")
+            return True
+        elif app_status == psutil.STATUS_DEAD:
+            #obs.script_log(obs.LOG_INFO, "App Exited")
+            return False
 
 def start_qa(props, property):
     obs.script_log(obs.LOG_INFO, "start_qa")
@@ -163,16 +165,11 @@ def start_qa(props, property):
     obs.obs_frontend_set_current_scene(scene_source_ref)
     scene_item_ref = obsutil.find_scene_item(scene_ref, oldskies_scene_source_name)
     obs.obs_sceneitem_select(scene_item_ref, True)
-    #source_ref = obs.obs_sceneitem_get_source(scene_item_ref)
-    #obs.obs_frontend_set_current_scene(source_ref)
     setup_signals()
     gameutil.run_steam_game(oldskies_proc_main_window_name, oldskies_steam_gameid)
-    global qa_started
-    qa_started = True
-    last_app_status = None
     
 def on_frontend_finished_loading(event):
-    obs.script_log(obs.LOG_INFO, "on_frontend_finished_loading: ", str(event))
+    obs.script_log(obs.LOG_INFO, "on_frontend_finished_loading: "+ str(event))
     if event == obs.OBS_FRONTEND_EVENT_FINISHED_LOADING:
         setup_needs()
 
