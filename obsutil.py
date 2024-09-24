@@ -217,6 +217,62 @@ class HookRate(Enum):
     HOOK_RATE_FASTEST = 3.0
     def __str__(self):
         return f'{self.name}'
+    
+class PositionalAlignment(Enum):
+    ALIGN_CENTER = 0
+    ALIGN_LEFT = 1
+    ALIGN_RIGHT = 2
+    ALIGN_TOP = 4
+    ALIGN_BOTTOM = 6
+    def __str__(self):
+        return f'{self.name}'
+    def __int__(self):
+        return self.value
+    def __or__(self, other):
+        return self.value | other.value
+    
+def strvec2(vec : obs.vec2) -> str:
+    return "{{{posx},{posy}}}".format(posx=vec.x, posy=vec.y)
+    
+def reset_transform_and_crop(scene_item_ref):
+    '''
+    Resets both the transform and the crop to required levels
+    
+    ---
+    
+    Alignment is handled as a bitwise or of the literals. These literals in the repo are handled as\n
+    #define OBS_ALIGN_CENTER (0)\n
+    #define OBS_ALIGN_LEFT (1 << 0)\n
+    #define OBS_ALIGN_RIGHT (1 << 1)\n
+    #define OBS_ALIGN_TOP (1 << 2)\n
+    #define OBS_ALIGN_BOTTOM (1 << 3)\n
+
+    Bitwise ORs:\n
+    LEFT | TOP = 5\n
+    TOP | CENTER = 4
+    '''
+    obs.script_log(obs.LOG_DEBUG, "reset_transform_and_crop")
+    transform_info = obs.obs_transform_info()
+    obs.obs_sceneitem_get_info(scene_item_ref, transform_info)
+    obs.vec2_set(transform_info.pos, 0.0, 0.0)
+    transform_info.rot = 0.0
+    transform_info.alignment = PositionalAlignment.ALIGN_LEFT | PositionalAlignment.ALIGN_TOP
+    obs.obs_sceneitem_set_info(scene_item_ref, transform_info)
+    #print("transform.pos: ", strvec2(transform_info.pos))
+    #print("transform.rot: ", str(transform_info.rot))
+    #print("transform.alignment: ", str(transform_info.alignment))
+
+    crop_info = obs.obs_sceneitem_crop()
+    obs.obs_sceneitem_get_crop(scene_item_ref, crop_info)
+    crop_info.left = 0
+    crop_info.right = 0
+    crop_info.top = 0
+    crop_info.bottom = 0
+    obs.obs_sceneitem_set_crop(scene_item_ref, crop_info)
+    #print("crop.left: ", str(crop_info.left))
+    #print("crop.right: ", str(crop_info.right))
+    #print("crop.top: ", str(crop_info.top))
+    #print("crop.bottom: ", str(crop_info.bottom))
 
 def create_game_capture_source(scene_ref, source_name: str, window_name: str):
     """

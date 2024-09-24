@@ -91,6 +91,11 @@ def setup_needs():
         obs.script_log(obs.LOG_INFO, "Source does not exist. Will create.")
         source_ref = obsutil.create_game_capture_source(scene_ref, ags_data.source_name, ags_data.game_capture_window_string)
         obs.obs_frontend_set_current_scene(source_ref)
+
+        scene_item_ref = obs.obs_scene_sceneitem_from_source(scene_ref, source_ref)
+        if scene_item_ref:
+            obsutil.reset_transform_and_crop(scene_item_ref)
+            obs.obs_sceneitem_release(scene_item_ref)
         obs.obs_source_release(source_ref)
 
 def setup_signals():
