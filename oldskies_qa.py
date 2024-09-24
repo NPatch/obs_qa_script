@@ -136,9 +136,9 @@ def source_deactivated_callback(calldata):
 
 def game_hooked_callback(calldata):
     source = obs.calldata_source(calldata,"source")
-    game_title = obs.calldata_source(calldata,"title")
-    game_class = obs.calldata_source(calldata,"class")
-    game_executable = obs.calldata_source(calldata,"executable")
+    game_title = obs.calldata_string(calldata,"title")
+    game_class = obs.calldata_string(calldata,"class")
+    game_executable = obs.calldata_string(calldata,"executable")
     msg = "hooked: {source_name}, game_title: {game_title}, game_class: {game_class}, game_executable: {game_executable}".format(source_name=obs.obs_source_get_name(source),game_title=
     game_title, game_class=game_class, game_executable=game_executable)
     obs.script_log(obs.LOG_INFO, msg)
