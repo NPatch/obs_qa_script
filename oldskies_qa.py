@@ -31,7 +31,7 @@ def script_description():
             <p>Tools that automate and help in QA testing AGS games</p>"""
 
 def script_defaults(settings):
-    obs.script_log(obs.LOG_INFO, "script_defaults")
+    obs.script_log(obs.LOG_DEBUG, "script_defaults")
     obs.obs_data_set_default_string(settings, "scene_name", "")
     obs.obs_data_set_default_string(settings, "source_name", "")
     obs.obs_data_set_default_int(settings, "steam_gameid", 0)
@@ -42,11 +42,11 @@ def script_defaults(settings):
     obs.obs_data_set_default_string(settings, "crash_win_name", "")
 
 def script_load(settings):
-    obs.script_log(obs.LOG_INFO, "script_load")
+    obs.script_log(obs.LOG_DEBUG, "script_load")
     obs.obs_frontend_add_event_callback(on_frontend_finished_loading)
 
 def script_properties():
-    obs.script_log(obs.LOG_INFO, "script_properties")
+    obs.script_log(obs.LOG_DEBUG, "script_properties")
     props = obs.obs_properties_create()
 
     obs.obs_properties_add_text(props, "scene_name", "Scene name", obs.OBS_TEXT_DEFAULT)
@@ -59,10 +59,11 @@ def script_properties():
     obs.obs_properties_add_text(props, "crash_win_class", "Crash Window Class", obs.OBS_TEXT_DEFAULT)
 
     obs.obs_properties_add_button(props, "button0", "Start QA",start_qa)
+
     return props
 
 def script_update(settings):
-    obs.script_log(obs.LOG_INFO, "script_update")
+    obs.script_log(obs.LOG_DEBUG, "script_update")
     ags_data.scene_name = obs.obs_data_get_string(settings, "scene_name")
     ags_data.source_name = obs.obs_data_get_string(settings, "source_name")
     ags_data.steam_gameid = obs.obs_data_get_string(settings, "steam_gameid")
@@ -73,14 +74,14 @@ def script_update(settings):
     ags_data.crash_window_class = obs.obs_data_get_string(settings, "crash_win_class")
 
 def create_game_capture_source(props, property):
-    obs.script_log(obs.LOG_INFO, "create_game_capture_source")
+    obs.script_log(obs.LOG_DEBUG, "create_game_capture_source")
     scene_ref = obsutil.find_scene(ags_data.scene_name)
     if not obsutil.game_capture_source_exists(scene_ref, ags_data.source_name):
         source_ref = obsutil.create_game_capture_source(scene_ref, ags_data.source_name, ags_data.game_capture_window_string)
         obs.obs_source_release(source_ref)
 
 def setup_needs():
-    obs.script_log(obs.LOG_INFO, "setup_needs")
+    obs.script_log(obs.LOG_DEBUG, "setup_needs")
     scene_ref = obsutil.find_scene(ags_data.scene_name)
     if scene_ref is None:
         obs.script_log(obs.LOG_INFO, "Scene does not exist. Will create.")
@@ -99,7 +100,7 @@ def setup_needs():
         obs.obs_source_release(source_ref)
 
 def setup_signals():
-    obs.script_log(obs.LOG_INFO, "setup_signals")
+    obs.script_log(obs.LOG_DEBUG, "setup_signals")
     scene_ref = obsutil.find_scene(ags_data.scene_name)
     scene_item_ref = obsutil.find_scene_item(scene_ref, ags_data.source_name)
     source_ref = obs.obs_sceneitem_get_source(scene_item_ref)
@@ -113,7 +114,7 @@ def setup_signals():
     obs.signal_handler_connect(signal_handler,"unhooked",game_unhooked_callback)
 
 def unset_signals():
-    obs.script_log(obs.LOG_INFO, "unset_signals")
+    obs.script_log(obs.LOG_DEBUG, "unset_signals")
     scene_ref = obsutil.find_scene(ags_data.scene_name)
     scene_item_ref = obsutil.find_scene_item(scene_ref, ags_data.source_name)
     source_ref = obs.obs_sceneitem_get_source(scene_item_ref)
@@ -184,7 +185,7 @@ def did_qa_crash(proc: psutil.Process) -> bool:
             return False
 
 def start_qa(props, property):
-    obs.script_log(obs.LOG_INFO, "start_qa")
+    obs.script_log(obs.LOG_DEBUG, "start_qa")
     scene_ref = obsutil.find_scene(ags_data.scene_name)
     scene_source_ref = obs.obs_scene_get_source(scene_ref)
     obs.obs_frontend_set_current_scene(scene_source_ref)
@@ -192,12 +193,12 @@ def start_qa(props, property):
     obs.obs_sceneitem_select(scene_item_ref, True)
     setup_signals()
     gameutil.run_steam_game(ags_data.window_name, ags_data.steam_gameid)
-    
+
 def on_frontend_finished_loading(event):
-    obs.script_log(obs.LOG_INFO, "on_frontend_finished_loading: ")
+    obs.script_log(obs.LOG_DEBUG, "on_frontend_finished_loading: ")
     if event == obs.OBS_FRONTEND_EVENT_FINISHED_LOADING:
         setup_needs()
 
 def script_unload():
-    obs.script_log(obs.LOG_INFO, "script_unload")
+    obs.script_log(obs.LOG_DEBUG, "script_unload")
     #unset_signals()
