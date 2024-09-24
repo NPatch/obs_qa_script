@@ -4,16 +4,21 @@ import math, time
 import psutil
 import obsutil, gameutil
 
-oldskies_scene_name = "Old Skies Scene"
-oldskies_scene_source_name = "Old Skies"
-oldskies_capture_window_name = "[OldSkies.exe]: Old Skies"
-oldskies_capture_window_string = "Old Skies:SDL_app:OldSkies.exe"
-oldskies_game_proc_name = "OldSkies.exe"
-oldskies_proc_main_window_name = "Old Skies"
-oldskies_proc_main_window_class = "SDL_app"
-oldskies_proc_crash_window_name = "Adventure Game Studio"
-oldskies_proc_crash_window_class = "#32770"
-oldskies_steam_gameid = 1346360
+# oldskies_scene_name = "Old Skies Scene"
+# oldskies_scene_source_name = "Old Skies"
+
+# #oldskies_capture_window_name = "[OldSkies.exe]: Old Skies"
+# oldskies_steam_gameid = 1346360
+# oldskies_game_proc_name = "OldSkies.exe"
+# oldskies_proc_main_window_name = "Old Skies"
+# oldskies_proc_main_window_class = "SDL_app"
+
+# oldskies_capture_window_string = "{winname}:{winclass}:{exename}".format(winname=oldskies_proc_main_window_name,winclass=oldskies_proc_main_window_class, exename=oldskies_game_proc_name)
+
+# oldskies_proc_crash_window_name = "Adventure Game Studio"
+# oldskies_proc_crash_window_class = "#32770"
+
+ags_data = gd.AGSGameData()
 
 proc = None
 proc_result = None
