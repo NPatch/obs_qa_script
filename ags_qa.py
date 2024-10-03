@@ -343,6 +343,81 @@ class obsutil:
         #print("crop.bottom: ", str(crop_info.bottom))
 
     @staticmethod
+    def config_set_base_resolution(width: int = 0, height: int = 0):
+        '''
+        Sets base resolution.
+
+        ---
+        
+        ##### obs API responsibilities
+
+        * Uses [obs_frontend_get_profile_config](https://docs.obsproject.com/reference-sources#c.obs_frontend_get_profile_config), which **does not require release**
+        '''
+        config = obs.obs_frontend_get_profile_config()
+
+        disable = (width == 0 or height == 0)
+        if(disable):
+            return
+
+        obs.config_set_uint(config, "Video", "BaseCX", width)
+        obs.config_set_uint(config, "Video", "BaseCY", height)
+
+    @staticmethod
+    def config_set_output_resolution(width: int = 0, height: int = 0):
+        '''
+        Sets output resolution.
+
+        ---
+        
+        ##### obs API responsibilities
+
+        * Uses [obs_frontend_get_profile_config](https://docs.obsproject.com/reference-sources#c.obs_frontend_get_profile_config), which **does not require release**
+        '''
+        config = obs.obs_frontend_get_profile_config()
+
+        disable = (width == 0 or height == 0)
+        if(disable):
+            return
+
+        obs.config_set_uint(config, "Video", "OutputCX", width)
+        obs.config_set_uint(config, "Video", "OutputCY", height)
+
+    class ScaleType(Enum):
+        DISABLE = 0
+        POINT = 1
+        BICUBIC = 2
+        BILINEAR = 3
+        LANCZOS = 4
+        AREA = 5
+        
+        def __str__(self):
+            return f'{self.name}'
+        def __int__(self):
+            return self.value
+
+    @staticmethod
+    def set_rescale_resolution(width: int = 0, height: int = 0, scale_type: ScaleType = ScaleType.BILINEAR):
+        '''
+        Sets the Rescale resolution and type for the output.
+
+        ---
+        
+        ##### obs API responsibilities
+
+        * Uses [obs_frontend_get_profile_config](https://docs.obsproject.com/reference-sources#c.obs_frontend_get_profile_config), which **does not require release**
+        '''
+        config = obs.obs_frontend_get_profile_config()
+
+        disable = (width == 0 or height == 0)
+        if(disable):
+            scale_type = obsutil.ScaleType.DISABLE
+            width = height = 0
+
+        obs.config_set_int(config, "AdvOut", "RecRescaleFilter", scale_type.value)
+        resolution = str(width)+"x"+str(height)
+        obs.config_set_string(config, "AdvOut", "RecRescaleRes", resolution)
+
+    @staticmethod
     def create_game_capture_source(scene_ref, source_name: str, window_name: str):
         """
         Creates a game capture style source that targets a specific application through its window's name.
