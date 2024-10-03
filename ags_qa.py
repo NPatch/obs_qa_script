@@ -645,6 +645,21 @@ def setup_needs():
             obs.obs_sceneitem_release(scene_item_ref)
         obs.obs_source_release(source_ref)
 
+# def setup_persistent_signals():
+#     obs.script_log(obs.LOG_DEBUG, "setup_persistent_signals")
+#     scene_ref = obsutil.find_scene(ags_data.scene_name)
+#     scene_item_ref = obsutil.find_scene_item(scene_ref, ags_data.source_name)
+#     source_ref = obs.obs_sceneitem_get_source(scene_item_ref)
+#     signal_handler = obs.obs_source_get_signal_handler(source_ref)
+    #Signals to get
+    #source_activate/deactivate
+    # obs.signal_handler_connect(signal_handler,"source_activated",source_activated_callback)
+    # obs.signal_handler_connect(signal_handler,"source_deactivated",source_deactivated_callback)
+    # obs.signal_handler_connect(signal_handler,"enable",source_enabled_callback)
+    
+    # obs.signal_handler_connect(signal_handler,"show",source_show_callback)
+    # obs.signal_handler_connect(signal_handler,"hide",source_hide_callback)
+
 def setup_signals():
     obs.script_log(obs.LOG_DEBUG, "setup_signals")
     scene_ref = obsutil.find_scene(ags_data.scene_name)
@@ -658,6 +673,21 @@ def setup_signals():
     #hooked/unhooked for game_capture
     obs.signal_handler_connect(signal_handler,"hooked",game_hooked_callback)
     obs.signal_handler_connect(signal_handler,"unhooked",game_unhooked_callback)
+
+# def unset_persistent_signals():
+#     obs.script_log(obs.LOG_DEBUG, "unset_persistent_signals")
+#     scene_ref = obsutil.find_scene(ags_data.scene_name)
+#     scene_item_ref = obsutil.find_scene_item(scene_ref, ags_data.source_name)
+#     source_ref = obs.obs_sceneitem_get_source(scene_item_ref)
+#     signal_handler = obs.obs_source_get_signal_handler(source_ref)
+    #Signals to get
+    #source_activate/deactivate
+    # obs.signal_handler_disconnect(signal_handler,"source_activated",source_activated_callback)
+    # obs.signal_handler_disconnect(signal_handler,"source_deactivated",source_deactivated_callback)
+    # obs.signal_handler_disconnect(signal_handler,"enable",source_enabled_callback)
+
+    # obs.signal_handler_disconnect(signal_handler,"show",source_show_callback)
+    # obs.signal_handler_disconnect(signal_handler,"hide",source_hide_callback)
 
 def unset_signals():
     obs.script_log(obs.LOG_DEBUG, "unset_signals")
@@ -697,12 +727,7 @@ def game_hooked_callback(calldata):
     global proc
     proc = gameutil.find_processid_by_name(ags_data.exe_name)
 
-    #obs.timer_add(post_hook_cb, 1000)
 
-def post_hook_cb():
-    resize_output_to_source_size()
-    #start recording
-    obs.remove_current_callback()
 
 def game_unhooked_callback(calldata):
     source = obs.calldata_source(calldata,"source")
@@ -755,7 +780,6 @@ def print_video_settings(props, property):
     print("print_video_settings")
     vid_settings = obs.obs_video_info()
     obs.obs_get_video_info(vid_settings)
-    #print("Graphics Module: ", vid_settings.graphics_module)
     print("FPS numenator: ", str(vid_settings.fps_num))
     print("FPS denominator: ", str(vid_settings.fps_den))
     print("Base Res Width: ", str(vid_settings.base_width))
@@ -768,172 +792,6 @@ def print_video_settings(props, property):
     print("Colorspace Type: ", str(vid_settings.colorspace))
     print("Video Range Type: ", str(vid_settings.range))
     print("Scale Type: ", str(vid_settings.scale_type))
-    # vid_settings.base_width = vid_settings.output_width = 3440
-    # vid_settings.base_height = vid_settings.output_height = 1440
-    # val = obs.obs_reset_video(vid_settings)
-    # if(val == 0):
-        # print("Success")
-        # obs.obs_frontend_save()
-        # obs.obs_frontend_reset_video()
-        
-
-    # elif(val == -1):
-        # print("Fail")
-    # elif(val == -2):
-        # print("Video Not Supported")
-    # elif(val == -3):
-        # print("Invalid Param")
-    # elif(val == -4):
-        # print("Currently Active")
-    # elif(val == -5):
-        # print("Module Not Found")
-
-    #obs_frontend_get_global_config
-    # profile_config = obs.obs_frontend_get_profile_config()
-    # base_res = obs.vec2()
-    # output_res = obs.vec2()
-    # base_res.x = obs.config_get_uint(profile_config, "Video", "BaseCX")
-    # base_res.y = obs.config_get_uint(profile_config, "Video", "BaseCY")
-    # output_res.x = obs.config_get_uint(profile_config, "Video", "OutputCX")
-    # output_res.y = obs.config_get_uint(profile_config, "Video", "OutputCY")
-    # print("Base Resolution: ", obsutil.strvec2(base_res))
-    # print("Output Resolution: ", obsutil.strvec2(output_res))
-    # base_res.x = output_res.x = 3440
-    # base_res.y = output_res.y = 1440
-    # obs.config_set_uint(profile_config, "Video", "BaseCX", int(base_res.x))
-    # obs.config_set_uint(profile_config, "Video", "BaseCY", int(base_res.y))
-    # obs.config_set_uint(profile_config, "Video", "OutputCX", int(output_res.x))
-    # obs.config_set_uint(profile_config, "Video", "OutputCY", int(output_res.y))
-    # base_res.x = obs.config_get_uint(profile_config, "Video", "BaseCX")
-    # base_res.y = obs.config_get_uint(profile_config, "Video", "BaseCY")
-    # output_res.x = obs.config_get_uint(profile_config, "Video", "OutputCX")
-    # output_res.y = obs.config_get_uint(profile_config, "Video", "OutputCY")
-    # print("Base Resolution: ", obsutil.strvec2(base_res))
-    # print("Output Resolution: ", obsutil.strvec2(output_res))
-    # obs.obs_frontend_save()
-    # obs.obs_frontend_reset_video()
-    # scene_ref = obsutil.find_scene(ags_data.scene_name)
-    # scene_item_ref = obsutil.find_scene_item(scene_ref, ags_data.source_name)
-    # obsutil.reset_transform_and_crop(scene_item_ref)
-
-def clamp_scrolling_offsets(vid_settings, targetSizeX, targetSizeY, scalingAmount):
-    target = obs.vec3()
-    offset = obs.vec3()
-
-    obs.vec3_set(target, float(targetSizeX), float(targetSizeY), 1.0)
-    obs.vec3_set(offset, float(vid_settings.base_width), float(vid_settings.base_height), 1.0)
-
-    obs.vec3_mulf(offset, offset, scalingAmount)
-
-    obs.vec3_sub(offset, offset, target)
-
-    obs.vec3_mulf(offset, offset, 0.5)
-    obs.vec3_maxf(offset, offset, 0.0)  
-    obs.vec3_divf(target, target, 2.0)
-    obs.vec3_add(offset, offset, target)
-
-def resize_preview(vid_settings):
-    
-    # targetSizeX = obs.obs_source_get_width(preview_source)
-    # targetSizeY = obs.obs_source_get_height(preview_source)
-    
-    scalingAmount = 1
-
-def reset_video(config):
-
-    bwidth = obs.config_get_uint(config, "Video", "BaseCX")
-    bheight = obs.config_get_uint(config, "Video", "BaseCY")
-    owidth = obs.config_get_uint(config, "Video", "OutputCX")
-    oheight = obs.config_get_uint(config, "Video", "OutputCY")
-
-    vid_settings = obs.obs_video_info()
-    obs.obs_get_video_info(vid_settings)
-    vid_settings.base_width = bwidth
-    vid_settings.base_height = bheight
-    vid_settings.output_width = owidth
-    vid_settings.output_height = oheight
-
-    ret = obs.obs_reset_video(vid_settings)
-    if ret == -4: # Currently Active
-        obs.script_log(obs.LOG_WARNING, "Tried to reset when already active")
-        return ret
-    
-    if ret == 0:
-        obs.script_log(obs.LOG_INFO, "Successful video reset")
-        # resize preview....seems to be relavant for Studio mode
-        #resize_preview(vid_settings)
-
-        #set video levels for white and hdr nominal peak
-        #Can't implement. Obspython has no obs_set_video_sdr_white_level
-
-        #basic stats initialize values
-        #No idea how to implement
-
-        #remigrate scene collection
-        #no idea yet
-
-    return ret
-
-def undo_redo(data):
-    dat = obs.obs_data_create_from_json(data)
-    scene_uuid = obs.obs_data_get_string(dat, "scene_uuid")
-    source = obs.obs_get_source_by_uuid(scene_uuid)
-    obs.obs_frontend_set_current_scene(source)
-    obs.obs_scene_load_transform_states(data)
-
-def on_actionFitToScreen_triggered(scene_ref, scene_item_ref, config):
-    ovi = obs.obs_video_info()
-    obs.obs_get_video_info(ovi)
-
-    ovi.base_width = obs.config_get_uint(config, "Video", "BaseCX")
-    ovi.base_height = obs.config_get_uint(config, "Video", "BaseCY")
-    ovi.output_width = obs.config_get_uint(config, "Video", "OutputCX")
-    ovi.output_height = obs.config_get_uint(config, "Video", "OutputCY")
-
-    # print("FPS numenator: ", str(ovi.fps_num))
-    # print("FPS denominator: ", str(ovi.fps_den))
-    # print("Base Res Width: ", str(ovi.base_width))
-    # print("Base Res Height: ", str(ovi.base_height))
-    # print("Output Res Width: ", str(ovi.output_width))
-    # print("Output Res Height: ", str(ovi.output_height))
-    # print("Output Format: ", str(ovi.output_format))
-    # print("Adapter: ", str(ovi.adapter))
-    # print("Gpu Conversion: ", str(ovi.gpu_conversion))
-    # print("Colorspace Type: ", str(ovi.colorspace))
-    # print("Video Range Type: ", str(ovi.range))
-    # print("Scale Type: ", str(ovi.scale_type))
-
-    obsutil.reset_transform_and_crop(scene_item_ref,float(ovi.base_width), float(ovi.base_height))
-
-def resize_output_to_source_size():
-    if obs.obs_video_active():
-        return
-    
-    profile_config = obs.obs_frontend_get_profile_config()
-    
-    scene_ref = obsutil.find_scene(ags_data.scene_name)
-    scene_item_ref = obsutil.find_scene_item(scene_ref, ags_data.source_name)
-    source_ref = obs.obs_sceneitem_get_source(scene_item_ref)
-
-    source_width = obs.obs_source_get_width(source_ref)
-    source_height = obs.obs_source_get_height(source_ref)
-
-    obs.config_set_uint(profile_config, "Video", "BaseCX", source_width)
-    obs.config_set_uint(profile_config, "Video", "BaseCY", source_height)
-    obs.config_set_uint(profile_config, "Video", "OutputCX", source_width)
-    obs.config_set_uint(profile_config, "Video", "OutputCY", source_height)
-    
-    #profile config save
-    print("config save safe")
-    obs.config_save_safe(profile_config, "tmp", None)
-    
-    #on_actionFitToScreen_triggered
-    print("onActionFitToScreenTriggered")
-    on_actionFitToScreen_triggered(scene_ref, scene_item_ref, profile_config)
-
-    #reset_video
-    print("reset_video_attempt")
-    reset_video(profile_config)
 
 def script_unload():
     obs.script_log(obs.LOG_DEBUG, "script_unload")
