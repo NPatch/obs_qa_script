@@ -424,6 +424,8 @@ class obsutil:
 
         Returns: obs_source_t*, does **require release**
 
+        ---
+
         ##### obs API responsibilities
 
         * Uses [obs_source_create](https://docs.obsproject.com/reference-sources#c.obs_source_create), which **requires release**
@@ -639,6 +641,50 @@ class AGSGameData(GameData):
             self.crash_window_name = data["crash_window_name"]
             self.crash_window_class = data["crash_window_class"]
 
+class obs_frontend_event(Enum):
+    OBS_FRONTEND_EVENT_STREAMING_STARTING = 0
+    OBS_FRONTEND_EVENT_STREAMING_STARTED = 1
+    OBS_FRONTEND_EVENT_STREAMING_STOPPING = 2
+    OBS_FRONTEND_EVENT_STREAMING_STOPPED = 3
+    OBS_FRONTEND_EVENT_RECORDING_STARTING = 4
+    OBS_FRONTEND_EVENT_RECORDING_STARTED = 5
+    OBS_FRONTEND_EVENT_RECORDING_STOPPING = 6
+    OBS_FRONTEND_EVENT_RECORDING_STOPPED = 7
+    OBS_FRONTEND_EVENT_SCENE_CHANGED = 8
+    OBS_FRONTEND_EVENT_SCENE_LIST_CHANGED = 9
+    OBS_FRONTEND_EVENT_TRANSITION_CHANGED = 10
+    OBS_FRONTEND_EVENT_TRANSITION_STOPPED = 11
+    OBS_FRONTEND_EVENT_TRANSITION_LIST_CHANGED = 12
+    OBS_FRONTEND_EVENT_SCENE_COLLECTION_CHANGED = 13
+    OBS_FRONTEND_EVENT_SCENE_COLLECTION_LIST_CHANGED = 14
+    OBS_FRONTEND_EVENT_PROFILE_CHANGED = 15
+    OBS_FRONTEND_EVENT_PROFILE_LIST_CHANGED = 16
+    OBS_FRONTEND_EVENT_EXIT = 17
+    OBS_FRONTEND_EVENT_REPLAY_BUFFER_STARTING = 18
+    OBS_FRONTEND_EVENT_REPLAY_BUFFER_STARTED = 19
+    OBS_FRONTEND_EVENT_REPLAY_BUFFER_STOPPING = 20
+    OBS_FRONTEND_EVENT_REPLAY_BUFFER_STOPPED = 21
+    OBS_FRONTEND_EVENT_STUDIO_MODE_ENABLED = 22
+    OBS_FRONTEND_EVENT_STUDIO_MODE_DISABLED = 23
+    OBS_FRONTEND_EVENT_PREVIEW_SCENE_CHANGED = 24
+    OBS_FRONTEND_EVENT_SCENE_COLLECTION_CLEANUP = 25
+    OBS_FRONTEND_EVENT_FINISHED_LOADING = 26
+    OBS_FRONTEND_EVENT_RECORDING_PAUSED = 27
+    OBS_FRONTEND_EVENT_RECORDING_UNPAUSED = 28
+    OBS_FRONTEND_EVENT_TRANSITION_DURATION_CHANGED = 29
+    OBS_FRONTEND_EVENT_REPLAY_BUFFER_SAVED = 30
+    OBS_FRONTEND_EVENT_VIRTUALCAM_STARTED = 31
+    OBS_FRONTEND_EVENT_VIRTUALCAM_STOPPED = 32
+    OBS_FRONTEND_EVENT_TBAR_VALUE_CHANGED = 33
+    OBS_FRONTEND_EVENT_SCENE_COLLECTION_CHANGING = 34
+    OBS_FRONTEND_EVENT_PROFILE_CHANGING = 35
+    OBS_FRONTEND_EVENT_SCRIPTING_SHUTDOWN = 36
+    OBS_FRONTEND_EVENT_PROFILE_RENAMED = 37
+    OBS_FRONTEND_EVENT_SCENE_COLLECTION_RENAMED = 38
+    OBS_FRONTEND_EVENT_THEME_CHANGED = 39
+    OBS_FRONTEND_EVENT_SCREENSHOT_TAKEN = 40
+
+
 ags_data = AGSGameData()
 
 proc = None
@@ -847,9 +893,22 @@ def start_qa(props, property):
     gameutil.run_steam_game(ags_data.window_name, ags_data.steam_gameid)
 
 def on_frontend_finished_loading(event):
-    obs.script_log(obs.LOG_DEBUG, "on_frontend_finished_loading: ")
+    msg = "on_frontend_finished_loading: "+ obs_frontend_event(event).name
+    obs.script_log(obs.LOG_DEBUG, msg)
     if event == obs.OBS_FRONTEND_EVENT_FINISHED_LOADING:
         setup_needs()
+    elif event == obs.OBS_FRONTEND_EVENT_RECORDING_STARTING:
+        obs.script_log(obs.LOG_DEBUG, "Recording Starting")
+    elif event == obs.OBS_FRONTEND_EVENT_RECORDING_STARTED:
+        obs.script_log(obs.LOG_DEBUG, "Recording Started")
+    elif event == obs.OBS_FRONTEND_EVENT_RECORDING_STOPPING:
+        obs.script_log(obs.LOG_DEBUG, "Recording Stopping")
+    elif event == obs.OBS_FRONTEND_EVENT_RECORDING_STOPPED:
+        obs.script_log(obs.LOG_DEBUG, "Recording Stopped")
+    elif event == obs.OBS_FRONTEND_EVENT_RECORDING_PAUSED:
+        obs.script_log(obs.LOG_DEBUG, "Recording Paused")
+    elif event == obs.OBS_FRONTEND_EVENT_RECORDING_UNPAUSED:
+        obs.script_log(obs.LOG_DEBUG, "Recording Unpaused")
 
 def print_video_settings(props, property):
     print("print_video_settings")
