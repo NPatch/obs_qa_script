@@ -982,6 +982,7 @@ def print_video_settings(props, property):
 def script_unload():
     obs.script_log(obs.LOG_DEBUG, "script_unload")
     #unset_signals()    global proc
+    obs.obs_frontend_remove_event_callback(on_frontend_finished_loading)
     global proc
     if proc is not None:
         proc.kill()
