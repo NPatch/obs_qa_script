@@ -5,7 +5,8 @@ import os
 import json
 import psutil
 import subprocess
-import win32gui
+import win32gui, win32process
+
 
 # oldskies_scene_name = "Old Skies Scene"
 # oldskies_scene_source_name = "Old Skies"
@@ -80,7 +81,7 @@ class obsutil:
 
         * Uses [obs_scene_create](https://docs.obsproject.com/reference-scenes#c.obs_scene_create), which doesn't require release.
         """
-        scene_ref = find_scene(scene_name)
+        scene_ref = obsutil.find_scene(scene_name)
         if scene_ref is None:
             obs.script_log(obs.LOG_INFO, "Scene does not exist. Will create.")
             scene_ref = obs.obs_scene_create(scene_name)
@@ -103,12 +104,12 @@ class obsutil:
 
     @staticmethod
     def print_scene_info(scene_name: str):
-        scene_ref = find_scene(scene_name)
+        scene_ref = obsutil.find_scene(scene_name)
         if scene_ref is None:
             print('Scene does not exist')
         scene_ref = obs.obs_scene_get_ref(scene_ref)
         source_ref = obs.obs_scene_get_source(scene_ref)
-        print_source_info(source_ref)
+        obsutil.print_source_info(source_ref)
         obs.obs_scene_release(scene_ref)
 
     @staticmethod
@@ -138,7 +139,7 @@ class obsutil:
         source_property_display_name = obs.obs_property_description(property)
         print("\t\tSource Property Display Name: "+source_property_display_name)
         source_property_type = obs.obs_property_get_type(property)
-        print("\t\tSource Property Type: "+source_property_types[source_property_type])
+        print("\t\tSource Property Type: "+obsutil.source_property_types[source_property_type])
         if source_property_type == obs.OBS_PROPERTY_LIST:
             list_type = obs.obs_property_list_type(property)
             print("\t\t\tProperty Type " + str(list_type))
@@ -158,7 +159,7 @@ class obsutil:
     @staticmethod
     def enum_scene_items(scene_name: str):
         #walk_scene_items_in_current_source()
-        scene_ref = find_scene(scene_name)
+        scene_ref = obsutil.find_scene(scene_name)
         if(scene_ref is None):
             print('scene var is None')
             return
@@ -239,8 +240,8 @@ class obsutil:
 
         * Uses `find_scene_item(scene_ref, source_name: str)`, which doesn't increment the ref count
         """
-        scene_ref = find_scene(scene_name)
-        scene_item = find_scene_item(scene_ref, source_name)
+        scene_ref = obsutil.find_scene(scene_name)
+        scene_item = obsutil.find_scene_item(scene_ref, source_name)
         return scene_item
 
     class HookRate(Enum):
@@ -474,7 +475,7 @@ class gameutil:
     '''
 
     @staticmethod
-    def run_steam_game(game_name: str, game_steam_gameid: int):
+    def run_steam_game(game_name: str, game_steam_gameid: str):
         """
         Runs a steam game, given its steam gameid.
         """
@@ -482,6 +483,11 @@ class gameutil:
         steamCommand = "steam"
         steamGameParameter = "steam://rungameid/"+str(game_steam_gameid)
         subprocess.call([steamCommand, steamGameParameter])
+
+    @staticmethod
+    def run_game(game_executable: str):
+        obs.script_log(obs.LOG_INFO, "Running" + game_executable)
+        subprocess.call([game_executable])
 
     @staticmethod
     def check_if_process_running(processName: str) -> bool:
@@ -513,7 +519,7 @@ class gameutil:
         for proc in psutil.process_iter():
             try:
                 # Check if process name contains the given name string.
-                if processName.lower() == proc.name().lower() :
+                if proc.name().lower() in processName.lower() :
                     listOfProcessObjects.append(proc)
             except (psutil.NoSuchProcess, psutil.AccessDenied , psutil.ZombieProcess) :
                 pass
@@ -584,6 +590,9 @@ class GameData:
     @property
     def game_capture_window_string(self): 
         return "{winname}:{winclass}:{exename}".format(winname=self.window_name,winclass=self.window_class, exename=self.exe_name)
+    
+    def get_game_capture_window_string(self, process): 
+        return "{winname}:{winclass}:{exename}".format(winname=self.window_name,winclass=self.window_class, exename=process.name())
 
     def __init__(self):
         self.scene_name = ""
@@ -700,12 +709,12 @@ def script_defaults(settings):
     obs.script_log(obs.LOG_DEBUG, "script_defaults")
     obs.obs_data_set_default_string(settings, "scene_name", "")
     obs.obs_data_set_default_string(settings, "source_name", "")
-    obs.obs_data_set_default_int(settings, "steam_gameid", 0)
+    obs.obs_data_set_default_string(settings, "steam_gameid", "0")
     obs.obs_data_set_default_string(settings, "exe_name", "")
     obs.obs_data_set_default_string(settings, "win_name", "")
     obs.obs_data_set_default_string(settings, "win_class", "")
     obs.obs_data_set_default_string(settings, "crash_win_name", "")
-    obs.obs_data_set_default_string(settings, "crash_win_name", "")
+    obs.obs_data_set_default_string(settings, "crash_win_class", "")
 
 def script_load(settings):
     obs.script_log(obs.LOG_DEBUG, "script_load")
@@ -725,7 +734,6 @@ def script_properties():
     obs.obs_properties_add_text(props, "crash_win_class", "Crash Window Class", obs.OBS_TEXT_DEFAULT)
 
     obs.obs_properties_add_button(props, "button0", "Start QA",start_qa)
-    obs.obs_properties_add_button(props, "button1", "Check Video Settings",print_video_settings)
 
     return props
 
@@ -833,39 +841,45 @@ def source_deactivated_callback(calldata):
     obs.script_log(obs.LOG_INFO, "deactivated: ", obs.obs_source_get_name(source))
 
 def game_hooked_callback(calldata):
-    source = obs.calldata_source(calldata,"source")
+    source_ref = obs.calldata_source(calldata,"source")
     game_title = obs.calldata_string(calldata,"title")
     game_class = obs.calldata_string(calldata,"class")
     game_executable = obs.calldata_string(calldata,"executable")
-    msg = "hooked: {source_name}, game_title: {game_title}, game_class: {game_class}, game_executable: {game_executable}".format(source_name=obs.obs_source_get_name(source),game_title=
+    msg = "hooked: {source_name}, game_title: {game_title}, game_class: {game_class}, game_executable: {game_executable}".format(source_name=obs.obs_source_get_name(source_ref),game_title=
     game_title, game_class=game_class, game_executable=game_executable)
     obs.script_log(obs.LOG_INFO, msg)
 
-    # source_ref = obs.obs_sceneitem_get_source(scene_item_ref)
-    # signal_handler = obs.obs_source_get_signal_handler(source_ref)
-    # obs.signal_handler_disconnect(signal_handler,"hooked",game_hooked_callback)
-    # obs.signal_handler_connect(signal_handler,"unhooked",game_unhooked_callback)
+    source_width = obs.obs_source_get_width(source_ref)
+    source_height = obs.obs_source_get_height(source_ref)
+
+    print("Window Res: ", source_width, "x", source_height)
+
+    # obsutil.config_set_base_resolution(source_width, source_height)
+    # obsutil.config_set_output_resolution(source_width, source_height)
+    # obsutil.set_rescale_resolution()
+
+    #output = obs.obs_frontend_get_recording_output()
+    #obs.obs_output_set_preferred_size(output, source_width, source_height)
+    #obs.obs_output_release(output)
+    
+    scene_ref = obsutil.find_scene(ags_data.scene_name)
+    scene_item_ref = obsutil.find_scene_item(scene_ref, ags_data.source_name)
+    obsutil.reset_transform_and_crop(scene_item_ref, source_width, source_height)
+
     global proc
-    proc = gameutil.find_processid_by_name(ags_data.exe_name)
-
-
+    if proc is None:
+        proc = gameutil.find_processid_by_name(ags_data.exe_name)
 
 def game_unhooked_callback(calldata):
     source = obs.calldata_source(calldata,"source")
     obs.script_log(obs.LOG_INFO, "unhooked: "+ obs.obs_source_get_name(source))
 
     global proc
-    proc_state = did_qa_crash(proc)
-    if proc_state:
-        obs.script_log(obs.LOG_ERROR, "Application Crashed")
-    proc = None
-
-    # scene_ref = obsutil.find_scene(oldskies_scene_name)
-    # scene_item_ref = obsutil.find_scene_item(scene_ref, oldskies_scene_source_name)
-    # source_ref = obs.obs_sceneitem_get_source(scene_item_ref)
-    # signal_handler = obs.obs_source_get_signal_handler(source_ref)
-    # obs.signal_handler_disconnect(signal_handler,"unhooked",game_unhooked_callback)
-    unset_signals()
+    if proc is not None:
+        proc_state = did_qa_crash(proc)
+        if proc_state:
+            obs.script_log(obs.LOG_ERROR, "Application Crashed")
+        proc = None
 
 def did_qa_crash(proc: psutil.Process) -> bool:
     app_status = None
@@ -880,6 +894,42 @@ def did_qa_crash(proc: psutil.Process) -> bool:
         elif app_status == psutil.STATUS_DEAD:
             #obs.script_log(obs.LOG_INFO, "App Exited")
             return False
+    return False
+
+def findWindow(pid):
+    found_hwnd = None
+    def enumHandler(hwnd, lParam):
+        if win32gui.IsWindowVisible(hwnd):
+            thread_id, process_id = win32process.GetWindowThreadProcessId(hwnd)
+            if(process_id == pid):
+                nonlocal found_hwnd
+                found_hwnd = hwnd
+
+    win32gui.EnumWindows(enumHandler, None)
+    return found_hwnd
+
+def find_proc():
+    global proc
+    global ags_data
+    proc = gameutil.find_processid_by_name(ags_data.exe_name)
+    if proc is not None:
+        #print("process found: "+ str(proc.pid))
+        game_hwnd = findWindow(proc.pid)
+
+        ags_data.window_name = win32gui.GetWindowText(game_hwnd)
+        ags_data.window_class = win32gui.GetClassName(game_hwnd)
+        window_string = ags_data.get_game_capture_window_string(proc)
+        #print("Discovered window name: "+ags_data.window_name)
+
+        scene_ref = obsutil.find_scene(ags_data.scene_name)
+        scene_item_ref = obsutil.find_scene_item(scene_ref, ags_data.source_name)
+        source_ref = obs.obs_sceneitem_get_source(scene_item_ref)
+        settings = obs.obs_source_get_settings(source_ref)
+
+        obs.obs_data_set_string(settings, "window", window_string)
+        obs.obs_source_update(source_ref, settings)
+        obs.obs_data_release(settings)
+    obs.remove_current_callback()
 
 def start_qa(props, property):
     obs.script_log(obs.LOG_DEBUG, "start_qa")
@@ -892,6 +942,8 @@ def start_qa(props, property):
     
     gameutil.run_steam_game(ags_data.window_name, ags_data.steam_gameid)
 
+obs.timer_add(find_proc, 4000)
+    
 def on_frontend_finished_loading(event):
     msg = "on_frontend_finished_loading: "+ obs_frontend_event(event).name
     obs.script_log(obs.LOG_DEBUG, msg)
@@ -929,4 +981,7 @@ def print_video_settings(props, property):
 
 def script_unload():
     obs.script_log(obs.LOG_DEBUG, "script_unload")
-    #unset_signals()
+    #unset_signals()    global proc
+    global proc
+    if proc is not None:
+        proc.kill()
