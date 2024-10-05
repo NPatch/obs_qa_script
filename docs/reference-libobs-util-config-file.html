@@ -1,0 +1,1070 @@
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" data-content_root="./">
+<head>
+  <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Config Files &mdash; OBS Studio 27.2.0 documentation</title>
+      <link rel="stylesheet" type="text/css" href="_static/pygments.css?v=fa44fd50" />
+      <link rel="stylesheet" type="text/css" href="_static/css/theme.css?v=19f00094" />
+      <link rel="stylesheet" type="text/css" href="_static/css/custom.css?v=a336fdc4" />
+
+  
+    <link rel="shortcut icon" href="_static/favicon.ico"/>
+  <!--[if lt IE 9]>
+    <script src="_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+        <script src="_static/jquery.js?v=5d32c60e"></script>
+        <script src="_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+        <script src="_static/documentation_options.js?v=358611a8"></script>
+        <script src="_static/doctools.js?v=9a2dae69"></script>
+        <script src="_static/sphinx_highlight.js?v=dc90522c"></script>
+    <script src="_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
+    <link rel="next" title="Dynamic Arrays" href="reference-libobs-util-darray.html" />
+    <link rel="prev" title="Circular Buffers" href="reference-libobs-util-circlebuf.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search"  style="background: #202C73" >
+
+          
+          
+          <a href="index.html">
+            
+              <img src="_static/logo.svg" class="logo" alt="Logo"/>
+          </a>
+              <div class="version">
+                27.2.0
+              </div>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">Core Concepts</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="backend-design.html">OBS Studio Backend Design</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="backend-design.html#libobs-plugin-objects">Libobs Plugin Objects</a></li>
+<li class="toctree-l2"><a class="reference internal" href="backend-design.html#libobs-threads">Libobs Threads</a></li>
+<li class="toctree-l2"><a class="reference internal" href="backend-design.html#output-channels">Output Channels</a></li>
+<li class="toctree-l2"><a class="reference internal" href="backend-design.html#general-video-pipeline-overview">General Video Pipeline Overview</a></li>
+<li class="toctree-l2"><a class="reference internal" href="backend-design.html#general-audio-pipeline-overview">General Audio Pipeline Overview</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="plugins.html">Plugins</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="plugins.html#plugin-module-headers">Plugin Module Headers</a></li>
+<li class="toctree-l2"><a class="reference internal" href="plugins.html#common-directory-structure-and-cmakelists-txt">Common Directory Structure and CMakeLists.txt</a></li>
+<li class="toctree-l2"><a class="reference internal" href="plugins.html#native-plugin-initialization">Native Plugin Initialization</a></li>
+<li class="toctree-l2"><a class="reference internal" href="plugins.html#sources">Sources</a></li>
+<li class="toctree-l2"><a class="reference internal" href="plugins.html#outputs">Outputs</a></li>
+<li class="toctree-l2"><a class="reference internal" href="plugins.html#encoders">Encoders</a></li>
+<li class="toctree-l2"><a class="reference internal" href="plugins.html#services">Services</a></li>
+<li class="toctree-l2"><a class="reference internal" href="plugins.html#settings">Settings</a></li>
+<li class="toctree-l2"><a class="reference internal" href="plugins.html#properties">Properties</a></li>
+<li class="toctree-l2"><a class="reference internal" href="plugins.html#localization">Localization</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="frontends.html">Frontends</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="frontends.html#initialization-and-shutdown">Initialization and Shutdown</a></li>
+<li class="toctree-l2"><a class="reference internal" href="frontends.html#reconfiguring-video">Reconfiguring Video</a></li>
+<li class="toctree-l2"><a class="reference internal" href="frontends.html#displays">Displays</a></li>
+<li class="toctree-l2"><a class="reference internal" href="frontends.html#saving-loading-objects-and-object-management">Saving/Loading Objects and Object Management</a></li>
+<li class="toctree-l2"><a class="reference internal" href="frontends.html#signals">Signals</a></li>
+<li class="toctree-l2"><a class="reference internal" href="frontends.html#displaying-sources">Displaying Sources</a></li>
+<li class="toctree-l2"><a class="reference internal" href="frontends.html#outputs-encoders-and-services">Outputs, Encoders, and Services</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="graphics.html">Rendering Graphics</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="graphics.html#the-graphics-context">The Graphics Context</a></li>
+<li class="toctree-l2"><a class="reference internal" href="graphics.html#creating-effects">Creating Effects</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="graphics.html#effect-parameters">Effect Parameters</a></li>
+<li class="toctree-l3"><a class="reference internal" href="graphics.html#effect-sampler-states">Effect Sampler States</a></li>
+<li class="toctree-l3"><a class="reference internal" href="graphics.html#effect-vertex-pixel-semantics">Effect Vertex/Pixel Semantics</a></li>
+<li class="toctree-l3"><a class="reference internal" href="graphics.html#effect-techniques">Effect Techniques</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="graphics.html#using-effects">Using Effects</a></li>
+<li class="toctree-l2"><a class="reference internal" href="graphics.html#rendering-video-sources">Rendering Video Sources</a></li>
+<li class="toctree-l2"><a class="reference internal" href="graphics.html#rendering-video-effect-filters">Rendering Video Effect Filters</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="scripting.html">Python/Lua Scripting</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="scripting.html#script-function-exports">Script Function Exports</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="scripting.html#script_description"><code class="docutils literal notranslate"><span class="pre">script_description()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="scripting.html#script_load"><code class="docutils literal notranslate"><span class="pre">script_load()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="scripting.html#script_unload"><code class="docutils literal notranslate"><span class="pre">script_unload()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="scripting.html#script_save"><code class="docutils literal notranslate"><span class="pre">script_save()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="scripting.html#script_defaults"><code class="docutils literal notranslate"><span class="pre">script_defaults()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="scripting.html#script_update"><code class="docutils literal notranslate"><span class="pre">script_update()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="scripting.html#script_properties"><code class="docutils literal notranslate"><span class="pre">script_properties()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="scripting.html#script_tick"><code class="docutils literal notranslate"><span class="pre">script_tick()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="scripting.html#getting-the-current-script-s-path">Getting the Current Script’s Path</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="scripting.html#script_path"><code class="docutils literal notranslate"><span class="pre">script_path()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="scripting.html#script-timers">Script Timers</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="scripting.html#timer_add"><code class="docutils literal notranslate"><span class="pre">timer_add()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="scripting.html#timer_remove"><code class="docutils literal notranslate"><span class="pre">timer_remove()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="scripting.html#script-sources-lua-only">Script Sources (Lua Only)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="scripting.html#other-differences-from-the-c-api">Other Differences From the C API</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="scripting.html#obs_enum_sources"><code class="docutils literal notranslate"><span class="pre">obs_enum_sources()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="scripting.html#obs_scene_enum_items"><code class="docutils literal notranslate"><span class="pre">obs_scene_enum_items()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="scripting.html#obs_sceneitem_group_enum_items"><code class="docutils literal notranslate"><span class="pre">obs_sceneitem_group_enum_items()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="scripting.html#obs_add_main_render_callback"><code class="docutils literal notranslate"><span class="pre">obs_add_main_render_callback()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="scripting.html#obs_remove_main_render_callback"><code class="docutils literal notranslate"><span class="pre">obs_remove_main_render_callback()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="scripting.html#signal_handler_connect"><code class="docutils literal notranslate"><span class="pre">signal_handler_connect()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="scripting.html#signal_handler_disconnect"><code class="docutils literal notranslate"><span class="pre">signal_handler_disconnect()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="scripting.html#signal_handler_connect_global"><code class="docutils literal notranslate"><span class="pre">signal_handler_connect_global()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="scripting.html#signal_handler_disconnect_global"><code class="docutils literal notranslate"><span class="pre">signal_handler_disconnect_global()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="scripting.html#obs_hotkey_register_frontend"><code class="docutils literal notranslate"><span class="pre">obs_hotkey_register_frontend()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="scripting.html#obs_hotkey_unregister"><code class="docutils literal notranslate"><span class="pre">obs_hotkey_unregister()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="scripting.html#obs_properties_add_button"><code class="docutils literal notranslate"><span class="pre">obs_properties_add_button()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="scripting.html#remove_current_callback"><code class="docutils literal notranslate"><span class="pre">remove_current_callback()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="scripting.html#source_list_release"><code class="docutils literal notranslate"><span class="pre">source_list_release()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="scripting.html#sceneitem_list_release"><code class="docutils literal notranslate"><span class="pre">sceneitem_list_release()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="scripting.html#calldata_source"><code class="docutils literal notranslate"><span class="pre">calldata_source()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="scripting.html#calldata_sceneitem"><code class="docutils literal notranslate"><span class="pre">calldata_sceneitem()</span></code></a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">API Reference</span></p>
+<ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="reference-core.html">OBS Core</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="reference-core.html#initialization-shutdown-and-information">Initialization, Shutdown, and Information</a></li>
+<li class="toctree-l2"><a class="reference internal" href="reference-core.html#libobs-objects">Libobs Objects</a></li>
+<li class="toctree-l2"><a class="reference internal" href="reference-core.html#video-audio-and-graphics">Video, Audio, and Graphics</a></li>
+<li class="toctree-l2"><a class="reference internal" href="reference-core.html#primary-signal-procedure-handlers">Primary signal/procedure handlers</a></li>
+<li class="toctree-l2"><a class="reference internal" href="reference-core.html#core-obs-signals">Core OBS Signals</a></li>
+<li class="toctree-l2"><a class="reference internal" href="reference-core.html#displays">Displays</a></li>
+<li class="toctree-l2"><a class="reference internal" href="reference-core.html#views">Views</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="reference-modules.html">Modules</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="reference-modules.html#module-macros">Module Macros</a></li>
+<li class="toctree-l2"><a class="reference internal" href="reference-modules.html#module-exports">Module Exports</a></li>
+<li class="toctree-l2"><a class="reference internal" href="reference-modules.html#module-externs">Module Externs</a></li>
+<li class="toctree-l2"><a class="reference internal" href="reference-modules.html#frontend-module-functions">Frontend Module Functions</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="reference-core-objects.html">Core API Object</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="reference-sources.html">Sources (obs_source_t)</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="reference-sources.html#source-definition-structure-obs-source-info">Source Definition Structure (obs_source_info)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="reference-sources.html#common-source-signals">Common Source Signals</a></li>
+<li class="toctree-l3"><a class="reference internal" href="reference-sources.html#source-specific-signals">Source-specific Signals</a></li>
+<li class="toctree-l3"><a class="reference internal" href="reference-sources.html#source-specific-procedures">Source-specific Procedures</a></li>
+<li class="toctree-l3"><a class="reference internal" href="reference-sources.html#general-source-functions">General Source Functions</a></li>
+<li class="toctree-l3"><a class="reference internal" href="reference-sources.html#functions-used-by-sources">Functions used by sources</a></li>
+<li class="toctree-l3"><a class="reference internal" href="reference-sources.html#filters">Filters</a></li>
+<li class="toctree-l3"><a class="reference internal" href="reference-sources.html#functions-used-by-filters">Functions used by filters</a></li>
+<li class="toctree-l3"><a class="reference internal" href="reference-sources.html#transitions">Transitions</a></li>
+<li class="toctree-l3"><a class="reference internal" href="reference-sources.html#functions-used-by-transitions">Functions used by transitions</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="reference-scenes.html">Scenes (obs_scene_t)</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="reference-scenes.html#scene-item-transform-structure-obs-transform-info">Scene Item Transform Structure (obs_transform_info)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="reference-scenes.html#scene-item-crop-structure-obs-sceneitem-crop">Scene Item Crop Structure (obs_sceneitem_crop)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="reference-scenes.html#scene-item-order-info-structure-obs-sceneitem-order-info">Scene Item Order Info Structure (*obs_sceneitem_order_info)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="reference-scenes.html#scene-signals">Scene Signals</a></li>
+<li class="toctree-l3"><a class="reference internal" href="reference-scenes.html#general-scene-functions">General Scene Functions</a></li>
+<li class="toctree-l3"><a class="reference internal" href="reference-scenes.html#scene-item-functions">Scene Item Functions</a></li>
+<li class="toctree-l3"><a class="reference internal" href="reference-scenes.html#scene-item-group-functions">Scene Item Group Functions</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="reference-outputs.html">Outputs (obs_output_t)</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="reference-outputs.html#output-definition-structure-obs-output-info">Output Definition Structure (obs_output_info)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="reference-outputs.html#output-signals">Output Signals</a></li>
+<li class="toctree-l3"><a class="reference internal" href="reference-outputs.html#general-output-functions">General Output Functions</a></li>
+<li class="toctree-l3"><a class="reference internal" href="reference-outputs.html#functions-used-by-outputs">Functions used by outputs</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="reference-encoders.html">Encoders (obs_encoder_t)</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="reference-encoders.html#encoder-definition-structure-obs-encoder-info">Encoder Definition Structure (obs_encoder_info)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="reference-encoders.html#encoder-packet-structure-encoder-packet">Encoder Packet Structure (encoder_packet)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="reference-encoders.html#raw-frame-data-structure-encoder-frame">Raw Frame Data Structure (encoder_frame)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="reference-encoders.html#encoder-region-of-interest-structure-obs-encoder-roi">Encoder Region of Interest Structure (obs_encoder_roi)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="reference-encoders.html#general-encoder-functions">General Encoder Functions</a></li>
+<li class="toctree-l3"><a class="reference internal" href="reference-encoders.html#functions-used-by-encoders">Functions used by encoders</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="reference-services.html">Services (obs_service_t)</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="reference-services.html#service-definition-structure">Service Definition Structure</a></li>
+<li class="toctree-l3"><a class="reference internal" href="reference-services.html#general-service-functions">General Service Functions</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="reference-settings.html">Data Settings (obs_data_t)</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="reference-settings.html#general-functions">General Functions</a></li>
+<li class="toctree-l3"><a class="reference internal" href="reference-settings.html#set-functions">Set Functions</a></li>
+<li class="toctree-l3"><a class="reference internal" href="reference-settings.html#get-functions">Get Functions</a></li>
+<li class="toctree-l3"><a class="reference internal" href="reference-settings.html#default-value-functions">Default Value Functions</a></li>
+<li class="toctree-l3"><a class="reference internal" href="reference-settings.html#autoselect-functions">Autoselect Functions</a></li>
+<li class="toctree-l3"><a class="reference internal" href="reference-settings.html#array-functions">Array Functions</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="reference-properties.html">Properties (obs_properties_t)</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="reference-properties.html#general-functions">General Functions</a></li>
+<li class="toctree-l3"><a class="reference internal" href="reference-properties.html#property-object-functions">Property Object Functions</a></li>
+<li class="toctree-l3"><a class="reference internal" href="reference-properties.html#property-enumeration-functions">Property Enumeration Functions</a></li>
+<li class="toctree-l3"><a class="reference internal" href="reference-properties.html#property-modification-functions">Property Modification Functions</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1 current"><a class="reference internal" href="reference-libobs-util.html">Platform/Utility</a><ul class="current">
+<li class="toctree-l2"><a class="reference internal" href="reference-libobs-util-base.html">Logging</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="reference-libobs-util-base.html#logging-levels">Logging Levels</a></li>
+<li class="toctree-l3"><a class="reference internal" href="reference-libobs-util-base.html#logging-functions">Logging Functions</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="reference-libobs-util-bmem.html">Memory Management</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="reference-libobs-util-bmem.html#memory-functions">Memory Functions</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="reference-libobs-util-circlebuf.html">Circular Buffers</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="reference-libobs-util-circlebuf.html#circular-buffer-structure-struct-circlebuf">Circular Buffer Structure (struct circlebuf)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="reference-libobs-util-circlebuf.html#circular-buffer-inline-functions">Circular Buffer Inline Functions</a></li>
+</ul>
+</li>
+<li class="toctree-l2 current"><a class="current reference internal" href="#">Config Files</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#config-file-functions">Config File Functions</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#set-get-functions">Set/Get Functions</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#default-value-functions">Default Value Functions</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="reference-libobs-util-darray.html">Dynamic Arrays</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="reference-libobs-util-darray.html#dynamic-array-macros">Dynamic Array Macros</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="reference-libobs-util-deque.html">Double-Ended Queue</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="reference-libobs-util-deque.html#deque-structure-struct-deque">Deque Structure (struct deque)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="reference-libobs-util-deque.html#deque-inline-functions">Deque Inline Functions</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="reference-libobs-util-dstr.html">Dynamic Strings And String Helpers</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="reference-libobs-util-dstr.html#dynamic-string-structure-struct-dstr">Dynamic String Structure (struct dstr)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="reference-libobs-util-dstr.html#general-string-helper-functions">General String Helper Functions</a></li>
+<li class="toctree-l3"><a class="reference internal" href="reference-libobs-util-dstr.html#dynamic-string-functions">Dynamic String Functions</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="reference-libobs-util-platform.html">Platform Helpers</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="reference-libobs-util-platform.html#file-functions">File Functions</a></li>
+<li class="toctree-l3"><a class="reference internal" href="reference-libobs-util-platform.html#string-conversion-functions">String Conversion Functions</a></li>
+<li class="toctree-l3"><a class="reference internal" href="reference-libobs-util-platform.html#number-string-conversion-functions">Number/String Conversion Functions</a></li>
+<li class="toctree-l3"><a class="reference internal" href="reference-libobs-util-platform.html#dynamic-link-library-functions">Dynamic Link Library Functions</a></li>
+<li class="toctree-l3"><a class="reference internal" href="reference-libobs-util-platform.html#cpu-usage-functions">CPU Usage Functions</a></li>
+<li class="toctree-l3"><a class="reference internal" href="reference-libobs-util-platform.html#sleep-time-functions">Sleep/Time Functions</a></li>
+<li class="toctree-l3"><a class="reference internal" href="reference-libobs-util-platform.html#other-path-file-functions">Other Path/File Functions</a></li>
+<li class="toctree-l3"><a class="reference internal" href="reference-libobs-util-platform.html#sleep-inhibition-functions">Sleep-Inhibition Functions</a></li>
+<li class="toctree-l3"><a class="reference internal" href="reference-libobs-util-platform.html#other-functions">Other Functions</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="reference-libobs-util-profiler.html">Profiler</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="reference-libobs-util-profiler.html#profiler-structures">Profiler Structures</a></li>
+<li class="toctree-l3"><a class="reference internal" href="reference-libobs-util-profiler.html#profiler-control-functions">Profiler Control Functions</a></li>
+<li class="toctree-l3"><a class="reference internal" href="reference-libobs-util-profiler.html#profiling-functions">Profiling Functions</a></li>
+<li class="toctree-l3"><a class="reference internal" href="reference-libobs-util-profiler.html#profiler-name-storage-functions">Profiler Name Storage Functions</a></li>
+<li class="toctree-l3"><a class="reference internal" href="reference-libobs-util-profiler.html#profiler-data-access-functions">Profiler Data Access Functions</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="reference-libobs-util-serializers.html">Serializer</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="reference-libobs-util-serializers.html#serializer-structure-struct-serializer">Serializer Structure (struct serializer)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="reference-libobs-util-serializers.html#serializer-inline-functions">Serializer Inline Functions</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="reference-libobs-util-serializers.html#array-output-serializer">Array Output Serializer</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="reference-libobs-util-serializers.html#array-output-serializer-structure-struct-array-output-data">Array Output Serializer Structure (struct array_output_data)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="reference-libobs-util-serializers.html#array-output-serializer-functions">Array Output Serializer Functions</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="reference-libobs-util-serializers.html#file-input-output-serializers">File Input/Output Serializers</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="reference-libobs-util-serializers.html#file-input-serializer-functions">File Input Serializer Functions</a></li>
+<li class="toctree-l3"><a class="reference internal" href="reference-libobs-util-serializers.html#file-output-serializer-functions">File Output Serializer Functions</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="reference-libobs-util-serializers.html#buffered-file-output-serializer">Buffered File Output Serializer</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="reference-libobs-util-serializers.html#buffered-file-output-serializer-functions">Buffered File Output Serializer Functions</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="reference-libobs-util-text-lookup.html">Text Lookup Interface</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="reference-libobs-util-text-lookup.html#text-lookup-functions">Text Lookup Functions</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="reference-libobs-util-threading.html">Threading</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="reference-libobs-util-threading.html#threading-types">Threading Types</a></li>
+<li class="toctree-l3"><a class="reference internal" href="reference-libobs-util-threading.html#general-thread-functions">General Thread Functions</a></li>
+<li class="toctree-l3"><a class="reference internal" href="reference-libobs-util-threading.html#event-functions">Event Functions</a></li>
+<li class="toctree-l3"><a class="reference internal" href="reference-libobs-util-threading.html#semaphore-functions">Semaphore Functions</a></li>
+<li class="toctree-l3"><a class="reference internal" href="reference-libobs-util-threading.html#atomic-inline-functions">Atomic Inline Functions</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="reference-libobs-callback.html">Callbacks (libobs/callback)</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="reference-libobs-callback.html#calldata">Calldata</a></li>
+<li class="toctree-l2"><a class="reference internal" href="reference-libobs-callback.html#signals">Signals</a></li>
+<li class="toctree-l2"><a class="reference internal" href="reference-libobs-callback.html#procedure-handlers">Procedure Handlers</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="reference-libobs-graphics.html">Graphics (libobs/graphics)</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="reference-libobs-graphics-effects.html">Effects (Shaders)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="reference-libobs-graphics-vec2.html">2-Component Vector</a></li>
+<li class="toctree-l2"><a class="reference internal" href="reference-libobs-graphics-vec3.html">3-Component Vector</a></li>
+<li class="toctree-l2"><a class="reference internal" href="reference-libobs-graphics-vec4.html">4-Component Vector</a></li>
+<li class="toctree-l2"><a class="reference internal" href="reference-libobs-graphics-quat.html">Quaternion</a></li>
+<li class="toctree-l2"><a class="reference internal" href="reference-libobs-graphics-matrix4.html">Matrix</a></li>
+<li class="toctree-l2"><a class="reference internal" href="reference-libobs-graphics-math.html">Extra Math Functions/Macros</a></li>
+<li class="toctree-l2"><a class="reference internal" href="reference-libobs-graphics-image-file.html">Image File Helper</a></li>
+<li class="toctree-l2"><a class="reference internal" href="reference-libobs-graphics-axisang.html">Axis Angle</a></li>
+<li class="toctree-l2"><a class="reference internal" href="reference-libobs-graphics-graphics.html">Core Graphics API</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="reference-libobs-graphics-graphics.html#graphics-enumerations">Graphics Enumerations</a></li>
+<li class="toctree-l3"><a class="reference internal" href="reference-libobs-graphics-graphics.html#graphics-structures">Graphics Structures</a></li>
+<li class="toctree-l3"><a class="reference internal" href="reference-libobs-graphics-graphics.html#initialization-functions">Initialization Functions</a></li>
+<li class="toctree-l3"><a class="reference internal" href="reference-libobs-graphics-graphics.html#matrix-stack-functions">Matrix Stack Functions</a></li>
+<li class="toctree-l3"><a class="reference internal" href="reference-libobs-graphics-graphics.html#draw-functions">Draw Functions</a></li>
+<li class="toctree-l3"><a class="reference internal" href="reference-libobs-graphics-graphics.html#swap-chains">Swap Chains</a></li>
+<li class="toctree-l3"><a class="reference internal" href="reference-libobs-graphics-graphics.html#resource-loading">Resource Loading</a></li>
+<li class="toctree-l3"><a class="reference internal" href="reference-libobs-graphics-graphics.html#id1">Draw Functions</a></li>
+<li class="toctree-l3"><a class="reference internal" href="reference-libobs-graphics-graphics.html#texture-functions">Texture Functions</a></li>
+<li class="toctree-l3"><a class="reference internal" href="reference-libobs-graphics-graphics.html#cube-texture-functions">Cube Texture Functions</a></li>
+<li class="toctree-l3"><a class="reference internal" href="reference-libobs-graphics-graphics.html#staging-surface-functions">Staging Surface Functions</a></li>
+<li class="toctree-l3"><a class="reference internal" href="reference-libobs-graphics-graphics.html#z-stencil-functions">Z-Stencil Functions</a></li>
+<li class="toctree-l3"><a class="reference internal" href="reference-libobs-graphics-graphics.html#sampler-state-functions">Sampler State Functions</a></li>
+<li class="toctree-l3"><a class="reference internal" href="reference-libobs-graphics-graphics.html#vertex-buffer-functions">Vertex Buffer Functions</a></li>
+<li class="toctree-l3"><a class="reference internal" href="reference-libobs-graphics-graphics.html#index-buffer-functions">Index Buffer Functions</a></li>
+<li class="toctree-l3"><a class="reference internal" href="reference-libobs-graphics-graphics.html#display-duplicator-windows-only">Display Duplicator (Windows Only)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="reference-libobs-graphics-graphics.html#monitor-functions">Monitor Functions</a></li>
+<li class="toctree-l3"><a class="reference internal" href="reference-libobs-graphics-graphics.html#render-helper-functions">Render Helper Functions</a></li>
+<li class="toctree-l3"><a class="reference internal" href="reference-libobs-graphics-graphics.html#graphics-types">Graphics Types</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="reference-libobs-media-io.html">Media I/O (libobs/media-io)</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="reference-libobs-media-io.html#video-handler">Video Handler</a></li>
+<li class="toctree-l2"><a class="reference internal" href="reference-libobs-media-io.html#audio-handler">Audio Handler</a></li>
+<li class="toctree-l2"><a class="reference internal" href="reference-libobs-media-io.html#resampler">Resampler</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="reference-frontend-api.html">OBS Studio Frontend API</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="reference-frontend-api.html#structures-enumerations">Structures/Enumerations</a></li>
+<li class="toctree-l2"><a class="reference internal" href="reference-frontend-api.html#functions">Functions</a></li>
+</ul>
+</li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Additional Resources</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference external" href="https://obsproject.com/wiki/Install-Instructions">Build Instructions</a></li>
+<li class="toctree-l1"><a class="reference external" href="https://github.com/obsproject/obs-plugintemplate#obs-plugin-template">Plugin Template</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu"  style="background: #202C73" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="index.html">OBS Studio</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content style-external-links">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="index.html" class="icon icon-home" aria-label="Home"></a></li>
+          <li class="breadcrumb-item"><a href="reference-libobs-util.html">Platform/Utility API Reference (libobs/util)</a></li>
+      <li class="breadcrumb-item active">Config Files</li>
+      <li class="wy-breadcrumbs-aside">
+              <a href="https://github.com/OBSProject/obs-studio/edit/master/docs/sphinx/reference-libobs-util-config-file.rst" class="fa fa-github"> Edit on GitHub</a>
+      </li>
+  </ul><div class="rst-breadcrumbs-buttons" role="navigation" aria-label="Sequential page navigation">
+        <a href="reference-libobs-util-circlebuf.html" class="btn btn-neutral float-left" title="Circular Buffers" accesskey="p"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="reference-libobs-util-darray.html" class="btn btn-neutral float-right" title="Dynamic Arrays" accesskey="n">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+  </div>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <section id="config-files">
+<h1>Config Files<a class="headerlink" href="#config-files" title="Link to this heading"></a></h1>
+<p>The configuration file functions are a simple implementation of the INI
+file format, with the addition of default values.</p>
+<div class="highlight-cpp notranslate"><div class="highlight"><pre><span></span><span class="cp">#include</span><span class="w"> </span><span class="cpf">&lt;util/config-file.h&gt;</span>
+</pre></div>
+</div>
+<dl class="c type">
+<dt class="sig sig-object c" id="c.config_t">
+<span class="k"><span class="pre">type</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">config_t</span></span></span><a class="headerlink" href="#c.config_t" title="Link to this definition"></a><br /></dt>
+<dd></dd></dl>
+
+<section id="config-file-functions">
+<h2>Config File Functions<a class="headerlink" href="#config-file-functions" title="Link to this heading"></a></h2>
+<dl class="c function">
+<dt class="sig sig-object c" id="c.config_create">
+<a class="reference internal" href="#c.config_t" title="config_t"><span class="n"><span class="pre">config_t</span></span></a><span class="w"> </span><span class="p"><span class="pre">*</span></span><span class="sig-name descname"><span class="n"><span class="pre">config_create</span></span></span><span class="sig-paren">(</span><span class="k"><span class="pre">const</span></span><span class="w"> </span><span class="kt"><span class="pre">char</span></span><span class="w"> </span><span class="p"><span class="pre">*</span></span><span class="n"><span class="pre">file</span></span><span class="sig-paren">)</span><a class="headerlink" href="#c.config_create" title="Link to this definition"></a><br /></dt>
+<dd><p>Creates a new configuration object and associates it with the
+specified file name.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>file</strong> – Path to the new configuration file</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>A new configuration file object</p>
+</dd>
+</dl>
+</dd></dl>
+
+<hr class="docutils" />
+<dl class="c function">
+<dt class="sig sig-object c" id="c.config_open">
+<span class="kt"><span class="pre">int</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">config_open</span></span></span><span class="sig-paren">(</span><a class="reference internal" href="#c.config_t" title="config_t"><span class="n"><span class="pre">config_t</span></span></a><span class="w"> </span><span class="p"><span class="pre">*</span></span><span class="p"><span class="pre">*</span></span><span class="n"><span class="pre">config</span></span>, <span class="k"><span class="pre">const</span></span><span class="w"> </span><span class="kt"><span class="pre">char</span></span><span class="w"> </span><span class="p"><span class="pre">*</span></span><span class="n"><span class="pre">file</span></span>, <span class="k"><span class="pre">enum</span></span><span class="w"> </span><span class="n"><span class="pre">config_open_type</span></span><span class="w"> </span><span class="n"><span class="pre">open_type</span></span><span class="sig-paren">)</span><a class="headerlink" href="#c.config_open" title="Link to this definition"></a><br /></dt>
+<dd><p>Opens a configuration file.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>config</strong> – Pointer that receives a pointer to a new configuration
+file object (if successful)</p></li>
+<li><p><strong>file</strong> – Path to the configuration file</p></li>
+<li><p><strong>open_type</strong> – <p>Can be one of the following values:</p>
+<ul>
+<li><p>CONFIG_OPEN_EXISTING - Fail if the file doesn’t
+exist.</p></li>
+<li><p>CONFIG_OPEN_ALWAYS - Try to open the file.  If
+the file doesn’t exist, create it.</p></li>
+</ul>
+</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p><p>Can return the following values:</p>
+<ul class="simple">
+<li><p>CONFIG_SUCCESS - Successful</p></li>
+<li><p>CONFIG_FILENOTFOUND - File not found</p></li>
+<li><p>CONFIG_ERROR - Generic error</p></li>
+</ul>
+</p>
+</dd>
+</dl>
+</dd></dl>
+
+<hr class="docutils" />
+<dl class="c function">
+<dt class="sig sig-object c" id="c.config_open_string">
+<span class="kt"><span class="pre">int</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">config_open_string</span></span></span><span class="sig-paren">(</span><a class="reference internal" href="#c.config_t" title="config_t"><span class="n"><span class="pre">config_t</span></span></a><span class="w"> </span><span class="p"><span class="pre">*</span></span><span class="p"><span class="pre">*</span></span><span class="n"><span class="pre">config</span></span>, <span class="k"><span class="pre">const</span></span><span class="w"> </span><span class="kt"><span class="pre">char</span></span><span class="w"> </span><span class="p"><span class="pre">*</span></span><span class="n"><span class="pre">str</span></span><span class="sig-paren">)</span><a class="headerlink" href="#c.config_open_string" title="Link to this definition"></a><br /></dt>
+<dd><p>Opens configuration data via a string rather than a file.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>config</strong> – Pointer that receives a pointer to a new configuration
+file object (if successful)</p></li>
+<li><p><strong>str</strong> – Configuration string</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p><p>Can return the following values:</p>
+<ul class="simple">
+<li><p>CONFIG_SUCCESS - Successful</p></li>
+<li><p>CONFIG_FILENOTFOUND - File not found</p></li>
+<li><p>CONFIG_ERROR - Generic error</p></li>
+</ul>
+</p>
+</dd>
+</dl>
+</dd></dl>
+
+<hr class="docutils" />
+<dl class="c function">
+<dt class="sig sig-object c" id="c.config_save">
+<span class="kt"><span class="pre">int</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">config_save</span></span></span><span class="sig-paren">(</span><a class="reference internal" href="#c.config_t" title="config_t"><span class="n"><span class="pre">config_t</span></span></a><span class="w"> </span><span class="p"><span class="pre">*</span></span><span class="n"><span class="pre">config</span></span><span class="sig-paren">)</span><a class="headerlink" href="#c.config_save" title="Link to this definition"></a><br /></dt>
+<dd><p>Saves configuration data to a file (if associated with a file).</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>config</strong> – Configuration object</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p><p>Can return the following values:</p>
+<ul class="simple">
+<li><p>CONFIG_SUCCESS - Successful</p></li>
+<li><p>CONFIG_FILENOTFOUND - File not found</p></li>
+<li><p>CONFIG_ERROR - Generic error</p></li>
+</ul>
+</p>
+</dd>
+</dl>
+</dd></dl>
+
+<hr class="docutils" />
+<dl class="c function">
+<dt class="sig sig-object c" id="c.config_save_safe">
+<span class="kt"><span class="pre">int</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">config_save_safe</span></span></span><span class="sig-paren">(</span><a class="reference internal" href="#c.config_t" title="config_t"><span class="n"><span class="pre">config_t</span></span></a><span class="w"> </span><span class="p"><span class="pre">*</span></span><span class="n"><span class="pre">config</span></span>, <span class="k"><span class="pre">const</span></span><span class="w"> </span><span class="kt"><span class="pre">char</span></span><span class="w"> </span><span class="p"><span class="pre">*</span></span><span class="n"><span class="pre">temp_ext</span></span>, <span class="k"><span class="pre">const</span></span><span class="w"> </span><span class="kt"><span class="pre">char</span></span><span class="w"> </span><span class="p"><span class="pre">*</span></span><span class="n"><span class="pre">backup_ext</span></span><span class="sig-paren">)</span><a class="headerlink" href="#c.config_save_safe" title="Link to this definition"></a><br /></dt>
+<dd><p>Saves configuration data and minimizes overwrite corruption risk.
+Saves the file with the file name</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>config</strong> – Configuration object</p></li>
+<li><p><strong>temp_ext</strong> – Temporary extension for the new file</p></li>
+<li><p><strong>backup_ext</strong> – Backup extension for the old file.  Can be <em>NULL</em>
+if no backup is desired.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p><p>Can return the following values:</p>
+<ul class="simple">
+<li><p>CONFIG_SUCCESS - Successful</p></li>
+<li><p>CONFIG_FILENOTFOUND - File not found</p></li>
+<li><p>CONFIG_ERROR - Generic error</p></li>
+</ul>
+</p>
+</dd>
+</dl>
+</dd></dl>
+
+<hr class="docutils" />
+<dl class="c function">
+<dt class="sig sig-object c" id="c.config_close">
+<span class="kt"><span class="pre">void</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">config_close</span></span></span><span class="sig-paren">(</span><a class="reference internal" href="#c.config_t" title="config_t"><span class="n"><span class="pre">config_t</span></span></a><span class="w"> </span><span class="p"><span class="pre">*</span></span><span class="n"><span class="pre">config</span></span><span class="sig-paren">)</span><a class="headerlink" href="#c.config_close" title="Link to this definition"></a><br /></dt>
+<dd><p>Closes the configuration object.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>config</strong> – Configuration object</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<hr class="docutils" />
+<dl class="c function">
+<dt class="sig sig-object c" id="c.config_num_sections">
+<span class="n"><span class="pre">size_t</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">config_num_sections</span></span></span><span class="sig-paren">(</span><a class="reference internal" href="#c.config_t" title="config_t"><span class="n"><span class="pre">config_t</span></span></a><span class="w"> </span><span class="p"><span class="pre">*</span></span><span class="n"><span class="pre">config</span></span><span class="sig-paren">)</span><a class="headerlink" href="#c.config_num_sections" title="Link to this definition"></a><br /></dt>
+<dd><p>Returns the number of sections.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>config</strong> – Configuration object</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>Number of configuration sections</p>
+</dd>
+</dl>
+</dd></dl>
+
+<hr class="docutils" />
+<dl class="c function">
+<dt class="sig sig-object c" id="c.config_get_section">
+<span class="k"><span class="pre">const</span></span><span class="w"> </span><span class="kt"><span class="pre">char</span></span><span class="w"> </span><span class="p"><span class="pre">*</span></span><span class="sig-name descname"><span class="n"><span class="pre">config_get_section</span></span></span><span class="sig-paren">(</span><a class="reference internal" href="#c.config_t" title="config_t"><span class="n"><span class="pre">config_t</span></span></a><span class="w"> </span><span class="p"><span class="pre">*</span></span><span class="n"><span class="pre">config</span></span>, <span class="n"><span class="pre">size_t</span></span><span class="w"> </span><span class="n"><span class="pre">idx</span></span><span class="sig-paren">)</span><a class="headerlink" href="#c.config_get_section" title="Link to this definition"></a><br /></dt>
+<dd><p>Returns a section name based upon its index.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>config</strong> – Configuration object</p></li>
+<li><p><strong>idx</strong> – Index of the section</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>The section’s name</p>
+</dd>
+</dl>
+</dd></dl>
+
+</section>
+<section id="set-get-functions">
+<h2>Set/Get Functions<a class="headerlink" href="#set-get-functions" title="Link to this heading"></a></h2>
+<dl class="c function">
+<dt class="sig sig-object c" id="c.config_set_string">
+<span class="kt"><span class="pre">void</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">config_set_string</span></span></span><span class="sig-paren">(</span><a class="reference internal" href="#c.config_t" title="config_t"><span class="n"><span class="pre">config_t</span></span></a><span class="w"> </span><span class="p"><span class="pre">*</span></span><span class="n"><span class="pre">config</span></span>, <span class="k"><span class="pre">const</span></span><span class="w"> </span><span class="kt"><span class="pre">char</span></span><span class="w"> </span><span class="p"><span class="pre">*</span></span><span class="n"><span class="pre">section</span></span>, <span class="k"><span class="pre">const</span></span><span class="w"> </span><span class="kt"><span class="pre">char</span></span><span class="w"> </span><span class="p"><span class="pre">*</span></span><span class="n"><span class="pre">name</span></span>, <span class="k"><span class="pre">const</span></span><span class="w"> </span><span class="kt"><span class="pre">char</span></span><span class="w"> </span><span class="p"><span class="pre">*</span></span><span class="n"><span class="pre">value</span></span><span class="sig-paren">)</span><a class="headerlink" href="#c.config_set_string" title="Link to this definition"></a><br /></dt>
+<dd><p>Sets a string value.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>config</strong> – Configuration object</p></li>
+<li><p><strong>section</strong> – The section of the value</p></li>
+<li><p><strong>name</strong> – The value name</p></li>
+<li><p><strong>value</strong> – The string value</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<hr class="docutils" />
+<dl class="c function">
+<dt class="sig sig-object c" id="c.config_set_int">
+<span class="kt"><span class="pre">void</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">config_set_int</span></span></span><span class="sig-paren">(</span><a class="reference internal" href="#c.config_t" title="config_t"><span class="n"><span class="pre">config_t</span></span></a><span class="w"> </span><span class="p"><span class="pre">*</span></span><span class="n"><span class="pre">config</span></span>, <span class="k"><span class="pre">const</span></span><span class="w"> </span><span class="kt"><span class="pre">char</span></span><span class="w"> </span><span class="p"><span class="pre">*</span></span><span class="n"><span class="pre">section</span></span>, <span class="k"><span class="pre">const</span></span><span class="w"> </span><span class="kt"><span class="pre">char</span></span><span class="w"> </span><span class="p"><span class="pre">*</span></span><span class="n"><span class="pre">name</span></span>, <span class="n"><span class="pre">int64_t</span></span><span class="w"> </span><span class="n"><span class="pre">value</span></span><span class="sig-paren">)</span><a class="headerlink" href="#c.config_set_int" title="Link to this definition"></a><br /></dt>
+<dd><p>Sets an integer value.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>config</strong> – Configuration object</p></li>
+<li><p><strong>section</strong> – The section of the value</p></li>
+<li><p><strong>name</strong> – The value name</p></li>
+<li><p><strong>value</strong> – The integer value</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<hr class="docutils" />
+<dl class="c function">
+<dt class="sig sig-object c" id="c.config_set_uint">
+<span class="kt"><span class="pre">void</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">config_set_uint</span></span></span><span class="sig-paren">(</span><a class="reference internal" href="#c.config_t" title="config_t"><span class="n"><span class="pre">config_t</span></span></a><span class="w"> </span><span class="p"><span class="pre">*</span></span><span class="n"><span class="pre">config</span></span>, <span class="k"><span class="pre">const</span></span><span class="w"> </span><span class="kt"><span class="pre">char</span></span><span class="w"> </span><span class="p"><span class="pre">*</span></span><span class="n"><span class="pre">section</span></span>, <span class="k"><span class="pre">const</span></span><span class="w"> </span><span class="kt"><span class="pre">char</span></span><span class="w"> </span><span class="p"><span class="pre">*</span></span><span class="n"><span class="pre">name</span></span>, <span class="n"><span class="pre">uint64_t</span></span><span class="w"> </span><span class="n"><span class="pre">value</span></span><span class="sig-paren">)</span><a class="headerlink" href="#c.config_set_uint" title="Link to this definition"></a><br /></dt>
+<dd><p>Sets an unsigned integer value.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>config</strong> – Configuration object</p></li>
+<li><p><strong>section</strong> – The section of the value</p></li>
+<li><p><strong>name</strong> – The value name</p></li>
+<li><p><strong>value</strong> – The unsigned integer value</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<hr class="docutils" />
+<dl class="c function">
+<dt class="sig sig-object c" id="c.config_set_bool">
+<span class="kt"><span class="pre">void</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">config_set_bool</span></span></span><span class="sig-paren">(</span><a class="reference internal" href="#c.config_t" title="config_t"><span class="n"><span class="pre">config_t</span></span></a><span class="w"> </span><span class="p"><span class="pre">*</span></span><span class="n"><span class="pre">config</span></span>, <span class="k"><span class="pre">const</span></span><span class="w"> </span><span class="kt"><span class="pre">char</span></span><span class="w"> </span><span class="p"><span class="pre">*</span></span><span class="n"><span class="pre">section</span></span>, <span class="k"><span class="pre">const</span></span><span class="w"> </span><span class="kt"><span class="pre">char</span></span><span class="w"> </span><span class="p"><span class="pre">*</span></span><span class="n"><span class="pre">name</span></span>, <span class="kt"><span class="pre">bool</span></span><span class="w"> </span><span class="n"><span class="pre">value</span></span><span class="sig-paren">)</span><a class="headerlink" href="#c.config_set_bool" title="Link to this definition"></a><br /></dt>
+<dd><p>Sets a boolean value.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>config</strong> – Configuration object</p></li>
+<li><p><strong>section</strong> – The section of the value</p></li>
+<li><p><strong>name</strong> – The value name</p></li>
+<li><p><strong>value</strong> – The boolean value</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<hr class="docutils" />
+<dl class="c function">
+<dt class="sig sig-object c" id="c.config_set_double">
+<span class="kt"><span class="pre">void</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">config_set_double</span></span></span><span class="sig-paren">(</span><a class="reference internal" href="#c.config_t" title="config_t"><span class="n"><span class="pre">config_t</span></span></a><span class="w"> </span><span class="p"><span class="pre">*</span></span><span class="n"><span class="pre">config</span></span>, <span class="k"><span class="pre">const</span></span><span class="w"> </span><span class="kt"><span class="pre">char</span></span><span class="w"> </span><span class="p"><span class="pre">*</span></span><span class="n"><span class="pre">section</span></span>, <span class="k"><span class="pre">const</span></span><span class="w"> </span><span class="kt"><span class="pre">char</span></span><span class="w"> </span><span class="p"><span class="pre">*</span></span><span class="n"><span class="pre">name</span></span>, <span class="kt"><span class="pre">double</span></span><span class="w"> </span><span class="n"><span class="pre">value</span></span><span class="sig-paren">)</span><a class="headerlink" href="#c.config_set_double" title="Link to this definition"></a><br /></dt>
+<dd><p>Sets a floating point value.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>config</strong> – Configuration object</p></li>
+<li><p><strong>section</strong> – The section of the value</p></li>
+<li><p><strong>name</strong> – The value name</p></li>
+<li><p><strong>value</strong> – The floating point value</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<hr class="docutils" />
+<dl class="c function">
+<dt class="sig sig-object c" id="c.config_get_string">
+<span class="k"><span class="pre">const</span></span><span class="w"> </span><span class="kt"><span class="pre">char</span></span><span class="w"> </span><span class="p"><span class="pre">*</span></span><span class="sig-name descname"><span class="n"><span class="pre">config_get_string</span></span></span><span class="sig-paren">(</span><a class="reference internal" href="#c.config_t" title="config_t"><span class="n"><span class="pre">config_t</span></span></a><span class="w"> </span><span class="p"><span class="pre">*</span></span><span class="n"><span class="pre">config</span></span>, <span class="k"><span class="pre">const</span></span><span class="w"> </span><span class="kt"><span class="pre">char</span></span><span class="w"> </span><span class="p"><span class="pre">*</span></span><span class="n"><span class="pre">section</span></span>, <span class="k"><span class="pre">const</span></span><span class="w"> </span><span class="kt"><span class="pre">char</span></span><span class="w"> </span><span class="p"><span class="pre">*</span></span><span class="n"><span class="pre">name</span></span><span class="sig-paren">)</span><a class="headerlink" href="#c.config_get_string" title="Link to this definition"></a><br /></dt>
+<dd><p>Gets a string value.  If the value is not set, it will use the
+default value.  If there is no default value, it will return <em>NULL</em>.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>config</strong> – Configuration object</p></li>
+<li><p><strong>section</strong> – The section of the value</p></li>
+<li><p><strong>name</strong> – The value name</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>The string value</p>
+</dd>
+</dl>
+</dd></dl>
+
+<hr class="docutils" />
+<dl class="c function">
+<dt class="sig sig-object c" id="c.config_get_int">
+<span class="n"><span class="pre">int64_t</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">config_get_int</span></span></span><span class="sig-paren">(</span><a class="reference internal" href="#c.config_t" title="config_t"><span class="n"><span class="pre">config_t</span></span></a><span class="w"> </span><span class="p"><span class="pre">*</span></span><span class="n"><span class="pre">config</span></span>, <span class="k"><span class="pre">const</span></span><span class="w"> </span><span class="kt"><span class="pre">char</span></span><span class="w"> </span><span class="p"><span class="pre">*</span></span><span class="n"><span class="pre">section</span></span>, <span class="k"><span class="pre">const</span></span><span class="w"> </span><span class="kt"><span class="pre">char</span></span><span class="w"> </span><span class="p"><span class="pre">*</span></span><span class="n"><span class="pre">name</span></span><span class="sig-paren">)</span><a class="headerlink" href="#c.config_get_int" title="Link to this definition"></a><br /></dt>
+<dd><p>Gets an integer value.  If the value is not set, it will use the
+default value.  If there is no default value, it will return 0.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>config</strong> – Configuration object</p></li>
+<li><p><strong>section</strong> – The section of the value</p></li>
+<li><p><strong>name</strong> – The value name</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>The integer value</p>
+</dd>
+</dl>
+</dd></dl>
+
+<hr class="docutils" />
+<dl class="c function">
+<dt class="sig sig-object c" id="c.config_get_uint">
+<span class="n"><span class="pre">uint64_t</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">config_get_uint</span></span></span><span class="sig-paren">(</span><a class="reference internal" href="#c.config_t" title="config_t"><span class="n"><span class="pre">config_t</span></span></a><span class="w"> </span><span class="p"><span class="pre">*</span></span><span class="n"><span class="pre">config</span></span>, <span class="k"><span class="pre">const</span></span><span class="w"> </span><span class="kt"><span class="pre">char</span></span><span class="w"> </span><span class="p"><span class="pre">*</span></span><span class="n"><span class="pre">section</span></span>, <span class="k"><span class="pre">const</span></span><span class="w"> </span><span class="kt"><span class="pre">char</span></span><span class="w"> </span><span class="p"><span class="pre">*</span></span><span class="n"><span class="pre">name</span></span><span class="sig-paren">)</span><a class="headerlink" href="#c.config_get_uint" title="Link to this definition"></a><br /></dt>
+<dd><p>Gets an unsigned integer value.  If the value is not set, it will use
+the default value.  If there is no default value, it will return 0.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>config</strong> – Configuration object</p></li>
+<li><p><strong>section</strong> – The section of the value</p></li>
+<li><p><strong>name</strong> – The value name</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>The unsigned integer value</p>
+</dd>
+</dl>
+</dd></dl>
+
+<hr class="docutils" />
+<dl class="c function">
+<dt class="sig sig-object c" id="c.config_get_bool">
+<span class="kt"><span class="pre">bool</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">config_get_bool</span></span></span><span class="sig-paren">(</span><a class="reference internal" href="#c.config_t" title="config_t"><span class="n"><span class="pre">config_t</span></span></a><span class="w"> </span><span class="p"><span class="pre">*</span></span><span class="n"><span class="pre">config</span></span>, <span class="k"><span class="pre">const</span></span><span class="w"> </span><span class="kt"><span class="pre">char</span></span><span class="w"> </span><span class="p"><span class="pre">*</span></span><span class="n"><span class="pre">section</span></span>, <span class="k"><span class="pre">const</span></span><span class="w"> </span><span class="kt"><span class="pre">char</span></span><span class="w"> </span><span class="p"><span class="pre">*</span></span><span class="n"><span class="pre">name</span></span><span class="sig-paren">)</span><a class="headerlink" href="#c.config_get_bool" title="Link to this definition"></a><br /></dt>
+<dd><p>Gets a boolean value.  If the value is not set, it will use the
+default value.  If there is no default value, it will return false.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>config</strong> – Configuration object</p></li>
+<li><p><strong>section</strong> – The section of the value</p></li>
+<li><p><strong>name</strong> – The value name</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>The boolean value</p>
+</dd>
+</dl>
+</dd></dl>
+
+<hr class="docutils" />
+<dl class="c function">
+<dt class="sig sig-object c" id="c.config_get_double">
+<span class="kt"><span class="pre">double</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">config_get_double</span></span></span><span class="sig-paren">(</span><a class="reference internal" href="#c.config_t" title="config_t"><span class="n"><span class="pre">config_t</span></span></a><span class="w"> </span><span class="p"><span class="pre">*</span></span><span class="n"><span class="pre">config</span></span>, <span class="k"><span class="pre">const</span></span><span class="w"> </span><span class="kt"><span class="pre">char</span></span><span class="w"> </span><span class="p"><span class="pre">*</span></span><span class="n"><span class="pre">section</span></span>, <span class="k"><span class="pre">const</span></span><span class="w"> </span><span class="kt"><span class="pre">char</span></span><span class="w"> </span><span class="p"><span class="pre">*</span></span><span class="n"><span class="pre">name</span></span><span class="sig-paren">)</span><a class="headerlink" href="#c.config_get_double" title="Link to this definition"></a><br /></dt>
+<dd><p>Gets a floating point value.  If the value is not set, it will use
+the default value.  If there is no default value, it will return 0.0.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>config</strong> – Configuration object</p></li>
+<li><p><strong>section</strong> – The section of the value</p></li>
+<li><p><strong>name</strong> – The value name</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>The floating point value</p>
+</dd>
+</dl>
+</dd></dl>
+
+<hr class="docutils" />
+<dl class="c function">
+<dt class="sig sig-object c" id="c.config_remove_value">
+<span class="kt"><span class="pre">bool</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">config_remove_value</span></span></span><span class="sig-paren">(</span><a class="reference internal" href="#c.config_t" title="config_t"><span class="n"><span class="pre">config_t</span></span></a><span class="w"> </span><span class="p"><span class="pre">*</span></span><span class="n"><span class="pre">config</span></span>, <span class="k"><span class="pre">const</span></span><span class="w"> </span><span class="kt"><span class="pre">char</span></span><span class="w"> </span><span class="p"><span class="pre">*</span></span><span class="n"><span class="pre">section</span></span>, <span class="k"><span class="pre">const</span></span><span class="w"> </span><span class="kt"><span class="pre">char</span></span><span class="w"> </span><span class="p"><span class="pre">*</span></span><span class="n"><span class="pre">name</span></span><span class="sig-paren">)</span><a class="headerlink" href="#c.config_remove_value" title="Link to this definition"></a><br /></dt>
+<dd><p>Removes a value.  Does not remove the default value if any.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>config</strong> – Configuration object</p></li>
+<li><p><strong>section</strong> – The section of the value</p></li>
+<li><p><strong>name</strong> – The value name</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+</section>
+<section id="default-value-functions">
+<h2>Default Value Functions<a class="headerlink" href="#default-value-functions" title="Link to this heading"></a></h2>
+<dl class="c function">
+<dt class="sig sig-object c" id="c.config_open_defaults">
+<span class="kt"><span class="pre">int</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">config_open_defaults</span></span></span><span class="sig-paren">(</span><a class="reference internal" href="#c.config_t" title="config_t"><span class="n"><span class="pre">config_t</span></span></a><span class="w"> </span><span class="p"><span class="pre">*</span></span><span class="n"><span class="pre">config</span></span>, <span class="k"><span class="pre">const</span></span><span class="w"> </span><span class="kt"><span class="pre">char</span></span><span class="w"> </span><span class="p"><span class="pre">*</span></span><span class="n"><span class="pre">file</span></span><span class="sig-paren">)</span><a class="headerlink" href="#c.config_open_defaults" title="Link to this definition"></a><br /></dt>
+<dd><p>Opens a file and uses it for default values.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>config</strong> – Configuration object</p></li>
+<li><p><strong>file</strong> – The file to open for default values</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<hr class="docutils" />
+<dl class="c function">
+<dt class="sig sig-object c" id="c.config_set_default_string">
+<span class="kt"><span class="pre">void</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">config_set_default_string</span></span></span><span class="sig-paren">(</span><a class="reference internal" href="#c.config_t" title="config_t"><span class="n"><span class="pre">config_t</span></span></a><span class="w"> </span><span class="p"><span class="pre">*</span></span><span class="n"><span class="pre">config</span></span>, <span class="k"><span class="pre">const</span></span><span class="w"> </span><span class="kt"><span class="pre">char</span></span><span class="w"> </span><span class="p"><span class="pre">*</span></span><span class="n"><span class="pre">section</span></span>, <span class="k"><span class="pre">const</span></span><span class="w"> </span><span class="kt"><span class="pre">char</span></span><span class="w"> </span><span class="p"><span class="pre">*</span></span><span class="n"><span class="pre">name</span></span>, <span class="k"><span class="pre">const</span></span><span class="w"> </span><span class="kt"><span class="pre">char</span></span><span class="w"> </span><span class="p"><span class="pre">*</span></span><span class="n"><span class="pre">value</span></span><span class="sig-paren">)</span><a class="headerlink" href="#c.config_set_default_string" title="Link to this definition"></a><br /></dt>
+<dd><p>Sets a default string value.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>config</strong> – Configuration object</p></li>
+<li><p><strong>section</strong> – The section of the value</p></li>
+<li><p><strong>name</strong> – The value name</p></li>
+<li><p><strong>value</strong> – The string value</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<hr class="docutils" />
+<dl class="c function">
+<dt class="sig sig-object c" id="c.config_set_default_int">
+<span class="kt"><span class="pre">void</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">config_set_default_int</span></span></span><span class="sig-paren">(</span><a class="reference internal" href="#c.config_t" title="config_t"><span class="n"><span class="pre">config_t</span></span></a><span class="w"> </span><span class="p"><span class="pre">*</span></span><span class="n"><span class="pre">config</span></span>, <span class="k"><span class="pre">const</span></span><span class="w"> </span><span class="kt"><span class="pre">char</span></span><span class="w"> </span><span class="p"><span class="pre">*</span></span><span class="n"><span class="pre">section</span></span>, <span class="k"><span class="pre">const</span></span><span class="w"> </span><span class="kt"><span class="pre">char</span></span><span class="w"> </span><span class="p"><span class="pre">*</span></span><span class="n"><span class="pre">name</span></span>, <span class="n"><span class="pre">int64_t</span></span><span class="w"> </span><span class="n"><span class="pre">value</span></span><span class="sig-paren">)</span><a class="headerlink" href="#c.config_set_default_int" title="Link to this definition"></a><br /></dt>
+<dd><p>Sets a default integer value.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>config</strong> – Configuration object</p></li>
+<li><p><strong>section</strong> – The section of the value</p></li>
+<li><p><strong>name</strong> – The value name</p></li>
+<li><p><strong>value</strong> – The integer value</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<hr class="docutils" />
+<dl class="c function">
+<dt class="sig sig-object c" id="c.config_set_default_uint">
+<span class="kt"><span class="pre">void</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">config_set_default_uint</span></span></span><span class="sig-paren">(</span><a class="reference internal" href="#c.config_t" title="config_t"><span class="n"><span class="pre">config_t</span></span></a><span class="w"> </span><span class="p"><span class="pre">*</span></span><span class="n"><span class="pre">config</span></span>, <span class="k"><span class="pre">const</span></span><span class="w"> </span><span class="kt"><span class="pre">char</span></span><span class="w"> </span><span class="p"><span class="pre">*</span></span><span class="n"><span class="pre">section</span></span>, <span class="k"><span class="pre">const</span></span><span class="w"> </span><span class="kt"><span class="pre">char</span></span><span class="w"> </span><span class="p"><span class="pre">*</span></span><span class="n"><span class="pre">name</span></span>, <span class="n"><span class="pre">uint64_t</span></span><span class="w"> </span><span class="n"><span class="pre">value</span></span><span class="sig-paren">)</span><a class="headerlink" href="#c.config_set_default_uint" title="Link to this definition"></a><br /></dt>
+<dd><p>Sets a default unsigned integer value.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>config</strong> – Configuration object</p></li>
+<li><p><strong>section</strong> – The section of the value</p></li>
+<li><p><strong>name</strong> – The value name</p></li>
+<li><p><strong>value</strong> – The unsigned integer value</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<hr class="docutils" />
+<dl class="c function">
+<dt class="sig sig-object c" id="c.config_set_default_bool">
+<span class="kt"><span class="pre">void</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">config_set_default_bool</span></span></span><span class="sig-paren">(</span><a class="reference internal" href="#c.config_t" title="config_t"><span class="n"><span class="pre">config_t</span></span></a><span class="w"> </span><span class="p"><span class="pre">*</span></span><span class="n"><span class="pre">config</span></span>, <span class="k"><span class="pre">const</span></span><span class="w"> </span><span class="kt"><span class="pre">char</span></span><span class="w"> </span><span class="p"><span class="pre">*</span></span><span class="n"><span class="pre">section</span></span>, <span class="k"><span class="pre">const</span></span><span class="w"> </span><span class="kt"><span class="pre">char</span></span><span class="w"> </span><span class="p"><span class="pre">*</span></span><span class="n"><span class="pre">name</span></span>, <span class="kt"><span class="pre">bool</span></span><span class="w"> </span><span class="n"><span class="pre">value</span></span><span class="sig-paren">)</span><a class="headerlink" href="#c.config_set_default_bool" title="Link to this definition"></a><br /></dt>
+<dd><p>Sets a default boolean value.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>config</strong> – Configuration object</p></li>
+<li><p><strong>section</strong> – The section of the value</p></li>
+<li><p><strong>name</strong> – The value name</p></li>
+<li><p><strong>value</strong> – The boolean value</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<hr class="docutils" />
+<dl class="c function">
+<dt class="sig sig-object c" id="c.config_set_default_double">
+<span class="kt"><span class="pre">void</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">config_set_default_double</span></span></span><span class="sig-paren">(</span><a class="reference internal" href="#c.config_t" title="config_t"><span class="n"><span class="pre">config_t</span></span></a><span class="w"> </span><span class="p"><span class="pre">*</span></span><span class="n"><span class="pre">config</span></span>, <span class="k"><span class="pre">const</span></span><span class="w"> </span><span class="kt"><span class="pre">char</span></span><span class="w"> </span><span class="p"><span class="pre">*</span></span><span class="n"><span class="pre">section</span></span>, <span class="k"><span class="pre">const</span></span><span class="w"> </span><span class="kt"><span class="pre">char</span></span><span class="w"> </span><span class="p"><span class="pre">*</span></span><span class="n"><span class="pre">name</span></span>, <span class="kt"><span class="pre">double</span></span><span class="w"> </span><span class="n"><span class="pre">value</span></span><span class="sig-paren">)</span><a class="headerlink" href="#c.config_set_default_double" title="Link to this definition"></a><br /></dt>
+<dd><p>Sets a default floating point value.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>config</strong> – Configuration object</p></li>
+<li><p><strong>section</strong> – The section of the value</p></li>
+<li><p><strong>name</strong> – The value name</p></li>
+<li><p><strong>value</strong> – The floating point value</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<hr class="docutils" />
+<dl class="c function">
+<dt class="sig sig-object c" id="c.config_get_default_string">
+<span class="k"><span class="pre">const</span></span><span class="w"> </span><span class="kt"><span class="pre">char</span></span><span class="w"> </span><span class="p"><span class="pre">*</span></span><span class="sig-name descname"><span class="n"><span class="pre">config_get_default_string</span></span></span><span class="sig-paren">(</span><a class="reference internal" href="#c.config_t" title="config_t"><span class="n"><span class="pre">config_t</span></span></a><span class="w"> </span><span class="p"><span class="pre">*</span></span><span class="n"><span class="pre">config</span></span>, <span class="k"><span class="pre">const</span></span><span class="w"> </span><span class="kt"><span class="pre">char</span></span><span class="w"> </span><span class="p"><span class="pre">*</span></span><span class="n"><span class="pre">section</span></span>, <span class="k"><span class="pre">const</span></span><span class="w"> </span><span class="kt"><span class="pre">char</span></span><span class="w"> </span><span class="p"><span class="pre">*</span></span><span class="n"><span class="pre">name</span></span><span class="sig-paren">)</span><a class="headerlink" href="#c.config_get_default_string" title="Link to this definition"></a><br /></dt>
+<dd><p>Gets a default string value.  If there is no default value, it will return <em>NULL</em>.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>config</strong> – Configuration object</p></li>
+<li><p><strong>section</strong> – The section of the value</p></li>
+<li><p><strong>name</strong> – The value name</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>The default string value</p>
+</dd>
+</dl>
+</dd></dl>
+
+<hr class="docutils" />
+<dl class="c function">
+<dt class="sig sig-object c" id="c.config_get_default_int">
+<span class="n"><span class="pre">int64_t</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">config_get_default_int</span></span></span><span class="sig-paren">(</span><a class="reference internal" href="#c.config_t" title="config_t"><span class="n"><span class="pre">config_t</span></span></a><span class="w"> </span><span class="p"><span class="pre">*</span></span><span class="n"><span class="pre">config</span></span>, <span class="k"><span class="pre">const</span></span><span class="w"> </span><span class="kt"><span class="pre">char</span></span><span class="w"> </span><span class="p"><span class="pre">*</span></span><span class="n"><span class="pre">section</span></span>, <span class="k"><span class="pre">const</span></span><span class="w"> </span><span class="kt"><span class="pre">char</span></span><span class="w"> </span><span class="p"><span class="pre">*</span></span><span class="n"><span class="pre">name</span></span><span class="sig-paren">)</span><a class="headerlink" href="#c.config_get_default_int" title="Link to this definition"></a><br /></dt>
+<dd><p>Gets a default integer value.  If there is no default value, it will return 0.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>config</strong> – Configuration object</p></li>
+<li><p><strong>section</strong> – The section of the value</p></li>
+<li><p><strong>name</strong> – The value name</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>The integer value</p>
+</dd>
+</dl>
+</dd></dl>
+
+<hr class="docutils" />
+<dl class="c function">
+<dt class="sig sig-object c" id="c.config_get_default_uint">
+<span class="n"><span class="pre">uint64_t</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">config_get_default_uint</span></span></span><span class="sig-paren">(</span><a class="reference internal" href="#c.config_t" title="config_t"><span class="n"><span class="pre">config_t</span></span></a><span class="w"> </span><span class="p"><span class="pre">*</span></span><span class="n"><span class="pre">config</span></span>, <span class="k"><span class="pre">const</span></span><span class="w"> </span><span class="kt"><span class="pre">char</span></span><span class="w"> </span><span class="p"><span class="pre">*</span></span><span class="n"><span class="pre">section</span></span>, <span class="k"><span class="pre">const</span></span><span class="w"> </span><span class="kt"><span class="pre">char</span></span><span class="w"> </span><span class="p"><span class="pre">*</span></span><span class="n"><span class="pre">name</span></span><span class="sig-paren">)</span><a class="headerlink" href="#c.config_get_default_uint" title="Link to this definition"></a><br /></dt>
+<dd><p>Gets a default unsigned integer value.  If there is no default value, it will return 0.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>config</strong> – Configuration object</p></li>
+<li><p><strong>section</strong> – The section of the value</p></li>
+<li><p><strong>name</strong> – The value name</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>The unsigned integer value</p>
+</dd>
+</dl>
+</dd></dl>
+
+<hr class="docutils" />
+<dl class="c function">
+<dt class="sig sig-object c" id="c.config_get_default_bool">
+<span class="kt"><span class="pre">bool</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">config_get_default_bool</span></span></span><span class="sig-paren">(</span><a class="reference internal" href="#c.config_t" title="config_t"><span class="n"><span class="pre">config_t</span></span></a><span class="w"> </span><span class="p"><span class="pre">*</span></span><span class="n"><span class="pre">config</span></span>, <span class="k"><span class="pre">const</span></span><span class="w"> </span><span class="kt"><span class="pre">char</span></span><span class="w"> </span><span class="p"><span class="pre">*</span></span><span class="n"><span class="pre">section</span></span>, <span class="k"><span class="pre">const</span></span><span class="w"> </span><span class="kt"><span class="pre">char</span></span><span class="w"> </span><span class="p"><span class="pre">*</span></span><span class="n"><span class="pre">name</span></span><span class="sig-paren">)</span><a class="headerlink" href="#c.config_get_default_bool" title="Link to this definition"></a><br /></dt>
+<dd><p>Gets a default boolean value.  If there is no default value, it will return false.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>config</strong> – Configuration object</p></li>
+<li><p><strong>section</strong> – The section of the value</p></li>
+<li><p><strong>name</strong> – The value name</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>The boolean value</p>
+</dd>
+</dl>
+</dd></dl>
+
+<hr class="docutils" />
+<dl class="c function">
+<dt class="sig sig-object c" id="c.config_get_default_double">
+<span class="kt"><span class="pre">double</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">config_get_default_double</span></span></span><span class="sig-paren">(</span><a class="reference internal" href="#c.config_t" title="config_t"><span class="n"><span class="pre">config_t</span></span></a><span class="w"> </span><span class="p"><span class="pre">*</span></span><span class="n"><span class="pre">config</span></span>, <span class="k"><span class="pre">const</span></span><span class="w"> </span><span class="kt"><span class="pre">char</span></span><span class="w"> </span><span class="p"><span class="pre">*</span></span><span class="n"><span class="pre">section</span></span>, <span class="k"><span class="pre">const</span></span><span class="w"> </span><span class="kt"><span class="pre">char</span></span><span class="w"> </span><span class="p"><span class="pre">*</span></span><span class="n"><span class="pre">name</span></span><span class="sig-paren">)</span><a class="headerlink" href="#c.config_get_default_double" title="Link to this definition"></a><br /></dt>
+<dd><p>Gets a default floating point value.  If there is no default value, it will return 0.0.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>config</strong> – Configuration object</p></li>
+<li><p><strong>section</strong> – The section of the value</p></li>
+<li><p><strong>name</strong> – The value name</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>The floating point value</p>
+</dd>
+</dl>
+</dd></dl>
+
+<hr class="docutils" />
+<dl class="c function">
+<dt class="sig sig-object c" id="c.config_has_user_value">
+<span class="kt"><span class="pre">bool</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">config_has_user_value</span></span></span><span class="sig-paren">(</span><a class="reference internal" href="#c.config_t" title="config_t"><span class="n"><span class="pre">config_t</span></span></a><span class="w"> </span><span class="p"><span class="pre">*</span></span><span class="n"><span class="pre">config</span></span>, <span class="k"><span class="pre">const</span></span><span class="w"> </span><span class="kt"><span class="pre">char</span></span><span class="w"> </span><span class="p"><span class="pre">*</span></span><span class="n"><span class="pre">section</span></span>, <span class="k"><span class="pre">const</span></span><span class="w"> </span><span class="kt"><span class="pre">char</span></span><span class="w"> </span><span class="p"><span class="pre">*</span></span><span class="n"><span class="pre">name</span></span><span class="sig-paren">)</span><a class="headerlink" href="#c.config_has_user_value" title="Link to this definition"></a><br /></dt>
+<dd><p>Returns whether a value is user-set (true) or default/none (false).</p>
+<blockquote>
+<div><dl class="field-list simple">
+<dt class="field-odd">param config<span class="colon">:</span></dt>
+<dd class="field-odd"><p>Configuration object</p>
+</dd>
+<dt class="field-even">param section<span class="colon">:</span></dt>
+<dd class="field-even"><p>The section of the value</p>
+</dd>
+<dt class="field-odd">param name<span class="colon">:</span></dt>
+<dd class="field-odd"><p>The value name</p>
+</dd>
+<dt class="field-even">return<span class="colon">:</span></dt>
+<dd class="field-even"><p>Whether a user value exists</p>
+</dd>
+</dl>
+</div></blockquote>
+</dd></dl>
+
+<hr class="docutils" />
+<dl class="c function">
+<dt class="sig sig-object c" id="c.config_has_default_value">
+<span class="kt"><span class="pre">bool</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">config_has_default_value</span></span></span><span class="sig-paren">(</span><a class="reference internal" href="#c.config_t" title="config_t"><span class="n"><span class="pre">config_t</span></span></a><span class="w"> </span><span class="p"><span class="pre">*</span></span><span class="n"><span class="pre">config</span></span>, <span class="k"><span class="pre">const</span></span><span class="w"> </span><span class="kt"><span class="pre">char</span></span><span class="w"> </span><span class="p"><span class="pre">*</span></span><span class="n"><span class="pre">section</span></span>, <span class="k"><span class="pre">const</span></span><span class="w"> </span><span class="kt"><span class="pre">char</span></span><span class="w"> </span><span class="p"><span class="pre">*</span></span><span class="n"><span class="pre">name</span></span><span class="sig-paren">)</span><a class="headerlink" href="#c.config_has_default_value" title="Link to this definition"></a><br /></dt>
+<dd><p>Returns whether a value has a default set.</p>
+<blockquote>
+<div><dl class="field-list simple">
+<dt class="field-odd">param config<span class="colon">:</span></dt>
+<dd class="field-odd"><p>Configuration object</p>
+</dd>
+<dt class="field-even">param section<span class="colon">:</span></dt>
+<dd class="field-even"><p>The section of the value</p>
+</dd>
+<dt class="field-odd">param name<span class="colon">:</span></dt>
+<dd class="field-odd"><p>The value name</p>
+</dd>
+<dt class="field-even">return<span class="colon">:</span></dt>
+<dd class="field-even"><p>Whether a user value exists</p>
+</dd>
+</dl>
+</div></blockquote>
+</dd></dl>
+
+</section>
+</section>
+
+
+           </div>
+          </div>
+          <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
+        <a href="reference-libobs-util-circlebuf.html" class="btn btn-neutral float-left" title="Circular Buffers" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="reference-libobs-util-darray.html" class="btn btn-neutral float-right" title="Dynamic Arrays" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2017-2022, Lain Bailey.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

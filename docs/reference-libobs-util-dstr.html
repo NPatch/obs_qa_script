@@ -1,0 +1,1235 @@
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" data-content_root="./">
+<head>
+  <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Dynamic Strings And String Helpers &mdash; OBS Studio 27.2.0 documentation</title>
+      <link rel="stylesheet" type="text/css" href="_static/pygments.css?v=fa44fd50" />
+      <link rel="stylesheet" type="text/css" href="_static/css/theme.css?v=19f00094" />
+      <link rel="stylesheet" type="text/css" href="_static/css/custom.css?v=a336fdc4" />
+
+  
+    <link rel="shortcut icon" href="_static/favicon.ico"/>
+  <!--[if lt IE 9]>
+    <script src="_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+        <script src="_static/jquery.js?v=5d32c60e"></script>
+        <script src="_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+        <script src="_static/documentation_options.js?v=358611a8"></script>
+        <script src="_static/doctools.js?v=9a2dae69"></script>
+        <script src="_static/sphinx_highlight.js?v=dc90522c"></script>
+    <script src="_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
+    <link rel="next" title="Platform Helpers" href="reference-libobs-util-platform.html" />
+    <link rel="prev" title="Double-Ended Queue" href="reference-libobs-util-deque.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search"  style="background: #202C73" >
+
+          
+          
+          <a href="index.html">
+            
+              <img src="_static/logo.svg" class="logo" alt="Logo"/>
+          </a>
+              <div class="version">
+                27.2.0
+              </div>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">Core Concepts</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="backend-design.html">OBS Studio Backend Design</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="backend-design.html#libobs-plugin-objects">Libobs Plugin Objects</a></li>
+<li class="toctree-l2"><a class="reference internal" href="backend-design.html#libobs-threads">Libobs Threads</a></li>
+<li class="toctree-l2"><a class="reference internal" href="backend-design.html#output-channels">Output Channels</a></li>
+<li class="toctree-l2"><a class="reference internal" href="backend-design.html#general-video-pipeline-overview">General Video Pipeline Overview</a></li>
+<li class="toctree-l2"><a class="reference internal" href="backend-design.html#general-audio-pipeline-overview">General Audio Pipeline Overview</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="plugins.html">Plugins</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="plugins.html#plugin-module-headers">Plugin Module Headers</a></li>
+<li class="toctree-l2"><a class="reference internal" href="plugins.html#common-directory-structure-and-cmakelists-txt">Common Directory Structure and CMakeLists.txt</a></li>
+<li class="toctree-l2"><a class="reference internal" href="plugins.html#native-plugin-initialization">Native Plugin Initialization</a></li>
+<li class="toctree-l2"><a class="reference internal" href="plugins.html#sources">Sources</a></li>
+<li class="toctree-l2"><a class="reference internal" href="plugins.html#outputs">Outputs</a></li>
+<li class="toctree-l2"><a class="reference internal" href="plugins.html#encoders">Encoders</a></li>
+<li class="toctree-l2"><a class="reference internal" href="plugins.html#services">Services</a></li>
+<li class="toctree-l2"><a class="reference internal" href="plugins.html#settings">Settings</a></li>
+<li class="toctree-l2"><a class="reference internal" href="plugins.html#properties">Properties</a></li>
+<li class="toctree-l2"><a class="reference internal" href="plugins.html#localization">Localization</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="frontends.html">Frontends</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="frontends.html#initialization-and-shutdown">Initialization and Shutdown</a></li>
+<li class="toctree-l2"><a class="reference internal" href="frontends.html#reconfiguring-video">Reconfiguring Video</a></li>
+<li class="toctree-l2"><a class="reference internal" href="frontends.html#displays">Displays</a></li>
+<li class="toctree-l2"><a class="reference internal" href="frontends.html#saving-loading-objects-and-object-management">Saving/Loading Objects and Object Management</a></li>
+<li class="toctree-l2"><a class="reference internal" href="frontends.html#signals">Signals</a></li>
+<li class="toctree-l2"><a class="reference internal" href="frontends.html#displaying-sources">Displaying Sources</a></li>
+<li class="toctree-l2"><a class="reference internal" href="frontends.html#outputs-encoders-and-services">Outputs, Encoders, and Services</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="graphics.html">Rendering Graphics</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="graphics.html#the-graphics-context">The Graphics Context</a></li>
+<li class="toctree-l2"><a class="reference internal" href="graphics.html#creating-effects">Creating Effects</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="graphics.html#effect-parameters">Effect Parameters</a></li>
+<li class="toctree-l3"><a class="reference internal" href="graphics.html#effect-sampler-states">Effect Sampler States</a></li>
+<li class="toctree-l3"><a class="reference internal" href="graphics.html#effect-vertex-pixel-semantics">Effect Vertex/Pixel Semantics</a></li>
+<li class="toctree-l3"><a class="reference internal" href="graphics.html#effect-techniques">Effect Techniques</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="graphics.html#using-effects">Using Effects</a></li>
+<li class="toctree-l2"><a class="reference internal" href="graphics.html#rendering-video-sources">Rendering Video Sources</a></li>
+<li class="toctree-l2"><a class="reference internal" href="graphics.html#rendering-video-effect-filters">Rendering Video Effect Filters</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="scripting.html">Python/Lua Scripting</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="scripting.html#script-function-exports">Script Function Exports</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="scripting.html#script_description"><code class="docutils literal notranslate"><span class="pre">script_description()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="scripting.html#script_load"><code class="docutils literal notranslate"><span class="pre">script_load()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="scripting.html#script_unload"><code class="docutils literal notranslate"><span class="pre">script_unload()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="scripting.html#script_save"><code class="docutils literal notranslate"><span class="pre">script_save()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="scripting.html#script_defaults"><code class="docutils literal notranslate"><span class="pre">script_defaults()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="scripting.html#script_update"><code class="docutils literal notranslate"><span class="pre">script_update()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="scripting.html#script_properties"><code class="docutils literal notranslate"><span class="pre">script_properties()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="scripting.html#script_tick"><code class="docutils literal notranslate"><span class="pre">script_tick()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="scripting.html#getting-the-current-script-s-path">Getting the Current Script’s Path</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="scripting.html#script_path"><code class="docutils literal notranslate"><span class="pre">script_path()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="scripting.html#script-timers">Script Timers</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="scripting.html#timer_add"><code class="docutils literal notranslate"><span class="pre">timer_add()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="scripting.html#timer_remove"><code class="docutils literal notranslate"><span class="pre">timer_remove()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="scripting.html#script-sources-lua-only">Script Sources (Lua Only)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="scripting.html#other-differences-from-the-c-api">Other Differences From the C API</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="scripting.html#obs_enum_sources"><code class="docutils literal notranslate"><span class="pre">obs_enum_sources()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="scripting.html#obs_scene_enum_items"><code class="docutils literal notranslate"><span class="pre">obs_scene_enum_items()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="scripting.html#obs_sceneitem_group_enum_items"><code class="docutils literal notranslate"><span class="pre">obs_sceneitem_group_enum_items()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="scripting.html#obs_add_main_render_callback"><code class="docutils literal notranslate"><span class="pre">obs_add_main_render_callback()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="scripting.html#obs_remove_main_render_callback"><code class="docutils literal notranslate"><span class="pre">obs_remove_main_render_callback()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="scripting.html#signal_handler_connect"><code class="docutils literal notranslate"><span class="pre">signal_handler_connect()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="scripting.html#signal_handler_disconnect"><code class="docutils literal notranslate"><span class="pre">signal_handler_disconnect()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="scripting.html#signal_handler_connect_global"><code class="docutils literal notranslate"><span class="pre">signal_handler_connect_global()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="scripting.html#signal_handler_disconnect_global"><code class="docutils literal notranslate"><span class="pre">signal_handler_disconnect_global()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="scripting.html#obs_hotkey_register_frontend"><code class="docutils literal notranslate"><span class="pre">obs_hotkey_register_frontend()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="scripting.html#obs_hotkey_unregister"><code class="docutils literal notranslate"><span class="pre">obs_hotkey_unregister()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="scripting.html#obs_properties_add_button"><code class="docutils literal notranslate"><span class="pre">obs_properties_add_button()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="scripting.html#remove_current_callback"><code class="docutils literal notranslate"><span class="pre">remove_current_callback()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="scripting.html#source_list_release"><code class="docutils literal notranslate"><span class="pre">source_list_release()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="scripting.html#sceneitem_list_release"><code class="docutils literal notranslate"><span class="pre">sceneitem_list_release()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="scripting.html#calldata_source"><code class="docutils literal notranslate"><span class="pre">calldata_source()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="scripting.html#calldata_sceneitem"><code class="docutils literal notranslate"><span class="pre">calldata_sceneitem()</span></code></a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">API Reference</span></p>
+<ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="reference-core.html">OBS Core</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="reference-core.html#initialization-shutdown-and-information">Initialization, Shutdown, and Information</a></li>
+<li class="toctree-l2"><a class="reference internal" href="reference-core.html#libobs-objects">Libobs Objects</a></li>
+<li class="toctree-l2"><a class="reference internal" href="reference-core.html#video-audio-and-graphics">Video, Audio, and Graphics</a></li>
+<li class="toctree-l2"><a class="reference internal" href="reference-core.html#primary-signal-procedure-handlers">Primary signal/procedure handlers</a></li>
+<li class="toctree-l2"><a class="reference internal" href="reference-core.html#core-obs-signals">Core OBS Signals</a></li>
+<li class="toctree-l2"><a class="reference internal" href="reference-core.html#displays">Displays</a></li>
+<li class="toctree-l2"><a class="reference internal" href="reference-core.html#views">Views</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="reference-modules.html">Modules</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="reference-modules.html#module-macros">Module Macros</a></li>
+<li class="toctree-l2"><a class="reference internal" href="reference-modules.html#module-exports">Module Exports</a></li>
+<li class="toctree-l2"><a class="reference internal" href="reference-modules.html#module-externs">Module Externs</a></li>
+<li class="toctree-l2"><a class="reference internal" href="reference-modules.html#frontend-module-functions">Frontend Module Functions</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="reference-core-objects.html">Core API Object</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="reference-sources.html">Sources (obs_source_t)</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="reference-sources.html#source-definition-structure-obs-source-info">Source Definition Structure (obs_source_info)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="reference-sources.html#common-source-signals">Common Source Signals</a></li>
+<li class="toctree-l3"><a class="reference internal" href="reference-sources.html#source-specific-signals">Source-specific Signals</a></li>
+<li class="toctree-l3"><a class="reference internal" href="reference-sources.html#source-specific-procedures">Source-specific Procedures</a></li>
+<li class="toctree-l3"><a class="reference internal" href="reference-sources.html#general-source-functions">General Source Functions</a></li>
+<li class="toctree-l3"><a class="reference internal" href="reference-sources.html#functions-used-by-sources">Functions used by sources</a></li>
+<li class="toctree-l3"><a class="reference internal" href="reference-sources.html#filters">Filters</a></li>
+<li class="toctree-l3"><a class="reference internal" href="reference-sources.html#functions-used-by-filters">Functions used by filters</a></li>
+<li class="toctree-l3"><a class="reference internal" href="reference-sources.html#transitions">Transitions</a></li>
+<li class="toctree-l3"><a class="reference internal" href="reference-sources.html#functions-used-by-transitions">Functions used by transitions</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="reference-scenes.html">Scenes (obs_scene_t)</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="reference-scenes.html#scene-item-transform-structure-obs-transform-info">Scene Item Transform Structure (obs_transform_info)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="reference-scenes.html#scene-item-crop-structure-obs-sceneitem-crop">Scene Item Crop Structure (obs_sceneitem_crop)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="reference-scenes.html#scene-item-order-info-structure-obs-sceneitem-order-info">Scene Item Order Info Structure (*obs_sceneitem_order_info)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="reference-scenes.html#scene-signals">Scene Signals</a></li>
+<li class="toctree-l3"><a class="reference internal" href="reference-scenes.html#general-scene-functions">General Scene Functions</a></li>
+<li class="toctree-l3"><a class="reference internal" href="reference-scenes.html#scene-item-functions">Scene Item Functions</a></li>
+<li class="toctree-l3"><a class="reference internal" href="reference-scenes.html#scene-item-group-functions">Scene Item Group Functions</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="reference-outputs.html">Outputs (obs_output_t)</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="reference-outputs.html#output-definition-structure-obs-output-info">Output Definition Structure (obs_output_info)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="reference-outputs.html#output-signals">Output Signals</a></li>
+<li class="toctree-l3"><a class="reference internal" href="reference-outputs.html#general-output-functions">General Output Functions</a></li>
+<li class="toctree-l3"><a class="reference internal" href="reference-outputs.html#functions-used-by-outputs">Functions used by outputs</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="reference-encoders.html">Encoders (obs_encoder_t)</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="reference-encoders.html#encoder-definition-structure-obs-encoder-info">Encoder Definition Structure (obs_encoder_info)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="reference-encoders.html#encoder-packet-structure-encoder-packet">Encoder Packet Structure (encoder_packet)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="reference-encoders.html#raw-frame-data-structure-encoder-frame">Raw Frame Data Structure (encoder_frame)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="reference-encoders.html#encoder-region-of-interest-structure-obs-encoder-roi">Encoder Region of Interest Structure (obs_encoder_roi)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="reference-encoders.html#general-encoder-functions">General Encoder Functions</a></li>
+<li class="toctree-l3"><a class="reference internal" href="reference-encoders.html#functions-used-by-encoders">Functions used by encoders</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="reference-services.html">Services (obs_service_t)</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="reference-services.html#service-definition-structure">Service Definition Structure</a></li>
+<li class="toctree-l3"><a class="reference internal" href="reference-services.html#general-service-functions">General Service Functions</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="reference-settings.html">Data Settings (obs_data_t)</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="reference-settings.html#general-functions">General Functions</a></li>
+<li class="toctree-l3"><a class="reference internal" href="reference-settings.html#set-functions">Set Functions</a></li>
+<li class="toctree-l3"><a class="reference internal" href="reference-settings.html#get-functions">Get Functions</a></li>
+<li class="toctree-l3"><a class="reference internal" href="reference-settings.html#default-value-functions">Default Value Functions</a></li>
+<li class="toctree-l3"><a class="reference internal" href="reference-settings.html#autoselect-functions">Autoselect Functions</a></li>
+<li class="toctree-l3"><a class="reference internal" href="reference-settings.html#array-functions">Array Functions</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="reference-properties.html">Properties (obs_properties_t)</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="reference-properties.html#general-functions">General Functions</a></li>
+<li class="toctree-l3"><a class="reference internal" href="reference-properties.html#property-object-functions">Property Object Functions</a></li>
+<li class="toctree-l3"><a class="reference internal" href="reference-properties.html#property-enumeration-functions">Property Enumeration Functions</a></li>
+<li class="toctree-l3"><a class="reference internal" href="reference-properties.html#property-modification-functions">Property Modification Functions</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1 current"><a class="reference internal" href="reference-libobs-util.html">Platform/Utility</a><ul class="current">
+<li class="toctree-l2"><a class="reference internal" href="reference-libobs-util-base.html">Logging</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="reference-libobs-util-base.html#logging-levels">Logging Levels</a></li>
+<li class="toctree-l3"><a class="reference internal" href="reference-libobs-util-base.html#logging-functions">Logging Functions</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="reference-libobs-util-bmem.html">Memory Management</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="reference-libobs-util-bmem.html#memory-functions">Memory Functions</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="reference-libobs-util-circlebuf.html">Circular Buffers</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="reference-libobs-util-circlebuf.html#circular-buffer-structure-struct-circlebuf">Circular Buffer Structure (struct circlebuf)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="reference-libobs-util-circlebuf.html#circular-buffer-inline-functions">Circular Buffer Inline Functions</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="reference-libobs-util-config-file.html">Config Files</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="reference-libobs-util-config-file.html#config-file-functions">Config File Functions</a></li>
+<li class="toctree-l3"><a class="reference internal" href="reference-libobs-util-config-file.html#set-get-functions">Set/Get Functions</a></li>
+<li class="toctree-l3"><a class="reference internal" href="reference-libobs-util-config-file.html#default-value-functions">Default Value Functions</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="reference-libobs-util-darray.html">Dynamic Arrays</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="reference-libobs-util-darray.html#dynamic-array-macros">Dynamic Array Macros</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="reference-libobs-util-deque.html">Double-Ended Queue</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="reference-libobs-util-deque.html#deque-structure-struct-deque">Deque Structure (struct deque)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="reference-libobs-util-deque.html#deque-inline-functions">Deque Inline Functions</a></li>
+</ul>
+</li>
+<li class="toctree-l2 current"><a class="current reference internal" href="#">Dynamic Strings And String Helpers</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#dynamic-string-structure-struct-dstr">Dynamic String Structure (struct dstr)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#general-string-helper-functions">General String Helper Functions</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#dynamic-string-functions">Dynamic String Functions</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="reference-libobs-util-platform.html">Platform Helpers</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="reference-libobs-util-platform.html#file-functions">File Functions</a></li>
+<li class="toctree-l3"><a class="reference internal" href="reference-libobs-util-platform.html#string-conversion-functions">String Conversion Functions</a></li>
+<li class="toctree-l3"><a class="reference internal" href="reference-libobs-util-platform.html#number-string-conversion-functions">Number/String Conversion Functions</a></li>
+<li class="toctree-l3"><a class="reference internal" href="reference-libobs-util-platform.html#dynamic-link-library-functions">Dynamic Link Library Functions</a></li>
+<li class="toctree-l3"><a class="reference internal" href="reference-libobs-util-platform.html#cpu-usage-functions">CPU Usage Functions</a></li>
+<li class="toctree-l3"><a class="reference internal" href="reference-libobs-util-platform.html#sleep-time-functions">Sleep/Time Functions</a></li>
+<li class="toctree-l3"><a class="reference internal" href="reference-libobs-util-platform.html#other-path-file-functions">Other Path/File Functions</a></li>
+<li class="toctree-l3"><a class="reference internal" href="reference-libobs-util-platform.html#sleep-inhibition-functions">Sleep-Inhibition Functions</a></li>
+<li class="toctree-l3"><a class="reference internal" href="reference-libobs-util-platform.html#other-functions">Other Functions</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="reference-libobs-util-profiler.html">Profiler</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="reference-libobs-util-profiler.html#profiler-structures">Profiler Structures</a></li>
+<li class="toctree-l3"><a class="reference internal" href="reference-libobs-util-profiler.html#profiler-control-functions">Profiler Control Functions</a></li>
+<li class="toctree-l3"><a class="reference internal" href="reference-libobs-util-profiler.html#profiling-functions">Profiling Functions</a></li>
+<li class="toctree-l3"><a class="reference internal" href="reference-libobs-util-profiler.html#profiler-name-storage-functions">Profiler Name Storage Functions</a></li>
+<li class="toctree-l3"><a class="reference internal" href="reference-libobs-util-profiler.html#profiler-data-access-functions">Profiler Data Access Functions</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="reference-libobs-util-serializers.html">Serializer</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="reference-libobs-util-serializers.html#serializer-structure-struct-serializer">Serializer Structure (struct serializer)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="reference-libobs-util-serializers.html#serializer-inline-functions">Serializer Inline Functions</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="reference-libobs-util-serializers.html#array-output-serializer">Array Output Serializer</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="reference-libobs-util-serializers.html#array-output-serializer-structure-struct-array-output-data">Array Output Serializer Structure (struct array_output_data)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="reference-libobs-util-serializers.html#array-output-serializer-functions">Array Output Serializer Functions</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="reference-libobs-util-serializers.html#file-input-output-serializers">File Input/Output Serializers</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="reference-libobs-util-serializers.html#file-input-serializer-functions">File Input Serializer Functions</a></li>
+<li class="toctree-l3"><a class="reference internal" href="reference-libobs-util-serializers.html#file-output-serializer-functions">File Output Serializer Functions</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="reference-libobs-util-serializers.html#buffered-file-output-serializer">Buffered File Output Serializer</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="reference-libobs-util-serializers.html#buffered-file-output-serializer-functions">Buffered File Output Serializer Functions</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="reference-libobs-util-text-lookup.html">Text Lookup Interface</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="reference-libobs-util-text-lookup.html#text-lookup-functions">Text Lookup Functions</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="reference-libobs-util-threading.html">Threading</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="reference-libobs-util-threading.html#threading-types">Threading Types</a></li>
+<li class="toctree-l3"><a class="reference internal" href="reference-libobs-util-threading.html#general-thread-functions">General Thread Functions</a></li>
+<li class="toctree-l3"><a class="reference internal" href="reference-libobs-util-threading.html#event-functions">Event Functions</a></li>
+<li class="toctree-l3"><a class="reference internal" href="reference-libobs-util-threading.html#semaphore-functions">Semaphore Functions</a></li>
+<li class="toctree-l3"><a class="reference internal" href="reference-libobs-util-threading.html#atomic-inline-functions">Atomic Inline Functions</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="reference-libobs-callback.html">Callbacks (libobs/callback)</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="reference-libobs-callback.html#calldata">Calldata</a></li>
+<li class="toctree-l2"><a class="reference internal" href="reference-libobs-callback.html#signals">Signals</a></li>
+<li class="toctree-l2"><a class="reference internal" href="reference-libobs-callback.html#procedure-handlers">Procedure Handlers</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="reference-libobs-graphics.html">Graphics (libobs/graphics)</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="reference-libobs-graphics-effects.html">Effects (Shaders)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="reference-libobs-graphics-vec2.html">2-Component Vector</a></li>
+<li class="toctree-l2"><a class="reference internal" href="reference-libobs-graphics-vec3.html">3-Component Vector</a></li>
+<li class="toctree-l2"><a class="reference internal" href="reference-libobs-graphics-vec4.html">4-Component Vector</a></li>
+<li class="toctree-l2"><a class="reference internal" href="reference-libobs-graphics-quat.html">Quaternion</a></li>
+<li class="toctree-l2"><a class="reference internal" href="reference-libobs-graphics-matrix4.html">Matrix</a></li>
+<li class="toctree-l2"><a class="reference internal" href="reference-libobs-graphics-math.html">Extra Math Functions/Macros</a></li>
+<li class="toctree-l2"><a class="reference internal" href="reference-libobs-graphics-image-file.html">Image File Helper</a></li>
+<li class="toctree-l2"><a class="reference internal" href="reference-libobs-graphics-axisang.html">Axis Angle</a></li>
+<li class="toctree-l2"><a class="reference internal" href="reference-libobs-graphics-graphics.html">Core Graphics API</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="reference-libobs-graphics-graphics.html#graphics-enumerations">Graphics Enumerations</a></li>
+<li class="toctree-l3"><a class="reference internal" href="reference-libobs-graphics-graphics.html#graphics-structures">Graphics Structures</a></li>
+<li class="toctree-l3"><a class="reference internal" href="reference-libobs-graphics-graphics.html#initialization-functions">Initialization Functions</a></li>
+<li class="toctree-l3"><a class="reference internal" href="reference-libobs-graphics-graphics.html#matrix-stack-functions">Matrix Stack Functions</a></li>
+<li class="toctree-l3"><a class="reference internal" href="reference-libobs-graphics-graphics.html#draw-functions">Draw Functions</a></li>
+<li class="toctree-l3"><a class="reference internal" href="reference-libobs-graphics-graphics.html#swap-chains">Swap Chains</a></li>
+<li class="toctree-l3"><a class="reference internal" href="reference-libobs-graphics-graphics.html#resource-loading">Resource Loading</a></li>
+<li class="toctree-l3"><a class="reference internal" href="reference-libobs-graphics-graphics.html#id1">Draw Functions</a></li>
+<li class="toctree-l3"><a class="reference internal" href="reference-libobs-graphics-graphics.html#texture-functions">Texture Functions</a></li>
+<li class="toctree-l3"><a class="reference internal" href="reference-libobs-graphics-graphics.html#cube-texture-functions">Cube Texture Functions</a></li>
+<li class="toctree-l3"><a class="reference internal" href="reference-libobs-graphics-graphics.html#staging-surface-functions">Staging Surface Functions</a></li>
+<li class="toctree-l3"><a class="reference internal" href="reference-libobs-graphics-graphics.html#z-stencil-functions">Z-Stencil Functions</a></li>
+<li class="toctree-l3"><a class="reference internal" href="reference-libobs-graphics-graphics.html#sampler-state-functions">Sampler State Functions</a></li>
+<li class="toctree-l3"><a class="reference internal" href="reference-libobs-graphics-graphics.html#vertex-buffer-functions">Vertex Buffer Functions</a></li>
+<li class="toctree-l3"><a class="reference internal" href="reference-libobs-graphics-graphics.html#index-buffer-functions">Index Buffer Functions</a></li>
+<li class="toctree-l3"><a class="reference internal" href="reference-libobs-graphics-graphics.html#display-duplicator-windows-only">Display Duplicator (Windows Only)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="reference-libobs-graphics-graphics.html#monitor-functions">Monitor Functions</a></li>
+<li class="toctree-l3"><a class="reference internal" href="reference-libobs-graphics-graphics.html#render-helper-functions">Render Helper Functions</a></li>
+<li class="toctree-l3"><a class="reference internal" href="reference-libobs-graphics-graphics.html#graphics-types">Graphics Types</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="reference-libobs-media-io.html">Media I/O (libobs/media-io)</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="reference-libobs-media-io.html#video-handler">Video Handler</a></li>
+<li class="toctree-l2"><a class="reference internal" href="reference-libobs-media-io.html#audio-handler">Audio Handler</a></li>
+<li class="toctree-l2"><a class="reference internal" href="reference-libobs-media-io.html#resampler">Resampler</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="reference-frontend-api.html">OBS Studio Frontend API</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="reference-frontend-api.html#structures-enumerations">Structures/Enumerations</a></li>
+<li class="toctree-l2"><a class="reference internal" href="reference-frontend-api.html#functions">Functions</a></li>
+</ul>
+</li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Additional Resources</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference external" href="https://obsproject.com/wiki/Install-Instructions">Build Instructions</a></li>
+<li class="toctree-l1"><a class="reference external" href="https://github.com/obsproject/obs-plugintemplate#obs-plugin-template">Plugin Template</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu"  style="background: #202C73" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="index.html">OBS Studio</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content style-external-links">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="index.html" class="icon icon-home" aria-label="Home"></a></li>
+          <li class="breadcrumb-item"><a href="reference-libobs-util.html">Platform/Utility API Reference (libobs/util)</a></li>
+      <li class="breadcrumb-item active">Dynamic Strings And String Helpers</li>
+      <li class="wy-breadcrumbs-aside">
+              <a href="https://github.com/OBSProject/obs-studio/edit/master/docs/sphinx/reference-libobs-util-dstr.rst" class="fa fa-github"> Edit on GitHub</a>
+      </li>
+  </ul><div class="rst-breadcrumbs-buttons" role="navigation" aria-label="Sequential page navigation">
+        <a href="reference-libobs-util-deque.html" class="btn btn-neutral float-left" title="Double-Ended Queue" accesskey="p"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="reference-libobs-util-platform.html" class="btn btn-neutral float-right" title="Platform Helpers" accesskey="n">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+  </div>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <section id="dynamic-strings-and-string-helpers">
+<h1>Dynamic Strings And String Helpers<a class="headerlink" href="#dynamic-strings-and-string-helpers" title="Link to this heading"></a></h1>
+<p>Provides string helper structures/functions (roughly equivalent to
+std::string).</p>
+<div class="highlight-cpp notranslate"><div class="highlight"><pre><span></span><span class="cp">#include</span><span class="w"> </span><span class="cpf">&lt;util/dstr.h&gt;</span>
+</pre></div>
+</div>
+<section id="dynamic-string-structure-struct-dstr">
+<h2>Dynamic String Structure (struct dstr)<a class="headerlink" href="#dynamic-string-structure-struct-dstr" title="Link to this heading"></a></h2>
+<dl class="c struct">
+<dt class="sig sig-object c" id="c.dstr">
+<span class="k"><span class="pre">struct</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">dstr</span></span></span><a class="headerlink" href="#c.dstr" title="Link to this definition"></a><br /></dt>
+<dd></dd></dl>
+
+<dl class="c member">
+<dt class="sig sig-object c" id="c.dstr.array">
+<span class="kt"><span class="pre">char</span></span><span class="w"> </span><span class="p"><span class="pre">*</span></span><span class="sig-prename descclassname"><a class="reference internal" href="#c.dstr" title="dstr"><span class="n"><span class="pre">dstr</span></span></a><span class="p"><span class="pre">.</span></span></span><span class="sig-name descname"><span class="n"><span class="pre">array</span></span></span><a class="headerlink" href="#c.dstr.array" title="Link to this definition"></a><br /></dt>
+<dd></dd></dl>
+
+<dl class="c member">
+<dt class="sig sig-object c" id="c.dstr.len">
+<span class="n"><span class="pre">size_t</span></span><span class="w"> </span><span class="sig-prename descclassname"><a class="reference internal" href="#c.dstr" title="dstr"><span class="n"><span class="pre">dstr</span></span></a><span class="p"><span class="pre">.</span></span></span><span class="sig-name descname"><span class="n"><span class="pre">len</span></span></span><a class="headerlink" href="#c.dstr.len" title="Link to this definition"></a><br /></dt>
+<dd></dd></dl>
+
+<dl class="c member">
+<dt class="sig sig-object c" id="c.dstr.capacity">
+<span class="n"><span class="pre">size_t</span></span><span class="w"> </span><span class="sig-prename descclassname"><a class="reference internal" href="#c.dstr" title="dstr"><span class="n"><span class="pre">dstr</span></span></a><span class="p"><span class="pre">.</span></span></span><span class="sig-name descname"><span class="n"><span class="pre">capacity</span></span></span><a class="headerlink" href="#c.dstr.capacity" title="Link to this definition"></a><br /></dt>
+<dd></dd></dl>
+
+</section>
+<section id="general-string-helper-functions">
+<h2>General String Helper Functions<a class="headerlink" href="#general-string-helper-functions" title="Link to this heading"></a></h2>
+<dl class="c function">
+<dt class="sig sig-object c" id="c.astrcmpi">
+<span class="kt"><span class="pre">int</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">astrcmpi</span></span></span><span class="sig-paren">(</span><span class="k"><span class="pre">const</span></span><span class="w"> </span><span class="kt"><span class="pre">char</span></span><span class="w"> </span><span class="p"><span class="pre">*</span></span><span class="n"><span class="pre">str1</span></span>, <span class="k"><span class="pre">const</span></span><span class="w"> </span><span class="kt"><span class="pre">char</span></span><span class="w"> </span><span class="p"><span class="pre">*</span></span><span class="n"><span class="pre">str2</span></span><span class="sig-paren">)</span><a class="headerlink" href="#c.astrcmpi" title="Link to this definition"></a><br /></dt>
+<dd><p>Case insensitive string comparison function.</p>
+</dd></dl>
+
+<hr class="docutils" />
+<dl class="c function">
+<dt class="sig sig-object c" id="c.wstrcmpi">
+<span class="kt"><span class="pre">int</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">wstrcmpi</span></span></span><span class="sig-paren">(</span><span class="k"><span class="pre">const</span></span><span class="w"> </span><span class="n"><span class="pre">wchar_t</span></span><span class="w"> </span><span class="p"><span class="pre">*</span></span><span class="n"><span class="pre">str1</span></span>, <span class="k"><span class="pre">const</span></span><span class="w"> </span><span class="n"><span class="pre">wchar_t</span></span><span class="w"> </span><span class="p"><span class="pre">*</span></span><span class="n"><span class="pre">str2</span></span><span class="sig-paren">)</span><a class="headerlink" href="#c.wstrcmpi" title="Link to this definition"></a><br /></dt>
+<dd><p>Case insensitive wide string comparison function.</p>
+</dd></dl>
+
+<hr class="docutils" />
+<dl class="c function">
+<dt class="sig sig-object c" id="c.astrcmp_n">
+<span class="kt"><span class="pre">int</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">astrcmp_n</span></span></span><span class="sig-paren">(</span><span class="k"><span class="pre">const</span></span><span class="w"> </span><span class="kt"><span class="pre">char</span></span><span class="w"> </span><span class="p"><span class="pre">*</span></span><span class="n"><span class="pre">str1</span></span>, <span class="k"><span class="pre">const</span></span><span class="w"> </span><span class="kt"><span class="pre">char</span></span><span class="w"> </span><span class="p"><span class="pre">*</span></span><span class="n"><span class="pre">str2</span></span>, <span class="n"><span class="pre">size_t</span></span><span class="w"> </span><span class="n"><span class="pre">n</span></span><span class="sig-paren">)</span><a class="headerlink" href="#c.astrcmp_n" title="Link to this definition"></a><br /></dt>
+<dd><p>String comparison function for a specific number of characters.</p>
+</dd></dl>
+
+<hr class="docutils" />
+<dl class="c function">
+<dt class="sig sig-object c" id="c.wstrcmp_n">
+<span class="kt"><span class="pre">int</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">wstrcmp_n</span></span></span><span class="sig-paren">(</span><span class="k"><span class="pre">const</span></span><span class="w"> </span><span class="n"><span class="pre">wchar_t</span></span><span class="w"> </span><span class="p"><span class="pre">*</span></span><span class="n"><span class="pre">str1</span></span>, <span class="k"><span class="pre">const</span></span><span class="w"> </span><span class="n"><span class="pre">wchar_t</span></span><span class="w"> </span><span class="p"><span class="pre">*</span></span><span class="n"><span class="pre">str2</span></span>, <span class="n"><span class="pre">size_t</span></span><span class="w"> </span><span class="n"><span class="pre">n</span></span><span class="sig-paren">)</span><a class="headerlink" href="#c.wstrcmp_n" title="Link to this definition"></a><br /></dt>
+<dd><p>Wide string comparison function for a specific number of characters.</p>
+</dd></dl>
+
+<hr class="docutils" />
+<dl class="c function">
+<dt class="sig sig-object c" id="c.astrcmpi_n">
+<span class="kt"><span class="pre">int</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">astrcmpi_n</span></span></span><span class="sig-paren">(</span><span class="k"><span class="pre">const</span></span><span class="w"> </span><span class="kt"><span class="pre">char</span></span><span class="w"> </span><span class="p"><span class="pre">*</span></span><span class="n"><span class="pre">str1</span></span>, <span class="k"><span class="pre">const</span></span><span class="w"> </span><span class="kt"><span class="pre">char</span></span><span class="w"> </span><span class="p"><span class="pre">*</span></span><span class="n"><span class="pre">str2</span></span>, <span class="n"><span class="pre">size_t</span></span><span class="w"> </span><span class="n"><span class="pre">n</span></span><span class="sig-paren">)</span><a class="headerlink" href="#c.astrcmpi_n" title="Link to this definition"></a><br /></dt>
+<dd><p>Case insensitive string comparison function for a specific number of
+characters.</p>
+</dd></dl>
+
+<hr class="docutils" />
+<dl class="c function">
+<dt class="sig sig-object c" id="c.wstrcmpi_n">
+<span class="kt"><span class="pre">int</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">wstrcmpi_n</span></span></span><span class="sig-paren">(</span><span class="k"><span class="pre">const</span></span><span class="w"> </span><span class="n"><span class="pre">wchar_t</span></span><span class="w"> </span><span class="p"><span class="pre">*</span></span><span class="n"><span class="pre">str1</span></span>, <span class="k"><span class="pre">const</span></span><span class="w"> </span><span class="n"><span class="pre">wchar_t</span></span><span class="w"> </span><span class="p"><span class="pre">*</span></span><span class="n"><span class="pre">str2</span></span>, <span class="n"><span class="pre">size_t</span></span><span class="w"> </span><span class="n"><span class="pre">n</span></span><span class="sig-paren">)</span><a class="headerlink" href="#c.wstrcmpi_n" title="Link to this definition"></a><br /></dt>
+<dd><p>Case insensitive wide string comparison function for a specific
+number of characters.</p>
+</dd></dl>
+
+<hr class="docutils" />
+<dl class="c function">
+<dt class="sig sig-object c" id="c.astrstri">
+<span class="kt"><span class="pre">char</span></span><span class="w"> </span><span class="p"><span class="pre">*</span></span><span class="sig-name descname"><span class="n"><span class="pre">astrstri</span></span></span><span class="sig-paren">(</span><span class="k"><span class="pre">const</span></span><span class="w"> </span><span class="kt"><span class="pre">char</span></span><span class="w"> </span><span class="p"><span class="pre">*</span></span><span class="n"><span class="pre">str</span></span>, <span class="k"><span class="pre">const</span></span><span class="w"> </span><span class="kt"><span class="pre">char</span></span><span class="w"> </span><span class="p"><span class="pre">*</span></span><span class="n"><span class="pre">find</span></span><span class="sig-paren">)</span><a class="headerlink" href="#c.astrstri" title="Link to this definition"></a><br /></dt>
+<dd><p>Case insensitive version of strstr.</p>
+</dd></dl>
+
+<hr class="docutils" />
+<dl class="c function">
+<dt class="sig sig-object c" id="c.wstrstri">
+<span class="n"><span class="pre">wchar_t</span></span><span class="w"> </span><span class="p"><span class="pre">*</span></span><span class="sig-name descname"><span class="n"><span class="pre">wstrstri</span></span></span><span class="sig-paren">(</span><span class="k"><span class="pre">const</span></span><span class="w"> </span><span class="n"><span class="pre">wchar_t</span></span><span class="w"> </span><span class="p"><span class="pre">*</span></span><span class="n"><span class="pre">str</span></span>, <span class="k"><span class="pre">const</span></span><span class="w"> </span><span class="n"><span class="pre">wchar_t</span></span><span class="w"> </span><span class="p"><span class="pre">*</span></span><span class="n"><span class="pre">find</span></span><span class="sig-paren">)</span><a class="headerlink" href="#c.wstrstri" title="Link to this definition"></a><br /></dt>
+<dd><p>Case insensitive version of wcsstr.</p>
+</dd></dl>
+
+<hr class="docutils" />
+<dl class="c function">
+<dt class="sig sig-object c" id="c.strdepad">
+<span class="kt"><span class="pre">char</span></span><span class="w"> </span><span class="p"><span class="pre">*</span></span><span class="sig-name descname"><span class="n"><span class="pre">strdepad</span></span></span><span class="sig-paren">(</span><span class="kt"><span class="pre">char</span></span><span class="w"> </span><span class="p"><span class="pre">*</span></span><span class="n"><span class="pre">str</span></span><span class="sig-paren">)</span><a class="headerlink" href="#c.strdepad" title="Link to this definition"></a><br /></dt>
+<dd><p>Removes padding characters (tab, space, CR, LF) from the front and
+end of a string.</p>
+</dd></dl>
+
+<hr class="docutils" />
+<dl class="c function">
+<dt class="sig sig-object c" id="c.wcsdepad">
+<span class="n"><span class="pre">wchar_t</span></span><span class="w"> </span><span class="p"><span class="pre">*</span></span><span class="sig-name descname"><span class="n"><span class="pre">wcsdepad</span></span></span><span class="sig-paren">(</span><span class="n"><span class="pre">wchar_t</span></span><span class="w"> </span><span class="p"><span class="pre">*</span></span><span class="n"><span class="pre">str</span></span><span class="sig-paren">)</span><a class="headerlink" href="#c.wcsdepad" title="Link to this definition"></a><br /></dt>
+<dd><p>Removes padding characters (tab, space, CR, LF) from the front and
+end of a wide string.</p>
+</dd></dl>
+
+<hr class="docutils" />
+<dl class="c function">
+<dt class="sig sig-object c" id="c.strlist_split">
+<span class="kt"><span class="pre">char</span></span><span class="w"> </span><span class="p"><span class="pre">*</span></span><span class="p"><span class="pre">*</span></span><span class="sig-name descname"><span class="n"><span class="pre">strlist_split</span></span></span><span class="sig-paren">(</span><span class="k"><span class="pre">const</span></span><span class="w"> </span><span class="kt"><span class="pre">char</span></span><span class="w"> </span><span class="p"><span class="pre">*</span></span><span class="n"><span class="pre">str</span></span>, <span class="kt"><span class="pre">char</span></span><span class="w"> </span><span class="n"><span class="pre">split_ch</span></span>, <span class="kt"><span class="pre">bool</span></span><span class="w"> </span><span class="n"><span class="pre">include_empty</span></span><span class="sig-paren">)</span><a class="headerlink" href="#c.strlist_split" title="Link to this definition"></a><br /></dt>
+<dd><p>Splits a string in to a list of multiple sub-strings, terminated by
+<code class="docutils literal notranslate"><span class="pre">NULL</span></code>. If <code class="docutils literal notranslate"><span class="pre">split_ch</span></code> does not exist in the string, the first
+sub-string will be the same as <code class="docutils literal notranslate"><span class="pre">str</span></code>. Free with <a class="reference internal" href="#c.strlist_free" title="strlist_free"><code class="xref c c-func docutils literal notranslate"><span class="pre">strlist_free()</span></code></a>.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>str</strong> – The string to be split</p></li>
+<li><p><strong>split_ch</strong> – The delimiter</p></li>
+<li><p><strong>include_empty</strong> – If <em>true</em>, empty strings caused by having the
+<code class="docutils literal notranslate"><span class="pre">split_ch</span></code> right next to another will be
+included in the list. If <em>false</em>, they won’t
+be included.</p></li>
+</ul>
+</dd>
+</dl>
+<p>Sample usage:</p>
+<div class="highlight-cpp notranslate"><div class="highlight"><pre><span></span><span class="kt">char</span><span class="w"> </span><span class="o">**</span><span class="n">words</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">strlist_split</span><span class="p">(</span><span class="s">&quot;OBS    Studio&quot;</span><span class="p">,</span><span class="w"> </span><span class="sc">&#39; &#39;</span><span class="p">,</span><span class="w"> </span><span class="nb">false</span><span class="p">);</span>
+<span class="kt">int</span><span class="w"> </span><span class="n">count</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">0</span><span class="p">;</span>
+
+<span class="k">for</span><span class="w"> </span><span class="p">(</span><span class="kt">char</span><span class="w"> </span><span class="o">**</span><span class="n">word</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">words</span><span class="p">;</span><span class="w"> </span><span class="o">*</span><span class="n">word</span><span class="p">;</span><span class="w"> </span><span class="o">++</span><span class="n">word</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">        </span><span class="n">count</span><span class="o">++</span><span class="p">;</span>
+<span class="w">        </span><span class="n">blog</span><span class="p">(</span><span class="n">LOG_DEBUG</span><span class="p">,</span><span class="w"> </span><span class="s">&quot;%s&quot;</span><span class="p">,</span><span class="w"> </span><span class="o">*</span><span class="n">word</span><span class="p">);</span>
+<span class="p">}</span>
+
+<span class="n">strlist_free</span><span class="p">(</span><span class="n">words</span><span class="p">);</span>
+<span class="c1">// count == 2</span>
+</pre></div>
+</div>
+</dd></dl>
+
+<hr class="docutils" />
+<dl class="c function">
+<dt class="sig sig-object c" id="c.strlist_free">
+<span class="kt"><span class="pre">void</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">strlist_free</span></span></span><span class="sig-paren">(</span><span class="kt"><span class="pre">char</span></span><span class="w"> </span><span class="p"><span class="pre">*</span></span><span class="p"><span class="pre">*</span></span><span class="n"><span class="pre">strlist</span></span><span class="sig-paren">)</span><a class="headerlink" href="#c.strlist_free" title="Link to this definition"></a><br /></dt>
+<dd><p>Frees a string list created with <a class="reference internal" href="#c.strlist_split" title="strlist_split"><code class="xref c c-func docutils literal notranslate"><span class="pre">strlist_split()</span></code></a>.</p>
+</dd></dl>
+
+</section>
+<hr class="docutils" />
+<section id="dynamic-string-functions">
+<h2>Dynamic String Functions<a class="headerlink" href="#dynamic-string-functions" title="Link to this heading"></a></h2>
+<dl class="c function">
+<dt class="sig sig-object c" id="c.dstr_init">
+<span class="kt"><span class="pre">void</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">dstr_init</span></span></span><span class="sig-paren">(</span><span class="k"><span class="pre">struct</span></span><span class="w"> </span><a class="reference internal" href="#c.dstr" title="dstr"><span class="n"><span class="pre">dstr</span></span></a><span class="w"> </span><span class="p"><span class="pre">*</span></span><span class="n"><span class="pre">dst</span></span><span class="sig-paren">)</span><a class="headerlink" href="#c.dstr_init" title="Link to this definition"></a><br /></dt>
+<dd><p>Initializes a dynamic string variable (just zeroes the variable).</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>dst</strong> – Dynamic string to initialize</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<hr class="docutils" />
+<dl class="c function">
+<dt class="sig sig-object c" id="c.dstr_init_move">
+<span class="kt"><span class="pre">void</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">dstr_init_move</span></span></span><span class="sig-paren">(</span><span class="k"><span class="pre">struct</span></span><span class="w"> </span><a class="reference internal" href="#c.dstr" title="dstr"><span class="n"><span class="pre">dstr</span></span></a><span class="w"> </span><span class="p"><span class="pre">*</span></span><span class="n"><span class="pre">dst</span></span>, <span class="k"><span class="pre">struct</span></span><span class="w"> </span><a class="reference internal" href="#c.dstr" title="dstr"><span class="n"><span class="pre">dstr</span></span></a><span class="w"> </span><span class="p"><span class="pre">*</span></span><span class="n"><span class="pre">src</span></span><span class="sig-paren">)</span><a class="headerlink" href="#c.dstr_init_move" title="Link to this definition"></a><br /></dt>
+<dd><p>Moves a <em>src</em> to <em>dst</em> without copying data and zeroes <em>src</em>.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>dst</strong> – Destination</p></li>
+<li><p><strong>src</strong> – Source</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<hr class="docutils" />
+<dl class="c function">
+<dt class="sig sig-object c" id="c.dstr_init_move_array">
+<span class="kt"><span class="pre">void</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">dstr_init_move_array</span></span></span><span class="sig-paren">(</span><span class="k"><span class="pre">struct</span></span><span class="w"> </span><a class="reference internal" href="#c.dstr" title="dstr"><span class="n"><span class="pre">dstr</span></span></a><span class="w"> </span><span class="p"><span class="pre">*</span></span><span class="n"><span class="pre">dst</span></span>, <span class="kt"><span class="pre">char</span></span><span class="w"> </span><span class="p"><span class="pre">*</span></span><span class="n"><span class="pre">str</span></span><span class="sig-paren">)</span><a class="headerlink" href="#c.dstr_init_move_array" title="Link to this definition"></a><br /></dt>
+<dd><p>Sets a bmalloc-allocated string as the dynamic string without
+copying/reallocating.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>dst</strong> – Dynamic string to initialize</p></li>
+<li><p><strong>str</strong> – bmalloc-allocated string</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<hr class="docutils" />
+<dl class="c function">
+<dt class="sig sig-object c" id="c.dstr_init_copy">
+<span class="kt"><span class="pre">void</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">dstr_init_copy</span></span></span><span class="sig-paren">(</span><span class="k"><span class="pre">struct</span></span><span class="w"> </span><a class="reference internal" href="#c.dstr" title="dstr"><span class="n"><span class="pre">dstr</span></span></a><span class="w"> </span><span class="p"><span class="pre">*</span></span><span class="n"><span class="pre">dst</span></span>, <span class="k"><span class="pre">const</span></span><span class="w"> </span><span class="kt"><span class="pre">char</span></span><span class="w"> </span><span class="p"><span class="pre">*</span></span><span class="n"><span class="pre">src</span></span><span class="sig-paren">)</span><a class="headerlink" href="#c.dstr_init_copy" title="Link to this definition"></a><br /></dt>
+<dd><p>Initializes a dynamic string with a copy of a string</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>dst</strong> – Dynamic string to initialize</p></li>
+<li><p><strong>src</strong> – String to copy</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<hr class="docutils" />
+<dl class="c function">
+<dt class="sig sig-object c" id="c.dstr_init_copy_dstr">
+<span class="kt"><span class="pre">void</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">dstr_init_copy_dstr</span></span></span><span class="sig-paren">(</span><span class="k"><span class="pre">struct</span></span><span class="w"> </span><a class="reference internal" href="#c.dstr" title="dstr"><span class="n"><span class="pre">dstr</span></span></a><span class="w"> </span><span class="p"><span class="pre">*</span></span><span class="n"><span class="pre">dst</span></span>, <span class="k"><span class="pre">const</span></span><span class="w"> </span><span class="k"><span class="pre">struct</span></span><span class="w"> </span><a class="reference internal" href="#c.dstr" title="dstr"><span class="n"><span class="pre">dstr</span></span></a><span class="w"> </span><span class="p"><span class="pre">*</span></span><span class="n"><span class="pre">src</span></span><span class="sig-paren">)</span><a class="headerlink" href="#c.dstr_init_copy_dstr" title="Link to this definition"></a><br /></dt>
+<dd><p>Initializes a dynamic string with a copy of another dynamic string</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>dst</strong> – Dynamic string to initialize</p></li>
+<li><p><strong>src</strong> – Dynamic string to copy</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<hr class="docutils" />
+<dl class="c function">
+<dt class="sig sig-object c" id="c.dstr_free">
+<span class="kt"><span class="pre">void</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">dstr_free</span></span></span><span class="sig-paren">(</span><span class="k"><span class="pre">struct</span></span><span class="w"> </span><a class="reference internal" href="#c.dstr" title="dstr"><span class="n"><span class="pre">dstr</span></span></a><span class="w"> </span><span class="p"><span class="pre">*</span></span><span class="n"><span class="pre">dst</span></span><span class="sig-paren">)</span><a class="headerlink" href="#c.dstr_free" title="Link to this definition"></a><br /></dt>
+<dd><p>Frees a dynamic string.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>dst</strong> – Dynamic string</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<hr class="docutils" />
+<dl class="c function">
+<dt class="sig sig-object c" id="c.dstr_copy">
+<span class="kt"><span class="pre">void</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">dstr_copy</span></span></span><span class="sig-paren">(</span><span class="k"><span class="pre">struct</span></span><span class="w"> </span><a class="reference internal" href="#c.dstr" title="dstr"><span class="n"><span class="pre">dstr</span></span></a><span class="w"> </span><span class="p"><span class="pre">*</span></span><span class="n"><span class="pre">dst</span></span>, <span class="k"><span class="pre">const</span></span><span class="w"> </span><span class="kt"><span class="pre">char</span></span><span class="w"> </span><span class="p"><span class="pre">*</span></span><span class="n"><span class="pre">array</span></span><span class="sig-paren">)</span><a class="headerlink" href="#c.dstr_copy" title="Link to this definition"></a><br /></dt>
+<dd><p>Copies a string.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>dst</strong> – Dynamic string</p></li>
+<li><p><strong>array</strong> – String to copy</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<hr class="docutils" />
+<dl class="c function">
+<dt class="sig sig-object c" id="c.dstr_copy_dstr">
+<span class="kt"><span class="pre">void</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">dstr_copy_dstr</span></span></span><span class="sig-paren">(</span><span class="k"><span class="pre">struct</span></span><span class="w"> </span><a class="reference internal" href="#c.dstr" title="dstr"><span class="n"><span class="pre">dstr</span></span></a><span class="w"> </span><span class="p"><span class="pre">*</span></span><span class="n"><span class="pre">dst</span></span>, <span class="k"><span class="pre">const</span></span><span class="w"> </span><span class="k"><span class="pre">struct</span></span><span class="w"> </span><a class="reference internal" href="#c.dstr" title="dstr"><span class="n"><span class="pre">dstr</span></span></a><span class="w"> </span><span class="p"><span class="pre">*</span></span><span class="n"><span class="pre">src</span></span><span class="sig-paren">)</span><a class="headerlink" href="#c.dstr_copy_dstr" title="Link to this definition"></a><br /></dt>
+<dd><p>Copies another dynamic string.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>dst</strong> – Dynamic string</p></li>
+<li><p><strong>src</strong> – Dynamic string to copy</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<hr class="docutils" />
+<dl class="c function">
+<dt class="sig sig-object c" id="c.dstr_ncopy">
+<span class="kt"><span class="pre">void</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">dstr_ncopy</span></span></span><span class="sig-paren">(</span><span class="k"><span class="pre">struct</span></span><span class="w"> </span><a class="reference internal" href="#c.dstr" title="dstr"><span class="n"><span class="pre">dstr</span></span></a><span class="w"> </span><span class="p"><span class="pre">*</span></span><span class="n"><span class="pre">dst</span></span>, <span class="k"><span class="pre">const</span></span><span class="w"> </span><span class="kt"><span class="pre">char</span></span><span class="w"> </span><span class="p"><span class="pre">*</span></span><span class="n"><span class="pre">array</span></span>, <span class="k"><span class="pre">const</span></span><span class="w"> </span><span class="n"><span class="pre">size_t</span></span><span class="w"> </span><span class="n"><span class="pre">len</span></span><span class="sig-paren">)</span><a class="headerlink" href="#c.dstr_ncopy" title="Link to this definition"></a><br /></dt>
+<dd><p>Copies a specific number of characters from a string.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>dst</strong> – Dynamic string</p></li>
+<li><p><strong>array</strong> – String to copy</p></li>
+<li><p><strong>len</strong> – Number of characters to copy</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<hr class="docutils" />
+<dl class="c function">
+<dt class="sig sig-object c" id="c.dstr_ncopy_dstr">
+<span class="kt"><span class="pre">void</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">dstr_ncopy_dstr</span></span></span><span class="sig-paren">(</span><span class="k"><span class="pre">struct</span></span><span class="w"> </span><a class="reference internal" href="#c.dstr" title="dstr"><span class="n"><span class="pre">dstr</span></span></a><span class="w"> </span><span class="p"><span class="pre">*</span></span><span class="n"><span class="pre">dst</span></span>, <span class="k"><span class="pre">const</span></span><span class="w"> </span><span class="k"><span class="pre">struct</span></span><span class="w"> </span><a class="reference internal" href="#c.dstr" title="dstr"><span class="n"><span class="pre">dstr</span></span></a><span class="w"> </span><span class="p"><span class="pre">*</span></span><span class="n"><span class="pre">src</span></span>, <span class="k"><span class="pre">const</span></span><span class="w"> </span><span class="n"><span class="pre">size_t</span></span><span class="w"> </span><span class="n"><span class="pre">len</span></span><span class="sig-paren">)</span><a class="headerlink" href="#c.dstr_ncopy_dstr" title="Link to this definition"></a><br /></dt>
+<dd><p>Copies a specific number of characters from another dynamic string.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>dst</strong> – Dynamic string</p></li>
+<li><p><strong>src</strong> – Dynamic string to copy</p></li>
+<li><p><strong>len</strong> – Number of characters to copy</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<hr class="docutils" />
+<dl class="c function">
+<dt class="sig sig-object c" id="c.dstr_resize">
+<span class="kt"><span class="pre">void</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">dstr_resize</span></span></span><span class="sig-paren">(</span><span class="k"><span class="pre">struct</span></span><span class="w"> </span><a class="reference internal" href="#c.dstr" title="dstr"><span class="n"><span class="pre">dstr</span></span></a><span class="w"> </span><span class="p"><span class="pre">*</span></span><span class="n"><span class="pre">dst</span></span>, <span class="k"><span class="pre">const</span></span><span class="w"> </span><span class="n"><span class="pre">size_t</span></span><span class="w"> </span><span class="n"><span class="pre">num</span></span><span class="sig-paren">)</span><a class="headerlink" href="#c.dstr_resize" title="Link to this definition"></a><br /></dt>
+<dd><p>Sets the size of the dynamic string.  If the new size is bigger than
+current size, zeroes the new characters.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>dst</strong> – Dynamic string</p></li>
+<li><p><strong>num</strong> – New size</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<hr class="docutils" />
+<dl class="c function">
+<dt class="sig sig-object c" id="c.dstr_reserve">
+<span class="kt"><span class="pre">void</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">dstr_reserve</span></span></span><span class="sig-paren">(</span><span class="k"><span class="pre">struct</span></span><span class="w"> </span><a class="reference internal" href="#c.dstr" title="dstr"><span class="n"><span class="pre">dstr</span></span></a><span class="w"> </span><span class="p"><span class="pre">*</span></span><span class="n"><span class="pre">dst</span></span>, <span class="k"><span class="pre">const</span></span><span class="w"> </span><span class="n"><span class="pre">size_t</span></span><span class="w"> </span><span class="n"><span class="pre">num</span></span><span class="sig-paren">)</span><a class="headerlink" href="#c.dstr_reserve" title="Link to this definition"></a><br /></dt>
+<dd><p>Reserves a specific number of characters in the buffer (but does not
+change the size).  Does not work if the value is smaller than the
+current reserve size.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>dst</strong> – Dynamic string</p></li>
+<li><p><strong>num</strong> – New reserve size</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<hr class="docutils" />
+<dl class="c function">
+<dt class="sig sig-object c" id="c.dstr_is_empty">
+<span class="kt"><span class="pre">bool</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">dstr_is_empty</span></span></span><span class="sig-paren">(</span><span class="k"><span class="pre">const</span></span><span class="w"> </span><span class="k"><span class="pre">struct</span></span><span class="w"> </span><a class="reference internal" href="#c.dstr" title="dstr"><span class="n"><span class="pre">dstr</span></span></a><span class="w"> </span><span class="p"><span class="pre">*</span></span><span class="n"><span class="pre">str</span></span><span class="sig-paren">)</span><a class="headerlink" href="#c.dstr_is_empty" title="Link to this definition"></a><br /></dt>
+<dd><p>Returns whether the dynamic string is empty.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>str</strong> – Dynamic string</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p><em>true</em> if empty, <em>false</em> otherwise</p>
+</dd>
+</dl>
+</dd></dl>
+
+<hr class="docutils" />
+<dl class="c function">
+<dt class="sig sig-object c" id="c.dstr_cat">
+<span class="kt"><span class="pre">void</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">dstr_cat</span></span></span><span class="sig-paren">(</span><span class="k"><span class="pre">struct</span></span><span class="w"> </span><a class="reference internal" href="#c.dstr" title="dstr"><span class="n"><span class="pre">dstr</span></span></a><span class="w"> </span><span class="p"><span class="pre">*</span></span><span class="n"><span class="pre">dst</span></span>, <span class="k"><span class="pre">const</span></span><span class="w"> </span><span class="kt"><span class="pre">char</span></span><span class="w"> </span><span class="p"><span class="pre">*</span></span><span class="n"><span class="pre">array</span></span><span class="sig-paren">)</span><a class="headerlink" href="#c.dstr_cat" title="Link to this definition"></a><br /></dt>
+<dd><p>Concatenates a dynamic string.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>dst</strong> – Dynamic string</p></li>
+<li><p><strong>array</strong> – String to concatenate with</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<hr class="docutils" />
+<dl class="c function">
+<dt class="sig sig-object c" id="c.dstr_cat_dstr">
+<span class="kt"><span class="pre">void</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">dstr_cat_dstr</span></span></span><span class="sig-paren">(</span><span class="k"><span class="pre">struct</span></span><span class="w"> </span><a class="reference internal" href="#c.dstr" title="dstr"><span class="n"><span class="pre">dstr</span></span></a><span class="w"> </span><span class="p"><span class="pre">*</span></span><span class="n"><span class="pre">dst</span></span>, <span class="k"><span class="pre">const</span></span><span class="w"> </span><span class="k"><span class="pre">struct</span></span><span class="w"> </span><a class="reference internal" href="#c.dstr" title="dstr"><span class="n"><span class="pre">dstr</span></span></a><span class="w"> </span><span class="p"><span class="pre">*</span></span><span class="n"><span class="pre">str</span></span><span class="sig-paren">)</span><a class="headerlink" href="#c.dstr_cat_dstr" title="Link to this definition"></a><br /></dt>
+<dd><p>Concatenates a dynamic string with another dynamic string.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>dst</strong> – Dynamic string to concatenate to</p></li>
+<li><p><strong>str</strong> – Dynamic string to concatenate with</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<hr class="docutils" />
+<dl class="c function">
+<dt class="sig sig-object c" id="c.dstr_cat_ch">
+<span class="kt"><span class="pre">void</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">dstr_cat_ch</span></span></span><span class="sig-paren">(</span><span class="k"><span class="pre">struct</span></span><span class="w"> </span><a class="reference internal" href="#c.dstr" title="dstr"><span class="n"><span class="pre">dstr</span></span></a><span class="w"> </span><span class="p"><span class="pre">*</span></span><span class="n"><span class="pre">dst</span></span>, <span class="kt"><span class="pre">char</span></span><span class="w"> </span><span class="n"><span class="pre">ch</span></span><span class="sig-paren">)</span><a class="headerlink" href="#c.dstr_cat_ch" title="Link to this definition"></a><br /></dt>
+<dd><p>Concatenates a dynamic string with a single character.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>dst</strong> – Dynamic string to concatenate to</p></li>
+<li><p><strong>ch</strong> – Character to concatenate</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<hr class="docutils" />
+<dl class="c function">
+<dt class="sig sig-object c" id="c.dstr_ncat">
+<span class="kt"><span class="pre">void</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">dstr_ncat</span></span></span><span class="sig-paren">(</span><span class="k"><span class="pre">struct</span></span><span class="w"> </span><a class="reference internal" href="#c.dstr" title="dstr"><span class="n"><span class="pre">dstr</span></span></a><span class="w"> </span><span class="p"><span class="pre">*</span></span><span class="n"><span class="pre">dst</span></span>, <span class="k"><span class="pre">const</span></span><span class="w"> </span><span class="kt"><span class="pre">char</span></span><span class="w"> </span><span class="p"><span class="pre">*</span></span><span class="n"><span class="pre">array</span></span>, <span class="k"><span class="pre">const</span></span><span class="w"> </span><span class="n"><span class="pre">size_t</span></span><span class="w"> </span><span class="n"><span class="pre">len</span></span><span class="sig-paren">)</span><a class="headerlink" href="#c.dstr_ncat" title="Link to this definition"></a><br /></dt>
+<dd><p>Concatenates a dynamic string with a specific number of characters
+from a string.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>dst</strong> – Dynamic string to concatenate to</p></li>
+<li><p><strong>array</strong> – String to concatenate with</p></li>
+<li><p><strong>len</strong> – Number of characters to concatenate with</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<hr class="docutils" />
+<dl class="c function">
+<dt class="sig sig-object c" id="c.dstr_ncat_dstr">
+<span class="kt"><span class="pre">void</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">dstr_ncat_dstr</span></span></span><span class="sig-paren">(</span><span class="k"><span class="pre">struct</span></span><span class="w"> </span><a class="reference internal" href="#c.dstr" title="dstr"><span class="n"><span class="pre">dstr</span></span></a><span class="w"> </span><span class="p"><span class="pre">*</span></span><span class="n"><span class="pre">dst</span></span>, <span class="k"><span class="pre">const</span></span><span class="w"> </span><span class="k"><span class="pre">struct</span></span><span class="w"> </span><a class="reference internal" href="#c.dstr" title="dstr"><span class="n"><span class="pre">dstr</span></span></a><span class="w"> </span><span class="p"><span class="pre">*</span></span><span class="n"><span class="pre">str</span></span>, <span class="k"><span class="pre">const</span></span><span class="w"> </span><span class="n"><span class="pre">size_t</span></span><span class="w"> </span><span class="n"><span class="pre">len</span></span><span class="sig-paren">)</span><a class="headerlink" href="#c.dstr_ncat_dstr" title="Link to this definition"></a><br /></dt>
+<dd><p>Concatenates a dynamic string with a specific number of characters
+from another dynamic string.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>dst</strong> – Dynamic string to concatenate to</p></li>
+<li><p><strong>str</strong> – Dynamic string to concatenate with</p></li>
+<li><p><strong>len</strong> – Number of characters to concatenate with</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<hr class="docutils" />
+<dl class="c function">
+<dt class="sig sig-object c" id="c.dstr_insert">
+<span class="kt"><span class="pre">void</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">dstr_insert</span></span></span><span class="sig-paren">(</span><span class="k"><span class="pre">struct</span></span><span class="w"> </span><a class="reference internal" href="#c.dstr" title="dstr"><span class="n"><span class="pre">dstr</span></span></a><span class="w"> </span><span class="p"><span class="pre">*</span></span><span class="n"><span class="pre">dst</span></span>, <span class="k"><span class="pre">const</span></span><span class="w"> </span><span class="n"><span class="pre">size_t</span></span><span class="w"> </span><span class="n"><span class="pre">idx</span></span>, <span class="k"><span class="pre">const</span></span><span class="w"> </span><span class="kt"><span class="pre">char</span></span><span class="w"> </span><span class="p"><span class="pre">*</span></span><span class="n"><span class="pre">array</span></span><span class="sig-paren">)</span><a class="headerlink" href="#c.dstr_insert" title="Link to this definition"></a><br /></dt>
+<dd><p>Inserts a string in to a dynamic string at a specific index.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>dst</strong> – Dynamic string to insert in to</p></li>
+<li><p><strong>idx</strong> – Character index to insert at</p></li>
+<li><p><strong>array</strong> – String to insert</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<hr class="docutils" />
+<dl class="c function">
+<dt class="sig sig-object c" id="c.dstr_insert_dstr">
+<span class="kt"><span class="pre">void</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">dstr_insert_dstr</span></span></span><span class="sig-paren">(</span><span class="k"><span class="pre">struct</span></span><span class="w"> </span><a class="reference internal" href="#c.dstr" title="dstr"><span class="n"><span class="pre">dstr</span></span></a><span class="w"> </span><span class="p"><span class="pre">*</span></span><span class="n"><span class="pre">dst</span></span>, <span class="k"><span class="pre">const</span></span><span class="w"> </span><span class="n"><span class="pre">size_t</span></span><span class="w"> </span><span class="n"><span class="pre">idx</span></span>, <span class="k"><span class="pre">const</span></span><span class="w"> </span><span class="k"><span class="pre">struct</span></span><span class="w"> </span><a class="reference internal" href="#c.dstr" title="dstr"><span class="n"><span class="pre">dstr</span></span></a><span class="w"> </span><span class="p"><span class="pre">*</span></span><span class="n"><span class="pre">str</span></span><span class="sig-paren">)</span><a class="headerlink" href="#c.dstr_insert_dstr" title="Link to this definition"></a><br /></dt>
+<dd><p>Inserts another dynamic string in to a dynamic string at a specific
+index.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>dst</strong> – Dynamic string to insert in to</p></li>
+<li><p><strong>idx</strong> – Character index to insert at</p></li>
+<li><p><strong>str</strong> – Dynamic string to insert</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<hr class="docutils" />
+<dl class="c function">
+<dt class="sig sig-object c" id="c.dstr_insert_ch">
+<span class="kt"><span class="pre">void</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">dstr_insert_ch</span></span></span><span class="sig-paren">(</span><span class="k"><span class="pre">struct</span></span><span class="w"> </span><a class="reference internal" href="#c.dstr" title="dstr"><span class="n"><span class="pre">dstr</span></span></a><span class="w"> </span><span class="p"><span class="pre">*</span></span><span class="n"><span class="pre">dst</span></span>, <span class="k"><span class="pre">const</span></span><span class="w"> </span><span class="n"><span class="pre">size_t</span></span><span class="w"> </span><span class="n"><span class="pre">idx</span></span>, <span class="k"><span class="pre">const</span></span><span class="w"> </span><span class="kt"><span class="pre">char</span></span><span class="w"> </span><span class="n"><span class="pre">ch</span></span><span class="sig-paren">)</span><a class="headerlink" href="#c.dstr_insert_ch" title="Link to this definition"></a><br /></dt>
+<dd><p>Inserts a character in to a dynamic string at a specific index.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>dst</strong> – Dynamic string to insert in to</p></li>
+<li><p><strong>idx</strong> – Character index to insert at</p></li>
+<li><p><strong>ch</strong> – Character to insert</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<hr class="docutils" />
+<dl class="c function">
+<dt class="sig sig-object c" id="c.dstr_remove">
+<span class="kt"><span class="pre">void</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">dstr_remove</span></span></span><span class="sig-paren">(</span><span class="k"><span class="pre">struct</span></span><span class="w"> </span><a class="reference internal" href="#c.dstr" title="dstr"><span class="n"><span class="pre">dstr</span></span></a><span class="w"> </span><span class="p"><span class="pre">*</span></span><span class="n"><span class="pre">dst</span></span>, <span class="k"><span class="pre">const</span></span><span class="w"> </span><span class="n"><span class="pre">size_t</span></span><span class="w"> </span><span class="n"><span class="pre">idx</span></span>, <span class="k"><span class="pre">const</span></span><span class="w"> </span><span class="n"><span class="pre">size_t</span></span><span class="w"> </span><span class="n"><span class="pre">count</span></span><span class="sig-paren">)</span><a class="headerlink" href="#c.dstr_remove" title="Link to this definition"></a><br /></dt>
+<dd><p>Removes a specific number of characters starting from a specific
+index.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>dst</strong> – Dynamic string</p></li>
+<li><p><strong>idx</strong> – Index to start removing characters at</p></li>
+<li><p><strong>count</strong> – Number of characters to remove</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<hr class="docutils" />
+<dl class="c function">
+<dt class="sig sig-object c" id="c.dstr_printf">
+<span class="kt"><span class="pre">void</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">dstr_printf</span></span></span><span class="sig-paren">(</span><span class="k"><span class="pre">struct</span></span><span class="w"> </span><a class="reference internal" href="#c.dstr" title="dstr"><span class="n"><span class="pre">dstr</span></span></a><span class="w"> </span><span class="p"><span class="pre">*</span></span><span class="n"><span class="pre">dst</span></span>, <span class="k"><span class="pre">const</span></span><span class="w"> </span><span class="kt"><span class="pre">char</span></span><span class="w"> </span><span class="p"><span class="pre">*</span></span><span class="n"><span class="pre">format</span></span>, <span class="p"><span class="pre">...</span></span><span class="sig-paren">)</span><a class="headerlink" href="#c.dstr_printf" title="Link to this definition"></a><br /></dt>
+<dt class="sig sig-object c" id="c.dstr_vprintf">
+<span class="kt"><span class="pre">void</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">dstr_vprintf</span></span></span><span class="sig-paren">(</span><span class="k"><span class="pre">struct</span></span><span class="w"> </span><a class="reference internal" href="#c.dstr" title="dstr"><span class="n"><span class="pre">dstr</span></span></a><span class="w"> </span><span class="p"><span class="pre">*</span></span><span class="n"><span class="pre">dst</span></span>, <span class="k"><span class="pre">const</span></span><span class="w"> </span><span class="kt"><span class="pre">char</span></span><span class="w"> </span><span class="p"><span class="pre">*</span></span><span class="n"><span class="pre">format</span></span>, <span class="n"><span class="pre">va_list</span></span><span class="w"> </span><span class="n"><span class="pre">args</span></span><span class="sig-paren">)</span><a class="headerlink" href="#c.dstr_vprintf" title="Link to this definition"></a><br /></dt>
+<dd><p>Sets a dynamic string to a formatted string.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>dst</strong> – Dynamic string</p></li>
+<li><p><strong>format</strong> – Format string</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<hr class="docutils" />
+<dl class="c function">
+<dt class="sig sig-object c" id="c.dstr_catf">
+<span class="kt"><span class="pre">void</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">dstr_catf</span></span></span><span class="sig-paren">(</span><span class="k"><span class="pre">struct</span></span><span class="w"> </span><a class="reference internal" href="#c.dstr" title="dstr"><span class="n"><span class="pre">dstr</span></span></a><span class="w"> </span><span class="p"><span class="pre">*</span></span><span class="n"><span class="pre">dst</span></span>, <span class="k"><span class="pre">const</span></span><span class="w"> </span><span class="kt"><span class="pre">char</span></span><span class="w"> </span><span class="p"><span class="pre">*</span></span><span class="n"><span class="pre">format</span></span>, <span class="p"><span class="pre">...</span></span><span class="sig-paren">)</span><a class="headerlink" href="#c.dstr_catf" title="Link to this definition"></a><br /></dt>
+<dt class="sig sig-object c" id="c.dstr_vcatf">
+<span class="kt"><span class="pre">void</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">dstr_vcatf</span></span></span><span class="sig-paren">(</span><span class="k"><span class="pre">struct</span></span><span class="w"> </span><a class="reference internal" href="#c.dstr" title="dstr"><span class="n"><span class="pre">dstr</span></span></a><span class="w"> </span><span class="p"><span class="pre">*</span></span><span class="n"><span class="pre">dst</span></span>, <span class="k"><span class="pre">const</span></span><span class="w"> </span><span class="kt"><span class="pre">char</span></span><span class="w"> </span><span class="p"><span class="pre">*</span></span><span class="n"><span class="pre">format</span></span>, <span class="n"><span class="pre">va_list</span></span><span class="w"> </span><span class="n"><span class="pre">args</span></span><span class="sig-paren">)</span><a class="headerlink" href="#c.dstr_vcatf" title="Link to this definition"></a><br /></dt>
+<dd><p>Concatenates a dynamic string with a formatted string.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>dst</strong> – Dynamic string</p></li>
+<li><p><strong>format</strong> – Format string</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<hr class="docutils" />
+<dl class="c function">
+<dt class="sig sig-object c" id="c.dstr_find_i">
+<span class="k"><span class="pre">const</span></span><span class="w"> </span><span class="kt"><span class="pre">char</span></span><span class="w"> </span><span class="p"><span class="pre">*</span></span><span class="sig-name descname"><span class="n"><span class="pre">dstr_find_i</span></span></span><span class="sig-paren">(</span><span class="k"><span class="pre">const</span></span><span class="w"> </span><span class="k"><span class="pre">struct</span></span><span class="w"> </span><a class="reference internal" href="#c.dstr" title="dstr"><span class="n"><span class="pre">dstr</span></span></a><span class="w"> </span><span class="p"><span class="pre">*</span></span><span class="n"><span class="pre">str</span></span>, <span class="k"><span class="pre">const</span></span><span class="w"> </span><span class="kt"><span class="pre">char</span></span><span class="w"> </span><span class="p"><span class="pre">*</span></span><span class="n"><span class="pre">find</span></span><span class="sig-paren">)</span><a class="headerlink" href="#c.dstr_find_i" title="Link to this definition"></a><br /></dt>
+<dd><p>Finds a string within a dynamic string, case insensitive.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>str</strong> – Dynamic string</p></li>
+<li><p><strong>find</strong> – String to find</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>Pointer to the first occurrence, or <em>NULL</em> if not found</p>
+</dd>
+</dl>
+</dd></dl>
+
+<hr class="docutils" />
+<dl class="c function">
+<dt class="sig sig-object c" id="c.dstr_find">
+<span class="k"><span class="pre">const</span></span><span class="w"> </span><span class="kt"><span class="pre">char</span></span><span class="w"> </span><span class="p"><span class="pre">*</span></span><span class="sig-name descname"><span class="n"><span class="pre">dstr_find</span></span></span><span class="sig-paren">(</span><span class="k"><span class="pre">const</span></span><span class="w"> </span><span class="k"><span class="pre">struct</span></span><span class="w"> </span><a class="reference internal" href="#c.dstr" title="dstr"><span class="n"><span class="pre">dstr</span></span></a><span class="w"> </span><span class="p"><span class="pre">*</span></span><span class="n"><span class="pre">str</span></span>, <span class="k"><span class="pre">const</span></span><span class="w"> </span><span class="kt"><span class="pre">char</span></span><span class="w"> </span><span class="p"><span class="pre">*</span></span><span class="n"><span class="pre">find</span></span><span class="sig-paren">)</span><a class="headerlink" href="#c.dstr_find" title="Link to this definition"></a><br /></dt>
+<dd><p>Finds a string within a dynamic string.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>str</strong> – Dynamic string</p></li>
+<li><p><strong>find</strong> – String to find</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>Pointer to the first occurrence, or <em>NULL</em> if not found</p>
+</dd>
+</dl>
+</dd></dl>
+
+<hr class="docutils" />
+<dl class="c function">
+<dt class="sig sig-object c" id="c.dstr_replace">
+<span class="kt"><span class="pre">void</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">dstr_replace</span></span></span><span class="sig-paren">(</span><span class="k"><span class="pre">struct</span></span><span class="w"> </span><a class="reference internal" href="#c.dstr" title="dstr"><span class="n"><span class="pre">dstr</span></span></a><span class="w"> </span><span class="p"><span class="pre">*</span></span><span class="n"><span class="pre">str</span></span>, <span class="k"><span class="pre">const</span></span><span class="w"> </span><span class="kt"><span class="pre">char</span></span><span class="w"> </span><span class="p"><span class="pre">*</span></span><span class="n"><span class="pre">find</span></span>, <span class="k"><span class="pre">const</span></span><span class="w"> </span><span class="kt"><span class="pre">char</span></span><span class="w"> </span><span class="p"><span class="pre">*</span></span><span class="n"><span class="pre">replace</span></span><span class="sig-paren">)</span><a class="headerlink" href="#c.dstr_replace" title="Link to this definition"></a><br /></dt>
+<dd><p>Replaces all occurrences of <em>find</em> with <em>replace</em>.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>str</strong> – Dynamic string</p></li>
+<li><p><strong>find</strong> – String to find</p></li>
+<li><p><strong>replace</strong> – Replacement string</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<hr class="docutils" />
+<dl class="c function">
+<dt class="sig sig-object c" id="c.dstr_cmp">
+<span class="kt"><span class="pre">int</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">dstr_cmp</span></span></span><span class="sig-paren">(</span><span class="k"><span class="pre">const</span></span><span class="w"> </span><span class="k"><span class="pre">struct</span></span><span class="w"> </span><a class="reference internal" href="#c.dstr" title="dstr"><span class="n"><span class="pre">dstr</span></span></a><span class="w"> </span><span class="p"><span class="pre">*</span></span><span class="n"><span class="pre">str1</span></span>, <span class="k"><span class="pre">const</span></span><span class="w"> </span><span class="kt"><span class="pre">char</span></span><span class="w"> </span><span class="p"><span class="pre">*</span></span><span class="n"><span class="pre">str2</span></span><span class="sig-paren">)</span><a class="headerlink" href="#c.dstr_cmp" title="Link to this definition"></a><br /></dt>
+<dd><p>Compares with a string.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>str1</strong> – Dynamic string</p></li>
+<li><p><strong>str2</strong> – String to compare</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>0 if equal, nonzero otherwise</p>
+</dd>
+</dl>
+</dd></dl>
+
+<hr class="docutils" />
+<dl class="c function">
+<dt class="sig sig-object c" id="c.dstr_cmpi">
+<span class="kt"><span class="pre">int</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">dstr_cmpi</span></span></span><span class="sig-paren">(</span><span class="k"><span class="pre">const</span></span><span class="w"> </span><span class="k"><span class="pre">struct</span></span><span class="w"> </span><a class="reference internal" href="#c.dstr" title="dstr"><span class="n"><span class="pre">dstr</span></span></a><span class="w"> </span><span class="p"><span class="pre">*</span></span><span class="n"><span class="pre">str1</span></span>, <span class="k"><span class="pre">const</span></span><span class="w"> </span><span class="kt"><span class="pre">char</span></span><span class="w"> </span><span class="p"><span class="pre">*</span></span><span class="n"><span class="pre">str2</span></span><span class="sig-paren">)</span><a class="headerlink" href="#c.dstr_cmpi" title="Link to this definition"></a><br /></dt>
+<dd><p>Compares with a string, case-insensitive.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>str1</strong> – Dynamic string</p></li>
+<li><p><strong>str2</strong> – String to compare</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>0 if equal, nonzero otherwise</p>
+</dd>
+</dl>
+</dd></dl>
+
+<hr class="docutils" />
+<dl class="c function">
+<dt class="sig sig-object c" id="c.dstr_ncmp">
+<span class="kt"><span class="pre">int</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">dstr_ncmp</span></span></span><span class="sig-paren">(</span><span class="k"><span class="pre">const</span></span><span class="w"> </span><span class="k"><span class="pre">struct</span></span><span class="w"> </span><a class="reference internal" href="#c.dstr" title="dstr"><span class="n"><span class="pre">dstr</span></span></a><span class="w"> </span><span class="p"><span class="pre">*</span></span><span class="n"><span class="pre">str1</span></span>, <span class="k"><span class="pre">const</span></span><span class="w"> </span><span class="kt"><span class="pre">char</span></span><span class="w"> </span><span class="p"><span class="pre">*</span></span><span class="n"><span class="pre">str2</span></span>, <span class="k"><span class="pre">const</span></span><span class="w"> </span><span class="n"><span class="pre">size_t</span></span><span class="w"> </span><span class="n"><span class="pre">n</span></span><span class="sig-paren">)</span><a class="headerlink" href="#c.dstr_ncmp" title="Link to this definition"></a><br /></dt>
+<dd><p>Compares a specific number of characters.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>str1</strong> – Dynamic string</p></li>
+<li><p><strong>str2</strong> – String to compare</p></li>
+<li><p><strong>n</strong> – Number of characters to compare</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>0 if equal, nonzero otherwise</p>
+</dd>
+</dl>
+</dd></dl>
+
+<hr class="docutils" />
+<dl class="c function">
+<dt class="sig sig-object c" id="c.dstr_ncmpi">
+<span class="kt"><span class="pre">int</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">dstr_ncmpi</span></span></span><span class="sig-paren">(</span><span class="k"><span class="pre">const</span></span><span class="w"> </span><span class="k"><span class="pre">struct</span></span><span class="w"> </span><a class="reference internal" href="#c.dstr" title="dstr"><span class="n"><span class="pre">dstr</span></span></a><span class="w"> </span><span class="p"><span class="pre">*</span></span><span class="n"><span class="pre">str1</span></span>, <span class="k"><span class="pre">const</span></span><span class="w"> </span><span class="kt"><span class="pre">char</span></span><span class="w"> </span><span class="p"><span class="pre">*</span></span><span class="n"><span class="pre">str2</span></span>, <span class="k"><span class="pre">const</span></span><span class="w"> </span><span class="n"><span class="pre">size_t</span></span><span class="w"> </span><span class="n"><span class="pre">n</span></span><span class="sig-paren">)</span><a class="headerlink" href="#c.dstr_ncmpi" title="Link to this definition"></a><br /></dt>
+<dd><p>Compares a specific number of characters, case-insensitive.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>str1</strong> – Dynamic string</p></li>
+<li><p><strong>str2</strong> – String to compare</p></li>
+<li><p><strong>n</strong> – Number of characters to compare</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>0 if equal, nonzero otherwise</p>
+</dd>
+</dl>
+</dd></dl>
+
+<hr class="docutils" />
+<dl class="c function">
+<dt class="sig sig-object c" id="c.dstr_depad">
+<span class="kt"><span class="pre">void</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">dstr_depad</span></span></span><span class="sig-paren">(</span><span class="k"><span class="pre">struct</span></span><span class="w"> </span><a class="reference internal" href="#c.dstr" title="dstr"><span class="n"><span class="pre">dstr</span></span></a><span class="w"> </span><span class="p"><span class="pre">*</span></span><span class="n"><span class="pre">dst</span></span><span class="sig-paren">)</span><a class="headerlink" href="#c.dstr_depad" title="Link to this definition"></a><br /></dt>
+<dd><p>Removes all padding characters (tabs, spaces, CR, LF) from the front
+and ends of a dynamic string.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>dst</strong> – Dynamic string</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<hr class="docutils" />
+<dl class="c function">
+<dt class="sig sig-object c" id="c.dstr_left">
+<span class="kt"><span class="pre">void</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">dstr_left</span></span></span><span class="sig-paren">(</span><span class="k"><span class="pre">struct</span></span><span class="w"> </span><a class="reference internal" href="#c.dstr" title="dstr"><span class="n"><span class="pre">dstr</span></span></a><span class="w"> </span><span class="p"><span class="pre">*</span></span><span class="n"><span class="pre">dst</span></span>, <span class="k"><span class="pre">const</span></span><span class="w"> </span><span class="k"><span class="pre">struct</span></span><span class="w"> </span><a class="reference internal" href="#c.dstr" title="dstr"><span class="n"><span class="pre">dstr</span></span></a><span class="w"> </span><span class="p"><span class="pre">*</span></span><span class="n"><span class="pre">str</span></span>, <span class="k"><span class="pre">const</span></span><span class="w"> </span><span class="n"><span class="pre">size_t</span></span><span class="w"> </span><span class="n"><span class="pre">pos</span></span><span class="sig-paren">)</span><a class="headerlink" href="#c.dstr_left" title="Link to this definition"></a><br /></dt>
+<dd><p>Copies a certain number of characters from the left side of one
+dynamic string in to another.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>dst</strong> – Destination</p></li>
+<li><p><strong>str</strong> – Source</p></li>
+<li><p><strong>pos</strong> – Number of characters</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<hr class="docutils" />
+<dl class="c function">
+<dt class="sig sig-object c" id="c.dstr_mid">
+<span class="kt"><span class="pre">void</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">dstr_mid</span></span></span><span class="sig-paren">(</span><span class="k"><span class="pre">struct</span></span><span class="w"> </span><a class="reference internal" href="#c.dstr" title="dstr"><span class="n"><span class="pre">dstr</span></span></a><span class="w"> </span><span class="p"><span class="pre">*</span></span><span class="n"><span class="pre">dst</span></span>, <span class="k"><span class="pre">const</span></span><span class="w"> </span><span class="k"><span class="pre">struct</span></span><span class="w"> </span><a class="reference internal" href="#c.dstr" title="dstr"><span class="n"><span class="pre">dstr</span></span></a><span class="w"> </span><span class="p"><span class="pre">*</span></span><span class="n"><span class="pre">str</span></span>, <span class="k"><span class="pre">const</span></span><span class="w"> </span><span class="n"><span class="pre">size_t</span></span><span class="w"> </span><span class="n"><span class="pre">start</span></span>, <span class="k"><span class="pre">const</span></span><span class="w"> </span><span class="n"><span class="pre">size_t</span></span><span class="w"> </span><span class="n"><span class="pre">count</span></span><span class="sig-paren">)</span><a class="headerlink" href="#c.dstr_mid" title="Link to this definition"></a><br /></dt>
+<dd><p>Copies a certain number of characters from the middle of one dynamic
+string in to another.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>dst</strong> – Destination</p></li>
+<li><p><strong>str</strong> – Source</p></li>
+<li><p><strong>start</strong> – Starting index within <em>str</em></p></li>
+<li><p><strong>count</strong> – Number of characters to copy</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<hr class="docutils" />
+<dl class="c function">
+<dt class="sig sig-object c" id="c.dstr_right">
+<span class="kt"><span class="pre">void</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">dstr_right</span></span></span><span class="sig-paren">(</span><span class="k"><span class="pre">struct</span></span><span class="w"> </span><a class="reference internal" href="#c.dstr" title="dstr"><span class="n"><span class="pre">dstr</span></span></a><span class="w"> </span><span class="p"><span class="pre">*</span></span><span class="n"><span class="pre">dst</span></span>, <span class="k"><span class="pre">const</span></span><span class="w"> </span><span class="k"><span class="pre">struct</span></span><span class="w"> </span><a class="reference internal" href="#c.dstr" title="dstr"><span class="n"><span class="pre">dstr</span></span></a><span class="w"> </span><span class="p"><span class="pre">*</span></span><span class="n"><span class="pre">str</span></span>, <span class="k"><span class="pre">const</span></span><span class="w"> </span><span class="n"><span class="pre">size_t</span></span><span class="w"> </span><span class="n"><span class="pre">pos</span></span><span class="sig-paren">)</span><a class="headerlink" href="#c.dstr_right" title="Link to this definition"></a><br /></dt>
+<dd><p>Copies a certain number of characters from the right of one dynamic
+string in to another.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>dst</strong> – Destination</p></li>
+<li><p><strong>str</strong> – Source</p></li>
+<li><p><strong>pos</strong> – Index of <em>str</em> to copy from</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<hr class="docutils" />
+<dl class="c function">
+<dt class="sig sig-object c" id="c.dstr_end">
+<span class="kt"><span class="pre">char</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">dstr_end</span></span></span><span class="sig-paren">(</span><span class="k"><span class="pre">const</span></span><span class="w"> </span><span class="k"><span class="pre">struct</span></span><span class="w"> </span><a class="reference internal" href="#c.dstr" title="dstr"><span class="n"><span class="pre">dstr</span></span></a><span class="w"> </span><span class="p"><span class="pre">*</span></span><span class="n"><span class="pre">str</span></span><span class="sig-paren">)</span><a class="headerlink" href="#c.dstr_end" title="Link to this definition"></a><br /></dt>
+<dd><dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>str</strong> – Dynamic string</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>The last character of a dynamic string</p>
+</dd>
+</dl>
+</dd></dl>
+
+<hr class="docutils" />
+<dl class="c function">
+<dt class="sig sig-object c" id="c.dstr_from_wcs">
+<span class="kt"><span class="pre">void</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">dstr_from_wcs</span></span></span><span class="sig-paren">(</span><span class="k"><span class="pre">struct</span></span><span class="w"> </span><a class="reference internal" href="#c.dstr" title="dstr"><span class="n"><span class="pre">dstr</span></span></a><span class="w"> </span><span class="p"><span class="pre">*</span></span><span class="n"><span class="pre">dst</span></span>, <span class="k"><span class="pre">const</span></span><span class="w"> </span><span class="n"><span class="pre">wchar_t</span></span><span class="w"> </span><span class="p"><span class="pre">*</span></span><span class="n"><span class="pre">wstr</span></span><span class="sig-paren">)</span><a class="headerlink" href="#c.dstr_from_wcs" title="Link to this definition"></a><br /></dt>
+<dd><p>Copies a wide string in to a dynamic string and converts it to UTF-8.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>dst</strong> – Dynamic string</p></li>
+<li><p><strong>wstr</strong> – Wide string</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<hr class="docutils" />
+<dl class="c function">
+<dt class="sig sig-object c" id="c.dstr_to_wcs">
+<span class="n"><span class="pre">wchar_t</span></span><span class="w"> </span><span class="p"><span class="pre">*</span></span><span class="sig-name descname"><span class="n"><span class="pre">dstr_to_wcs</span></span></span><span class="sig-paren">(</span><span class="k"><span class="pre">const</span></span><span class="w"> </span><span class="k"><span class="pre">struct</span></span><span class="w"> </span><a class="reference internal" href="#c.dstr" title="dstr"><span class="n"><span class="pre">dstr</span></span></a><span class="w"> </span><span class="p"><span class="pre">*</span></span><span class="n"><span class="pre">str</span></span><span class="sig-paren">)</span><a class="headerlink" href="#c.dstr_to_wcs" title="Link to this definition"></a><br /></dt>
+<dd><p>Converts a dynamic array to a wide string.  Free with
+<a class="reference internal" href="reference-libobs-util-bmem.html#c.bfree" title="bfree"><code class="xref c c-func docutils literal notranslate"><span class="pre">bfree()</span></code></a>.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>str</strong> – Dynamic string</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>Wide string allocation.  Free with <a class="reference internal" href="reference-libobs-util-bmem.html#c.bfree" title="bfree"><code class="xref c c-func docutils literal notranslate"><span class="pre">bfree()</span></code></a></p>
+</dd>
+</dl>
+</dd></dl>
+
+<hr class="docutils" />
+<dl class="c function">
+<dt class="sig sig-object c" id="c.dstr_to_upper">
+<span class="kt"><span class="pre">void</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">dstr_to_upper</span></span></span><span class="sig-paren">(</span><span class="k"><span class="pre">struct</span></span><span class="w"> </span><a class="reference internal" href="#c.dstr" title="dstr"><span class="n"><span class="pre">dstr</span></span></a><span class="w"> </span><span class="p"><span class="pre">*</span></span><span class="n"><span class="pre">str</span></span><span class="sig-paren">)</span><a class="headerlink" href="#c.dstr_to_upper" title="Link to this definition"></a><br /></dt>
+<dd><p>Converts all characters within a dynamic array to uppercase.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>str</strong> – Dynamic string</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<hr class="docutils" />
+<dl class="c function">
+<dt class="sig sig-object c" id="c.dstr_to_lower">
+<span class="kt"><span class="pre">void</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">dstr_to_lower</span></span></span><span class="sig-paren">(</span><span class="k"><span class="pre">struct</span></span><span class="w"> </span><a class="reference internal" href="#c.dstr" title="dstr"><span class="n"><span class="pre">dstr</span></span></a><span class="w"> </span><span class="p"><span class="pre">*</span></span><span class="n"><span class="pre">str</span></span><span class="sig-paren">)</span><a class="headerlink" href="#c.dstr_to_lower" title="Link to this definition"></a><br /></dt>
+<dd><p>Converts all characters within a dynamic array to lowercase.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>str</strong> – Dynamic string</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+</section>
+</section>
+
+
+           </div>
+          </div>
+          <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
+        <a href="reference-libobs-util-deque.html" class="btn btn-neutral float-left" title="Double-Ended Queue" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="reference-libobs-util-platform.html" class="btn btn-neutral float-right" title="Platform Helpers" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2017-2022, Lain Bailey.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>
