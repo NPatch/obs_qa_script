@@ -7,21 +7,6 @@ import psutil
 import subprocess
 import win32gui, win32process
 
-
-# oldskies_scene_name = "Old Skies Scene"
-# oldskies_scene_source_name = "Old Skies"
-
-# #oldskies_capture_window_name = "[OldSkies.exe]: Old Skies"
-# oldskies_steam_gameid = 1346360
-# oldskies_game_proc_name = "OldSkies.exe"
-# oldskies_proc_main_window_name = "Old Skies"
-# oldskies_proc_main_window_class = "SDL_app"
-
-# oldskies_capture_window_string = "{winname}:{winclass}:{exename}".format(winname=oldskies_proc_main_window_name,winclass=oldskies_proc_main_window_class, exename=oldskies_game_proc_name)
-
-# oldskies_proc_crash_window_name = "Adventure Game Studio"
-# oldskies_proc_crash_window_class = "#32770"
-
 class obsutil:
     '''
     obsutil is basically a namespace for helper functions on top of the obspython module
@@ -1009,7 +994,7 @@ def start_qa(props, property):
    
     gameutil.run_steam_game(ags_data.window_name, ags_data.steam_gameid)
 
-obs.timer_add(find_proc, 4000)
+    obs.timer_add(find_proc, 4000)
     
 def on_frontend_finished_loading(event):
     msg = "on_frontend_finished_loading: "+ obs_frontend_event(event).name
