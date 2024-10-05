@@ -10,5 +10,15 @@
 			"path": "C:/Users/npats/AppData/Roaming/obs-studio"
 		}
 	],
-	"settings": {}
+	"extensions": {
+		"recommendations": [
+			"ms-vscode.live-server",
+			"ms-python.python",
+			"ms-python.vscode-pylance",
+			"ms-python.debugpy"
+		]
+	},
+	"settings": {
+		"git.enabled": false
+	}
 }
