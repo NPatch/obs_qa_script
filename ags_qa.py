@@ -311,7 +311,7 @@ class obsutil:
             transform_info.scale.y  = 1.0
 
         #bounds_type
-        transform_info.bounds_type = obs.OBS_BOUNDS_SCALE_INNER
+        transform_info.bounds_type = obs.OBS_BOUNDS_NONE
         #print("bounds type: ", str(int(transform_info.bounds_type)))
         #bounds_alignment
         #print("bounds alignment: ", str(transform_info.bounds_alignment))
@@ -716,6 +716,15 @@ def script_defaults(settings):
     obs.obs_data_set_default_string(settings, "crash_win_name", "")
     obs.obs_data_set_default_string(settings, "crash_win_class", "")
 
+    obs.obs_data_set_default_string(settings, "scene_name", "Old Skies Scene")
+    obs.obs_data_set_default_string(settings, "source_name", "Old Skies")
+    obs.obs_data_set_default_string(settings, "steam_gameid", "1346360")
+    obs.obs_data_set_default_string(settings, "exe_name", "OldSkies.exe")
+    obs.obs_data_set_default_string(settings, "win_name", "Old Skies")
+    obs.obs_data_set_default_string(settings, "win_class", "SDL_app")
+    obs.obs_data_set_default_string(settings, "crash_win_name", "Adventure Game Studio")
+    obs.obs_data_set_default_string(settings, "crash_win_class", "#32770")
+
 def script_load(settings):
     obs.script_log(obs.LOG_DEBUG, "script_load")
     obs.obs_frontend_add_event_callback(on_frontend_finished_loading)
@@ -981,7 +990,6 @@ def print_video_settings(props, property):
 
 def script_unload():
     obs.script_log(obs.LOG_DEBUG, "script_unload")
-    #unset_signals()    global proc
     obs.obs_frontend_remove_event_callback(on_frontend_finished_loading)
     global proc
     if proc is not None:
