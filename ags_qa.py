@@ -712,6 +712,10 @@ def script_defaults(settings):
 
 def script_load(settings):
     obs.script_log(obs.LOG_DEBUG, "script_load")
+    #we only initialize the scene name because we'll be running the setup_signals
+    #next and we need scene_name to correctly compare against
+    ags_data.scene_name = obs.obs_data_get_string(settings, "scene_name")
+    ags_data.source_name = obs.obs_data_get_string(settings, "source_name")
     setup_signals()
     obs.obs_frontend_add_event_callback(on_frontend_finished_loading)
 
