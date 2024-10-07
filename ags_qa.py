@@ -775,13 +775,13 @@ def setup_needs():
 
 def on_scene_item_created(calldata):
     scene_item_ref = obs.calldata_sceneitem(calldata, "item")
-    scene_ref = obs.calldata_scene(calldata, "scene")
+    scene_src_ref = obs.calldata_source(calldata, "scene")
     msg = "scene item created: {item_name}".format(item_name=obs.obs.obs_source_get_name(obs.obs_sceneitem_get_source(scene_item_ref)))
     obs.script_log(obs.LOG_INFO, msg)
 
 def on_scene_item_removed(calldata):
     scene_item_ref = obs.calldata_sceneitem(calldata, "item")
-    scene_ref = obs.calldata_scene(calldata, "scene")
+    scene_src_ref = obs.calldata_source(calldata, "scene")
     source_ref = obs.obs_sceneitem_get_source(scene_item_ref)
     msg = "scene item removed: {item_name}".format(item_name=obs.obs_source_get_name(source_ref))
     obs.script_log(obs.LOG_INFO, msg)
@@ -795,9 +795,9 @@ def on_scene_item_removed(calldata):
     obs.signal_handler_disconnect(sh, "unhooked", game_unhooked_callback)
 
 def on_scene_item_visible(calldata):
+    scene_src_ref = obs.calldata_source(calldata, "scene")
     scene_item_ref = obs.calldata_sceneitem(calldata, "item")
-    scene_ref = obs.calldata_scene(calldata, "scene")
-    visible = obs.calldata_get_bool(calldata, "visible")
+    visible = obs.calldata_bool(calldata, "visible")
     msg = "scene item: {item_name} state: {visibility}".format(item_name=obs.obs_source_get_name(obs.obs_sceneitem_get_source(scene_item_ref)), visibility=visible)
     obs.script_log(obs.LOG_INFO, msg)
 
@@ -907,14 +907,23 @@ def setup_signals():
 
     for scene_a_s in obs.obs_frontend_get_scenes():
         scene_name = obs.obs_source_get_name(scene_a_s)
+        print("setup signals, scene name:" +scene_name)
+        print("ags_data.scene_name:"+ags_data.scene_name)
         if(scene_name == ags_data.scene_name):
             obs.script_log(obs.LOG_DEBUG, "Hooking Signals for {source_name}".format(source_name = scene_name))
             sh = obs.obs_source_get_signal_handler(scene_a_s)
             obs.signal_handler_connect(sh, "item_add", on_scene_item_created)
             obs.signal_handler_connect(sh, "item_remove", on_scene_item_removed)
             obs.signal_handler_connect(sh, "item_visible", on_scene_item_visible)
-            obs.signal_handler_connect(sh, "hooked", game_hooked_callback)
-            obs.signal_handler_connect(sh, "unhooked", game_unhooked_callback)
+            scene_item_ref = obsutil.find_scene_item(obs.obs_scene_from_source(scene_a_s), ags_data.source_name)
+            source_ref = obs.obs_sceneitem_get_source(scene_item_ref)
+            source_name = obs.obs_source_get_name(source_ref)
+            print("source_name: "+source_name+" ags_data.source_name:"+ags_data.source_name)
+            if(source_name == ags_data.source_name):
+                ssh = obs.obs_source_get_signal_handler(source_ref)
+                obs.signal_handler_connect(ssh, "hooked", game_hooked_callback)
+                obs.signal_handler_connect(ssh, "unhooked", game_unhooked_callback)
+
         obs.obs_source_release(scene_a_s)
 
 def unset_signals():
@@ -929,13 +938,20 @@ def unset_signals():
     for scene_a_s in obs.obs_frontend_get_scenes():
         scene_name = obs.obs_source_get_name(scene_a_s)
         if(scene_name == ags_data.scene_name):
-            obs.script_log(obs.LOG_DEBUG, "Hooking Signals for {source_name}".format(source_name = scene_name))
+            obs.script_log(obs.LOG_DEBUG, "Unhooking Signals for {source_name}".format(source_name = scene_name))
             sh = obs.obs_source_get_signal_handler(scene_a_s)
             obs.signal_handler_disconnect(sh, "item_add", on_scene_item_created)
             obs.signal_handler_disconnect(sh, "item_remove", on_scene_item_removed)
             obs.signal_handler_disconnect(sh, "item_visible", on_scene_item_visible)
-            obs.signal_handler_disconnect(sh, "hooked", game_hooked_callback)
-            obs.signal_handler_disconnect(sh, "unhooked", game_unhooked_callback)
+            scene_item_ref = obsutil.find_scene_item(obs.obs_scene_from_source(scene_a_s), ags_data.source_name)
+            source_ref = obs.obs_sceneitem_get_source(scene_item_ref)
+            source_name = obs.obs_source_get_name(source_ref)
+            print("source_name: "+source_name+" ags_data.source_name:"+ags_data.source_name)
+            if(source_name == ags_data.source_name):
+                ssh = obs.obs_source_get_signal_handler(source_ref)
+                obs.signal_handler_disconnect(ssh, "hooked", game_hooked_callback)
+                obs.signal_handler_disconnect(ssh, "unhooked", game_unhooked_callback)
+
         obs.obs_source_release(scene_a_s)
 
 def did_qa_crash(proc: psutil.Process) -> bool:
