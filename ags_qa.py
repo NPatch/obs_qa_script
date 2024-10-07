@@ -1040,5 +1040,5 @@ def script_unload():
     unset_signals()
     obs.obs_frontend_remove_event_callback(on_frontend_finished_loading)
     global proc
-    if proc is not None:
+    if proc is not None and proc.is_running():
         proc.kill()
