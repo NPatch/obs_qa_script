@@ -466,7 +466,7 @@ class gameutil:
         """
         obs.script_log(obs.LOG_INFO, "Running "+game_name)
         steamCommand = "steam"
-        steamGameParameter = "steam://rungameid/"+str(game_steam_gameid)
+        steamGameParameter = "steam://rungameid/"+game_steam_gameid
         subprocess.call([steamCommand, steamGameParameter])
 
     @staticmethod
