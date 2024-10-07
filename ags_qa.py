@@ -890,10 +890,12 @@ def game_unhooked_callback(calldata):
     obs.script_log(obs.LOG_INFO, "unhooked: "+ obs.obs_source_get_name(source))
 
     global proc
-    if proc is not None:
+    if proc is not None and proc.is_running():
         proc_state = did_qa_crash(proc)
         if proc_state:
             obs.script_log(obs.LOG_ERROR, "Application Crashed")
+            proc = None
+    else: #hopefully when the process has exited normally
         proc = None
 
 def setup_signals():
@@ -915,6 +917,7 @@ def setup_signals():
             obs.signal_handler_connect(sh, "item_add", on_scene_item_created)
             obs.signal_handler_connect(sh, "item_remove", on_scene_item_removed)
             obs.signal_handler_connect(sh, "item_visible", on_scene_item_visible)
+            
             scene_item_ref = obsutil.find_scene_item(obs.obs_scene_from_source(scene_a_s), ags_data.source_name)
             source_ref = obs.obs_sceneitem_get_source(scene_item_ref)
             source_name = obs.obs_source_get_name(source_ref)
@@ -943,6 +946,7 @@ def unset_signals():
             obs.signal_handler_disconnect(sh, "item_add", on_scene_item_created)
             obs.signal_handler_disconnect(sh, "item_remove", on_scene_item_removed)
             obs.signal_handler_disconnect(sh, "item_visible", on_scene_item_visible)
+            
             scene_item_ref = obsutil.find_scene_item(obs.obs_scene_from_source(scene_a_s), ags_data.source_name)
             source_ref = obs.obs_sceneitem_get_source(scene_item_ref)
             source_name = obs.obs_source_get_name(source_ref)
@@ -957,10 +961,10 @@ def unset_signals():
 def did_qa_crash(proc: psutil.Process) -> bool:
     app_status = None
     if proc is not None:
-        while(True):
-            app_status = gameutil.get_process_status(proc, ags_data.window_name, ags_data.window_class, ags_data.crash_window_name, ags_data.crash_window_class)
-            if app_status != psutil.STATUS_RUNNING:
-                break
+        # while(True):
+        app_status = gameutil.get_process_status(proc, ags_data.window_name, ags_data.window_class, ags_data.crash_window_name, ags_data.crash_window_class)
+            # if app_status != psutil.STATUS_RUNNING:
+            #     break
         if app_status == psutil.STATUS_STOPPED:
             #obs.script_log(obs.LOG_INFO, "App Crashed")
             return True
