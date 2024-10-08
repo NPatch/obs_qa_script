@@ -296,7 +296,7 @@ class obsutil:
             transform_info.scale.y  = 1.0
 
         #bounds_type
-        transform_info.bounds_type = obs.OBS_BOUNDS_NONE
+        transform_info.bounds_type = obs.OBS_BOUNDS_SCALE_INNER
         #print("bounds type: ", str(int(transform_info.bounds_type)))
         #bounds_alignment
         #print("bounds alignment: ", str(transform_info.bounds_alignment))
@@ -347,6 +347,23 @@ class obsutil:
 
         obs.config_set_uint(config, "Video", "BaseCX", width)
         obs.config_set_uint(config, "Video", "BaseCY", height)
+
+    @staticmethod
+    def config_get_base_resolution() -> obs.vec2:
+        '''
+        Gets base resolution.
+
+        ---
+        
+        ##### obs API responsibilities
+
+        * Uses [obs_frontend_get_profile_config](https://docs.obsproject.com/reference-sources#c.obs_frontend_get_profile_config), which **does not require release**
+        '''
+        config = obs.obs_frontend_get_profile_config()
+        res = obs.vec2()
+        res.x = obs.config_get_uint(config, "Video", "BaseCX")
+        res.y = obs.config_get_uint(config, "Video", "BaseCY")
+        return res
 
     @staticmethod
     def config_set_output_resolution(width: int = 0, height: int = 0):
@@ -869,17 +886,18 @@ def game_hooked_callback(calldata):
 
     print("Window Res: ", source_width, "x", source_height)
 
-    # obsutil.config_set_base_resolution(source_width, source_height)
-    # obsutil.config_set_output_resolution(source_width, source_height)
-    # obsutil.set_rescale_resolution()
+    #obsutil.config_set_base_resolution(source_width, source_height)
+    #obsutil.config_set_output_resolution(source_width, source_height)
+    obsutil.set_rescale_resolution(source_width, source_height, obsutil.ScaleType.LANCZOS)
 
-    #output = obs.obs_frontend_get_recording_output()
-    #obs.obs_output_set_preferred_size(output, source_width, source_height)
-    #obs.obs_output_release(output)
+    output = obs.obs_frontend_get_recording_output()
+    obs.obs_output_set_preferred_size(output, source_width, source_height)
+    obs.obs_output_release(output)
     
     scene_ref = obsutil.find_scene(ags_data.scene_name)
     scene_item_ref = obsutil.find_scene_item(scene_ref, ags_data.source_name)
-    obsutil.reset_transform_and_crop(scene_item_ref, source_width, source_height)
+    base_resolution = obsutil.config_get_base_resolution()
+    obsutil.reset_transform_and_crop(scene_item_ref, base_resolution.x, base_resolution.y)
 
     global proc
     if proc is None:
